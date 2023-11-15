@@ -10,7 +10,9 @@ const layout = (
   return (
     <>
       <Dashboard active="Problemset" />
-      {children}
+      <div className="bg-black text-white flex-1">
+        {children}
+      </div>
     </>
   )
 }

@@ -6,8 +6,8 @@ import { faBrain, faCalendar, faComments, faGear, faHome, faPen, faUser } from "
 const Navbar = () => {
 
   return (
-    <nav className="text-white bg-black h-screen w-10 flex flex-col justify-between">
-      <ul className="flex flex-col justify-center">
+    <nav className="text-white bg-black h-screen w-12 flex flex-col justify-between">
+      <ul className="flex flex-col items-center">
         <Link href="/code/home">
           <FontAwesomeIcon icon={faHome} className="text-2xl m-2 cursor-pointer" title="Home" />
         </Link>
@@ -25,7 +25,7 @@ const Navbar = () => {
         </Link>
       </ul>
 
-      <ul className="flex flex-col justify-center">
+      <ul className="flex flex-col items-center">
       <Link href="/code/profile">
         <FontAwesomeIcon icon={faUser} className="text-2xl m-2 cursor-pointer" title="Profile" />
       </Link>

@@ -1,4 +1,4 @@
-import Content from '@components/Content'
+import Content from '@components/content/Content'
 import React from 'react'
 
 const page = () => {
