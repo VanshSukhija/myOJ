@@ -2,11 +2,11 @@
 import React, { useEffect } from 'react'
 import problemset from './problems.json'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faArrowRightArrowLeft, faBrain, faRightFromBracket, faRightLong } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-interface ProblemInterface {
+type ProblemType = {
   id: number;
   name: string;
   description: string;
@@ -31,11 +31,18 @@ const Tags = [
   "2-sat", "binary search", "bitmasks", "brute force", "chinese remainder theorem", "combinatorics", "constructive algorithms", "data structures", "dfs and similar", "divide and conquer", "dp", "dsu", "expression parsing", "fft", "flows", "games", "geometry", "graph matchings", "graphs", "greedy", "hashing", "implementation", "interactive", "math", "matrices", "meet-in-the-middle", "number theory", "probabilities", "schedules", "shortest paths", "sortings", "string suffix structures", "strings", "ternary search", "trees", "two pointers"
 ]
 
-const Problemset = () => {
+const fetchData = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/code/problemset/docker');
+    const data = await response.json();
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+fetchData();
 
-  const params = useParams()
-  // useEffect(() => console.log(problemset), []);
-  // console.log(params);
+const Problemset = () => {
 
   return (
     <>
@@ -46,12 +53,12 @@ const Problemset = () => {
           <Filters />
 
           {
-            problemset.problems.map((problem: ProblemInterface) => {
+            problemset.problems.map((problem: ProblemType) => {
               return (
-                <>
+                <div key={problem.id} className='w-full'>
                   <Problem data={problem} />
                   {/* <Problem data={problem} /> */}
-                </>
+                </div>
               )
             })
           }
@@ -93,21 +100,22 @@ const Filters = () => {
   )
 }
 
-const Problem = ({ data }: { data: ProblemInterface }) => {
+const Problem = ({ data }: { data: ProblemType }) => {
 
   const params = useParams()
-  const flag = data.id.toString() === params.problemID
+  const isSelected = data.id.toString() === params.problemID
+  const isAccepted = true;
 
   return (
-    <Link href={`/code/problemset/problem/${data.id}`} key={data.id} className={`w-full py-1 pr-2 flex justify-between items-center border-y-2 border-slate-400 ${flag ? "bg-cyan-600" : ""}`} >
-      <div className='w-1 bg-green-400 h-full mr-1.5'></div>
+    <Link href={`/code/problemset/problems/${data.id}`} className={`w-full py-1 pr-2 flex justify-between items-center border-y-2 border-slate-400 ${isSelected ? "bg-cyan-600" : ""}`} >
+      <div className={`w-1 h-12 bg-green-400 mr-1.5`}></div>
       <div className='w-full'>
         <div>{data.id} | {data.name}</div>
         <div className='truncate'>
           {
             data.tags.map((tag: string) => {
               return (
-                <span className='text-xs text-slate-400'>{tag}, </span>
+                <span key={tag} className='text-xs text-slate-400'>{tag}, </span>
               )
             })
           }
