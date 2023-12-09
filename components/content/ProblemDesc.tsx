@@ -4,6 +4,7 @@ import problemset from '../dashboard/problems.json'
 import { notFound, useParams } from 'next/navigation'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { set } from 'firebase/database';
 
 type ProblemType = {
   id: number;
@@ -54,26 +55,53 @@ const ProblemDesc = () => {
 
 const ProblemNavbar = ({ data }: { data: ProblemType }) => {
 
-  const [code, setCode] = useState('')
-  const [extension, setExtension] = useState('')
+  const [code, setCode] = useState<string>('')
+  const [extension, setExtension] = useState<string>('')
+  const [outputArray, setOutputArray] = useState<string[]>([])
 
-  const submitCode = async (e: any) => {
-    e.preventDefault()
+  const submitCode = async (testcase: string, outputArray: string[]) => {
     await fetch(`http://localhost:3000/code/problemset/problems/${data.id}/api`, {
       method: 'POST',
       body: JSON.stringify({
         code: code,
         extension: extension,
-        input: data.testcases[0].input,
+        input: testcase,
       }),
       headers: {
         'Content-Type': 'application/json'
       }
     })
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(err => console.error(err))
+      .then(res => res.json())
+      .then(data => outputArray.push(data.output))
+      .catch(err => console.error(err))
   }
+
+  const runTestCases = async () => {
+    try {
+      for (const testcase of data.testcases) {
+        await fetch(`http://localhost:3000/code/problemset/problems/${data.id}/api`, {
+          method: 'POST',
+          body: JSON.stringify({
+            code: code,
+            extension: extension,
+            input: testcase.input,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(res => res.json())
+          .then(data => setOutputArray([...outputArray, data.output]))
+          .catch(err => console.error(err))
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    console.log(outputArray)
+  }, [outputArray])
 
   const getCode = async (event: any) => {
     event.preventDefault()
@@ -100,19 +128,14 @@ const ProblemNavbar = ({ data }: { data: ProblemType }) => {
           }
         </div>
       </div>
-      <div className='flex items-center w-1/3 text-right justify-evenly'>
-        <div className='flex flex-col w-2/3 gap-1 text-sm'>
-          <input type="file" onChange={getCode} />
-          <select className='text-black w-full' value={extension}>
-            <option value="">Select Language</option>
-            <option value="c">C</option>
-            <option value="cpp">C++</option>
-            <option value="py">Python</option>
-            <option value="java">Java</option>
-          </select>
-        </div>
-        <FontAwesomeIcon icon={faPlay} className="text-xl cursor-pointer" title="Submit Code" onClick={submitCode} />
-        <FontAwesomeIcon icon={faEllipsisV} className="text-xl cursor-pointer" title='More...' />
+      <div className='flex items-center w-[30%] text-right justify-evenly'>
+        <input type="file" onChange={getCode} />
+        <button className='w-[15%] text-xl cursor-pointer' onClick={runTestCases}>
+          <FontAwesomeIcon icon={faPlay} title="Submit Code" />
+        </button>
+        <button className='w-[15%] text-xl cursor-pointer'>
+          <FontAwesomeIcon icon={faEllipsisV} title="More..." />
+        </button>
       </div>
     </nav>
   )
