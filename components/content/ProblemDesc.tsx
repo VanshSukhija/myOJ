@@ -4,7 +4,6 @@ import problemset from '../dashboard/problems.json'
 import { notFound, useParams } from 'next/navigation'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faPlay } from "@fortawesome/free-solid-svg-icons";
-import { set } from 'firebase/database';
 
 type ProblemType = {
   id: number;
@@ -28,7 +27,7 @@ type ProblemType = {
 }
 
 const getProblem = (id: number) => {
-  const [data, setData] = useState(Object)
+  const [data, setData] = useState<ProblemType>(Object)
 
   useEffect(() => {
     const arr = problemset.problems.filter(e => e.id === id)
@@ -59,24 +58,8 @@ const ProblemNavbar = ({ data }: { data: ProblemType }) => {
   const [extension, setExtension] = useState<string>('')
   const [outputArray, setOutputArray] = useState<string[]>([])
 
-  const submitCode = async (testcase: string, outputArray: string[]) => {
-    await fetch(`http://localhost:3000/code/problemset/problems/${data.id}/api`, {
-      method: 'POST',
-      body: JSON.stringify({
-        code: code,
-        extension: extension,
-        input: testcase,
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => res.json())
-      .then(data => outputArray.push(data.output))
-      .catch(err => console.error(err))
-  }
-
-  const runTestCases = async () => {
+  const runTestCases = async (e: any) => {
+    e.preventDefault()
     try {
       for (const testcase of data.testcases) {
         await fetch(`http://localhost:3000/code/problemset/problems/${data.id}/api`, {
@@ -91,7 +74,7 @@ const ProblemNavbar = ({ data }: { data: ProblemType }) => {
           }
         })
           .then(res => res.json())
-          .then(data => setOutputArray([...outputArray, data.output]))
+          .then(data => setOutputArray(prev => [...prev, data.output]))
           .catch(err => console.error(err))
       }
     } catch (err) {
@@ -128,6 +111,7 @@ const ProblemNavbar = ({ data }: { data: ProblemType }) => {
           }
         </div>
       </div>
+      
       <div className='flex items-center w-[30%] text-right justify-evenly'>
         <input type="file" onChange={getCode} />
         <button className='w-[15%] text-xl cursor-pointer' onClick={runTestCases}>
