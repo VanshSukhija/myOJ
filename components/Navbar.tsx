@@ -26,12 +26,12 @@ const Navbar = () => {
       </ul>
 
       <ul className="flex flex-col items-center">
-      <Link href="/code/profile">
-        <FontAwesomeIcon icon={faUser} className="text-2xl m-2 cursor-pointer" title="Profile" />
-      </Link>
-      <Link href="/code/settings">
-        <FontAwesomeIcon icon={faGear} className="text-2xl m-2 cursor-pointer" title="Settings" />
-      </Link>
+        <Link href="/code/profile">
+          <FontAwesomeIcon icon={faUser} className="text-2xl m-2 cursor-pointer" title="Profile" />
+        </Link>
+        <Link href="/code/settings">
+          <FontAwesomeIcon icon={faGear} className="text-2xl m-2 cursor-pointer" title="Settings" />
+        </Link>
       </ul>
     </nav>
   )

@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import Dashboard from '@components/dashboard/Dashboard'
+import Loading from './loading'
 
 const layout = (
   {
@@ -9,7 +10,9 @@ const layout = (
   }) => {
   return (
     <>
-      <Dashboard active="Problemset" />
+      <Suspense fallback={<Loading />}>
+        <Dashboard active="Problemset" />
+      </Suspense>
       <div className="bg-black text-white flex-1">
         {children}
       </div>

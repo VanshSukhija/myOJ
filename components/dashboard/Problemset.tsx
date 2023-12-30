@@ -9,7 +9,12 @@ import { useParams } from 'next/navigation';
 type ProblemType = {
   id: number;
   name: string;
-  description: string;
+  description: {
+    statement: string;
+    input: string;
+    output: string;
+    constraints: string;
+  };
   difficulty: number;
   tags: string[];
   submissions: {
@@ -23,6 +28,7 @@ type ProblemType = {
     input: string;
     output: string;
   }[];
+  note: string;
   tutorial: string;
   solution: string;
 }
@@ -57,7 +63,6 @@ const Problemset = () => {
               return (
                 <div key={problem.id} className='w-full'>
                   <Problem data={problem} />
-                  {/* <Problem data={problem} /> */}
                 </div>
               )
             })
@@ -107,7 +112,7 @@ const Problem = ({ data }: { data: ProblemType }) => {
   const isAccepted = true;
 
   return (
-    <Link href={`/code/problemset/problems/${data.id}`} className={`w-full py-1 pr-2 flex justify-between items-center border-y-2 border-slate-400 ${isSelected ? "bg-cyan-600" : ""}`} >
+    <Link href={`/code/problemset/problems/${data.id}/description`} className={`w-full py-1 pr-2 flex justify-between items-center border-y-2 border-slate-400 ${isSelected ? "bg-cyan-600" : ""}`} >
       <div className={`w-1 h-12 bg-green-400 mr-1.5`}></div>
       <div className='w-full'>
         <div>{data.id} | {data.name}</div>
