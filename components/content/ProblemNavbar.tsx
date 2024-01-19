@@ -82,13 +82,21 @@ const ProblemNavbar = () => {
     console.log(outputArray)
   }, [outputArray])
 
+  // useEffect(() => {
+  //   console.log(extension)
+  // }, [extension])
+
+  // useEffect(() => {
+  //   console.log(code)
+  // }, [code])
+
   const getCode = async (event: any) => {
     event.preventDefault()
     const reader = new FileReader()
     reader.onload = async (e) => {
       const text = (e.target?.result as string)
       setCode(text)
-      setExtension(event.target?.files[0].name.split('.')[1]);
+      setExtension(event.target?.files[0].name.split('.').pop() as string);
     };
     reader.readAsText(event.target?.files[0])
   }
@@ -100,9 +108,9 @@ const ProblemNavbar = () => {
           <div className='text-2xl font-bold'>{data.name}</div>
           <div className='text-white'>
             {data.difficulty} | {
-              data.tags?.map((tag: string) => {
+              data.tags?.map((tag: string, index: number) => {
                 return (
-                  <span key={tag}>{tag}, </span>
+                  <span key={tag}>{index==data.tags.length-1 ? tag : tag + ','} </span>
                 )
               })
             }

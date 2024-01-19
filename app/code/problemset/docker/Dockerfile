@@ -1,7 +1,10 @@
-FROM gcc:latest
+FROM ubuntu:latest
+
+RUN apt-get update
+RUN apt-get install -y g++ python3-dev openjdk-11-jdk
 
 ENV TIMEOUT_SECONDS=1
-ENV MEMORY_LIMIT_MB=128
+ENV MEMORY_LIMIT_KB=131072
 
 WORKDIR /app
 

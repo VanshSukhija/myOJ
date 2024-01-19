@@ -1,21 +1,38 @@
 #!/bin/bash
+lang=$1
+# echo "language: $lang"
 
-g++ source_code.cpp -o executable
+# Check the language and execute the source code accordingly
+if [ $lang == "cpp" ] || [ $lang == "c" ]; then
+    g++ "source_code.$lang" -o executable
+    ulimit -v $MEMORY_LIMIT_MB -t $TIMEOUT_SECONDS
+    ./executable < input.txt 2> output.txt
 
-# Run the program with time and memory limits
+elif [ $lang == "java" ]; then
+    javac source_code.java
+    ulimit -v $MEMORY_LIMIT_MB -t $TIMEOUT_SECONDS
+    java source_code < input.txt 2> output.txt
 
-#memory limit ko handle nhi kar pa rha
-ulimit -m $MEMORY_LIMIT_MB
-timeout $TIMEOUT_SECONDS ./executable < input.txt 2> output.txt
+elif [ $lang == "py" ]; then
+    ulimit -v $MEMORY_LIMIT_MB -t $TIMEOUT_SECONDS
+    python3 source_code.py < input.txt 2> output.txt
+
+else
+    echo "Invalid file extension"
+    exit 1
+fi
+
+# Capture the exit status of the last command executed
+exit_status=$?
 
 # Check the exit status of the program
-if [ $? -eq 124 ]; then
+if [ $exit_status -eq 124 ]; then
     echo "Time limit exceeded"
     exit 0
-elif [ $? -eq 137 ]; then
+elif [ $exit_status -eq 137 ]; then
     echo "Memory limit exceeded"
     exit 0
 fi
 
-# Display the program's output (e.g., for debugging)
+# Return the output of the program to stdout
 cat output.txt
