@@ -29,7 +29,7 @@ const Dashboard = ({ active }: { active: string }) => {
   }
 
   return (
-    <main className="text-white bg-sky-950 w-1/4 overflow-y-auto">
+    <main className="text-white w-1/4 overflow-y-auto">
       {renderSwitch(active)}
     </main>
   )

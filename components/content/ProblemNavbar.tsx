@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV, faPlay } from "@fortawesome/free-solid-svg-icons";
 import problemset from "@components/dashboard/problems.json"
-import { notFound, useParams } from 'next/navigation'
+import { notFound, useParams, usePathname } from 'next/navigation'
 import Link from 'next/link';
 
 export type ProblemType = {
@@ -33,8 +33,6 @@ export type ProblemType = {
   solution: string;
 }
 
-type TabsType = 'description' | 'submissions' | 'solution'
-
 export function getProblem(id: number) {
   let data: ProblemType = Object()
 
@@ -47,8 +45,9 @@ export function getProblem(id: number) {
 
 const ProblemNavbar = () => {
   const params = useParams()
+  const pathname = usePathname().split('/')
   const data = getProblem(Number(params.problemID))
-  const [tab, setTab] = useState<TabsType>('description')
+  const tab = pathname[pathname.length-1]
 
   const [code, setCode] = useState<string>('')
   const [extension, setExtension] = useState<string>('')
@@ -123,17 +122,17 @@ const ProblemNavbar = () => {
 
       <nav className='w-full border-b-2'>
         <Link href={`/code/problemset/problems/${params.problemID}/description`}>
-          <button onClick={() => setTab('description')} className={`w-1/6 border-x-2 py-1 px-2 ${tab === 'description' ? 'bg-sky-950' : ''}`}>
+          <button className={`w-1/6 border-x-2 py-1 px-2 ${tab === 'description' ? 'bg-sky-950' : ''}`}>
             Description
           </button>
         </Link>
         <Link href={`/code/problemset/problems/${params.problemID}/submissions`}>
-          <button onClick={() => setTab('submissions')} className={`w-1/6 border-r-2 py-1 px-2 ${tab === 'submissions' ? 'bg-sky-950' : ''}`}>
+          <button className={`w-1/6 border-r-2 py-1 px-2 ${tab === 'submissions' ? 'bg-sky-950' : ''}`}>
             Submissions
           </button>
         </Link>
         <Link href={`/code/problemset/problems/${params.problemID}/solution`}>
-          <button onClick={() => setTab('solution')} className={`w-1/6 border-r-2 py-1 px-2 ${tab === 'solution' ? 'bg-sky-950' : ''}`}>
+          <button className={`w-1/6 border-r-2 py-1 px-2 ${tab === 'solution' ? 'bg-sky-950' : ''}`}>
             Solution
           </button>
         </Link>

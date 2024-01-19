@@ -51,27 +51,25 @@ fetchData();
 const Problemset = () => {
 
   return (
-    <>
-      <div className='flex flex-col h-screen w-100 justify-between items-center'>
-        <div className='w-full flex flex-col items-center'>
-          <div className='text-2xl font-bold my-1.5'>Problem Set</div>
+    <div className='flex flex-col h-screen justify-between items-center bg-sky-950'>
+      <div className='w-full flex flex-col items-center'>
+        <div className='text-2xl font-bold my-1.5'>Problem Set</div>
 
-          <Filters />
+        <Filters />
 
-          {
-            problemset.problems.map((problem: ProblemType) => {
-              return (
-                <div key={problem.id} className='w-full'>
-                  <Problem data={problem} />
-                </div>
-              )
-            })
-          }
-        </div>
-
-        <code className=''>{'<<'} {'<'} | 1 | 2 | 3 | 4 | 5 | {'>'} {'>>'}</code>
+        {
+          problemset.problems.map((problem: ProblemType) => {
+            return (
+              <div key={problem.id} className='w-full'>
+                <Problem data={problem} />
+              </div>
+            )
+          })
+        }
       </div>
-    </>
+
+      <code>{'<<'} {'<'} | 1 | 2 | 3 | 4 | 5 | {'>'} {'>>'}</code>
+    </div>
   )
 }
 
