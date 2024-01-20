@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { getProblem } from '@components/content/ProblemNavbar'
+import { getProblem } from '@components/content/problemset/ProblemNavbar'
 import { ProblemType } from './ProblemNavbar'
 
 const ProblemSolution = () => {

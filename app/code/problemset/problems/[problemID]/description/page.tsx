@@ -1,4 +1,4 @@
-import ProblemDescription from '@components/content/ProblemDescription'
+import ProblemDescription from '@components/content/problemset/ProblemDescription'
 import React from 'react'
 
 const page = () => {

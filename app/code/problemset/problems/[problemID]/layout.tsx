@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import Loading from './loading'
-import ProblemNavbar from '@components/content/ProblemNavbar'
+import ProblemNavbar from '@components/content/problemset/ProblemNavbar'
 
 export type ProblemType = {
   id: number;

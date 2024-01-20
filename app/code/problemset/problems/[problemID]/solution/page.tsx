@@ -1,5 +1,5 @@
 import React from 'react'
-import ProblemSolution from '@components/content/ProblemSolution'
+import ProblemSolution from '@components/content/problemset/ProblemSolution'
 
 const page = () => {
   return (

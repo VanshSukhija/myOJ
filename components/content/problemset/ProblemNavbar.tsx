@@ -9,15 +9,13 @@ import Link from 'next/link';
 export type ProblemType = {
   id: number;
   name: string;
-  description: {
-    statement: string;
-    input: string;
-    output: string;
-    constraints: string;
-  };
+  description: string;
+  inputFormat: string;
+  outputFormat: string;
+  constraints: string;
   difficulty: number;
   tags: string[];
-  submissions: {
+  submissions: { // to be removed
     id: number;
     user: string;
     time: number;
@@ -27,6 +25,7 @@ export type ProblemType = {
     id: number;
     input: string;
     output: string;
+    explaination: string;
   }[];
   note: string;
   tutorial: string;

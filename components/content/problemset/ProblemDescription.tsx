@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { getProblem } from '@components/content/ProblemNavbar'
+import { getProblem } from '@components/content/problemset/ProblemNavbar'
 import { ProblemType } from './ProblemNavbar'
 
 const ProblemDescription = () => {
@@ -15,9 +15,9 @@ const ProblemDescription = () => {
   return (
     <div className='p-1'>
       <section>
-        <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Statement</div>
+        <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Description</div>
         <pre className='whitespace-pre-wrap break-words'>
-          {data?.description?.statement}
+          {data?.description}
         </pre>
       </section>
       <br />
@@ -25,7 +25,7 @@ const ProblemDescription = () => {
       <section>
         <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Input</div>
         <pre className='whitespace-pre-wrap break-words'>
-          {data.description?.input}
+          {data.inputFormat}
         </pre>
       </section>
       <br />
@@ -33,7 +33,7 @@ const ProblemDescription = () => {
       <section>
         <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Output</div>
         <pre className='whitespace-pre-wrap break-words'>
-          {data.description?.output}
+          {data.outputFormat}
         </pre>
       </section>
       <br />
@@ -41,7 +41,7 @@ const ProblemDescription = () => {
       <section>
         <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Constraints</div>
         <pre className='whitespace-pre-wrap break-words'>
-          {data.description?.constraints}
+          {data.constraints}
         </pre>
       </section>
       <br />
