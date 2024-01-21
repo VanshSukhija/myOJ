@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 
 RUN apt-get update
-RUN apt-get install -y g++ python3-dev openjdk-11-jdk
+RUN apt-get install -y bc g++ python3-dev openjdk-11-jdk
 
 ENV TIMEOUT_SECONDS=1
 ENV MEMORY_LIMIT_KB=131072

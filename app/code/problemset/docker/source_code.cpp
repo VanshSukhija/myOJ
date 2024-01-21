@@ -5,12 +5,10 @@ int main(){
     int a, b;
     cin>>a>>b;
     
-    // for(int i=0, j=0; i<1e10; i++)
-    //     j++;
-
-    // long long n = 1e18;
-    // int arr[n];
-    // arr[0] = 0;
+    vector<int> v;
+    for(int i=0; i<1e7; i++){
+        v.push_back(i);
+    }
 
     cout<<a+b<<endl;
 
