@@ -1,5 +1,5 @@
-Add markdown format for problem
-Add azure storage to the system
+implement quill editor for markdown
+implement azure storage to the problem submission system
 Create profile page for user
 
 Add login page and google auth

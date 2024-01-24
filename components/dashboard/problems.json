@@ -12,6 +12,8 @@
             "constraints" : "2 <= n <= 200\n",
             "difficulty" : 800,
             "tags" : ["math", "geometry"],
+            "timeLimit" : 1000, 
+            "memoryLimit" : 256,
             "submissions" : [
                 {
                     "id" : 0,
@@ -44,7 +46,8 @@
             "note" : "In the first example, in any division the left and the right part contain one loaf of bread.\n\nIn the second example, the division is 'L' and 'O', and in these two strings the number of loaves is different (1 and 0) and the number of onions is different (0 and 1).\n\nIn the third example, any number 1, 2 or 3 is a correct answer.\n",
             
             "tutorial" : "This is the tutorial for problem 1",
-            "solution" : "This is the solution for problem 1"
+            "solution" : "This is the solution for problem 1",
+            "createdBy" : "user1"
         },
         {
             "id" : 1,
@@ -58,6 +61,8 @@
             "constraints" : "2 <= n <= 200\n",
             "difficulty" : 800,
             "tags" : ["math", "geometry"],
+            "timeLimit" : 1000, 
+            "memoryLimit" : 256, 
             "submissions" : [
                 {
                     "id" : 0,
@@ -90,7 +95,8 @@
             "note" : "In the first example, in any division the left and the right part contain one loaf of bread.\n\nIn the second example, the division is 'L' and 'O', and in these two strings the number of loaves is different (1 and 0) and the number of onions is different (0 and 1).\n\nIn the third example, any number 1, 2 or 3 is a correct answer.\n",
             
             "tutorial" : "This is the tutorial for problem 1",
-            "solution" : "This is the solution for problem 1"
+            "solution" : "This is the solution for problem 1",
+            "createdBy" : "user1"
         },
         {
             "id" : 2,
@@ -104,6 +110,8 @@
             "constraints" : "2 <= n <= 200\n",
             "difficulty" : 800,
             "tags" : ["math", "geometry"],
+            "timeLimit" : 1000, 
+            "memoryLimit" : 256, 
             "submissions" : [
                 {
                     "id" : 0,
@@ -136,7 +144,8 @@
             "note" : "In the first example, in any division the left and the right part contain one loaf of bread.\n\nIn the second example, the division is 'L' and 'O', and in these two strings the number of loaves is different (1 and 0) and the number of onions is different (0 and 1).\n\nIn the third example, any number 1, 2 or 3 is a correct answer.\n",
             
             "tutorial" : "This is the tutorial for problem 1",
-            "solution" : "This is the solution for problem 1"
+            "solution" : "This is the solution for problem 1",
+            "createdBy" : "user1"
         },
         {
             "id" : 3,
@@ -150,6 +159,8 @@
             "constraints" : "2 <= n <= 200\n",
             "difficulty" : 800,
             "tags" : ["math", "geometry"],
+            "timeLimit" : 1000, 
+            "memoryLimit" : 256, 
             "submissions" : [
                 {
                     "id" : 0,
@@ -182,7 +193,8 @@
             "note" : "In the first example, in any division the left and the right part contain one loaf of bread.\n\nIn the second example, the division is 'L' and 'O', and in these two strings the number of loaves is different (1 and 0) and the number of onions is different (0 and 1).\n\nIn the third example, any number 1, 2 or 3 is a correct answer.\n",
             
             "tutorial" : "This is the tutorial for problem 1",
-            "solution" : "This is the solution for problem 1"
+            "solution" : "This is the solution for problem 1",
+            "createdBy" : "user1"
         }
     ]
 }

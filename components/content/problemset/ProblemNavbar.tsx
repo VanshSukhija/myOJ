@@ -13,6 +13,8 @@ export type ProblemType = {
   inputFormat: string;
   outputFormat: string;
   constraints: string;
+  timeLimit: number;
+  memoryLimit: number;
   difficulty: number;
   tags: string[];
   submissions: { // to be removed
@@ -30,13 +32,14 @@ export type ProblemType = {
   note: string;
   tutorial: string;
   solution: string;
+  createdBy: string;
 }
 
 export function getProblem(id: number) {
   let data: ProblemType = Object()
 
   const arr = problemset.problems.filter(e => e.id === id)
-  if (!arr.length) notFound()
+  if (!arr.length) return notFound()
   data = arr[0]
 
   return data;

@@ -90,9 +90,9 @@ const Problem = ({ data }: { data: ProblemType }) => {
         <div>{data.id} | {data.name}</div>
         <div className='truncate'>
           {
-            data.tags.map((tag: string) => {
+            data.tags.map((tag: string, index: number) => {
               return (
-                <span key={tag} className='text-xs text-slate-400'>{tag}, </span>
+                <span key={tag} className='text-xs text-slate-300'>{tag}{index === data.tags.length - 1 ? '' : ', '} </span>
               )
             })
           }
