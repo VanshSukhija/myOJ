@@ -7,6 +7,7 @@ import problemset from '@components/dashboard/problems.json';
 
 const Create = () => {
   const problemID = Math.floor(Math.random() * 1000000000)
+  const user = 'user1'
   return (
     <div className='w-full flex h-screen flex-col items-center justify-between bg-red-900'>
       <div className='w-full flex flex-col items-center'>
@@ -17,15 +18,13 @@ const Create = () => {
         <div className='w-full'>
           <div className='font-bold px-1 text-xl text-center'>Your Problems</div>
           <div className='bg-red-500 w-full flex flex-col'>
-            {
-              problemset.problems.map((problem: ProblemType) => {
-                return (
-                  <div key={problem.id} className='w-full'>
-                    <EditProblem data={problem} />
-                  </div>
-                )
-              })
-            }
+            {problemset.problems.filter((prob: ProblemType) => prob.createdBy === user).map((problem: ProblemType) => {
+              return (
+                <div key={problem.id} className='w-full'>
+                  <EditProblem data={problem} />
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

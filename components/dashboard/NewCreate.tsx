@@ -51,13 +51,73 @@ const NewCreate = () => {
   }, [])
 
   const changeProblem = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name, value, type } = e.target
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        [name]: value
+        [name]: type === "number" || type === "range" ? Number(value) : value
       }
     })
+  }
+
+  const validateProblem = (name: string) => {
+    if (name === "name") {
+      if (problem.name.length < 5 || problem.name.length > 50) {
+        return false
+      } else if (problemset.problems.filter((prob: ProblemType) => problem.name === prob.name && problem.id !== prob.id).length > 0) {
+        return false
+      }
+    }
+
+    else if (name === "difficulty") {
+      if (problem.difficulty < 100 || problem.difficulty > 3000) {
+        return false
+      }
+    }
+
+    else if (name === "tags") {
+      if (problem.tags.length === 0) {
+        return false
+      }
+    }
+
+    else if (name === "time limit") {
+      if (problem.timeLimit === 0) {
+        return false
+      }
+    }
+
+    else if (name === "memory limit") {
+      if (problem.memoryLimit === 0) {
+        return false
+      }
+    }
+
+    else if (name === "description") {
+      if (problem.description.length < 10) {
+        return false
+      }
+    }
+
+    else if (name === "formatsConstraints") {
+      if (problem.inputFormat.length < 10 || problem.outputFormat.length < 10 || problem.constraints.length < 10) {
+        return false
+      }
+    }
+
+    else if (name === "testcases") {
+      if (problem.testcases.length === 0) {
+        return false
+      }
+    }
+
+    else if (name === "solution") {
+      if (problem.solution.length < 10 || problem.tutorial.length < 10) {
+        return false
+      }
+    }
+
+    return true
   }
 
   return (
@@ -68,13 +128,13 @@ const NewCreate = () => {
 
           <div className='bg-red-500 w-full h-[100%] overflow-y-auto'>
             <div className='w-full flex p-2 pl-0'>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className='w-1 bg-transparent mr-1.5'></div>
 
               <div className='w-full font-bold'>Problem ID: {problem.id}</div>
             </div>
 
             <div className='w-full flex p-2 pl-0'>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("name") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full'>
                 <label htmlFor='problemName' className='font-bold cursor-pointer'>Problem Name:</label>
@@ -83,7 +143,7 @@ const NewCreate = () => {
             </div>
 
             <div className='w-full flex p-2 pl-0'>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("difficulty") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full'>
                 <label htmlFor='difficultyRating' className='font-bold'>Difficulty Rating: {problem.difficulty} </label>
@@ -92,7 +152,7 @@ const NewCreate = () => {
             </div>
 
             <div className='w-full flex p-2 pl-0'>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("tags") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full'>
                 <label htmlFor='tags' className='font-bold'>Tags: </label> <br />
@@ -105,7 +165,18 @@ const NewCreate = () => {
                     })
                   }
                 </div>
-                <select id='tags' className='w-full text-black'>
+                <select id='tags' className='w-full text-black' onChange={() => {
+                  const select = document.getElementById('tags') as HTMLSelectElement
+                  const tag = select.value
+                  if (tag === "") return;
+                  setProblem((prev: ProblemType) => {
+                    return {
+                      ...prev,
+                      tags: [...prev.tags, tag].sort()
+                    }
+                  })
+                  select.value = ""
+                }}>
                   <option value="">Select tags</option>
                   {
                     Tags.map((tag: string) => {
@@ -119,31 +190,31 @@ const NewCreate = () => {
             </div>
 
             <div className='w-full flex p-2 pl-0'>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("time limit") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between'>
                 <label htmlFor='timeLimit' className='font-bold'>Time Limit:</label>
-                <div className='w-1/2 gap-2'>
+                <div className='w-1/2 text-right flex justify-end'>
                   <input type="number" id="timeLimit" className='w-1/2 text-black px-1 focus:outline-none' name='timeLimit' value={problem.timeLimit} onChange={changeProblem} />
-                  <span className='ml-2'>seconds</span>
+                  <div className='ml-1 w-1/6'>ms</div>
                 </div>
               </div>
             </div>
 
             <div className='w-full flex p-2 pl-0'>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("memory limit") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between'>
                 <label htmlFor='memoryLimit' className='font-bold'>Memory Limit:</label>
-                <div className='w-1/2 gap-2'>
+                <div className='w-1/2 text-right flex justify-end'>
                   <input type="number" id="memoryLimit" className='w-1/2 text-black px-1 focus:outline-none' name='memoryLimit' value={problem.memoryLimit} onChange={changeProblem} />
-                  <span className='ml-2'>MB</span>
+                  <div className='ml-1 w-1/6'>MB</div>
                 </div>
               </div>
             </div>
 
             <Link href={`/code/create/${params.problemID}/description`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'description' ? 'bg-white text-red-500' : ''}`}>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("description") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between items-center'>
                 <span className='font-bold'>Description</span>
@@ -152,7 +223,7 @@ const NewCreate = () => {
             </Link>
 
             <Link href={`/code/create/${params.problemID}/formats`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'formats' ? '' : ''}`}>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("formatsConstraints") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between items-center'>
                 <span className='font-bold'>Formats & Constraints</span>
@@ -161,7 +232,7 @@ const NewCreate = () => {
             </Link>
 
             <Link href={`/code/create/${params.problemID}/testcases`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'testcases' ? '' : ''}`}>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("testcases") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between items-center'>
                 <span className='font-bold'>Testcases</span>
@@ -170,7 +241,7 @@ const NewCreate = () => {
             </Link>
 
             <Link href={`/code/create/${params.problemID}/solution`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'solution' ? '' : ''}`}>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("solution") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between items-center'>
                 <span className='font-bold'>Solution & Explaination</span>
@@ -179,7 +250,7 @@ const NewCreate = () => {
             </Link>
 
             <Link href={`/code/create/${params.problemID}/note`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'note' ? '' : ''}`}>
-              <div className='w-1 bg-gray-400 mr-1.5'></div>
+              <div className='w-1 bg-transparent mr-1.5'></div>
 
               <div className='w-full flex justify-between items-center'>
                 <span className='font-bold'>Note</span>
@@ -189,9 +260,8 @@ const NewCreate = () => {
           </div>
         </div>
 
-        <div className='w-full flex justify-evenly text-red-500 font-bold bg-red-900 py-2'>
-          <button className='bg-white py-1 w-[45%]'>Preview</button>
-          <button className='bg-white py-1 w-[45%]'>Save</button>
+        <div className='w-full flex text-red-500 font-bold bg-red-900 p-2'>
+          <button className='bg-white py-1 w-full'>Review</button>
         </div>
       </div>
     </main>
