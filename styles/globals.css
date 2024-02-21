@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html{
+  overflow-y: hidden;
+}
+
 #create-problem-editor .ql-toolbar {
   background-color: rgb(127 29 29 / var(--tw-bg-opacity));
 }

@@ -1,8 +1,9 @@
 "use client";
 import dynamic from 'next/dynamic'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useContext } from 'react'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
+import { ProblemContext } from '@app/code/create/layout';
 
 const QuillEditor: any = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -10,8 +11,7 @@ const QuillEditor: any = dynamic(() => import('react-quill'), {
 });
 
 const Description = () => {
-  const [content, setContent] = useState<string>('');
-  const [isEditor, setIsEditor] = useState<boolean>(true);
+  const { problem, setProblem } = useContext(ProblemContext);
 
   const quillModules = {
     toolbar: [
@@ -42,10 +42,29 @@ const Description = () => {
   ];
 
   const handleEditorChange = (newContent: string) => {
-    setContent(newContent);
+    setProblem({
+      id: problem.id,
+      name: problem.name,
+      description: newContent,
+      inputFormat: problem.inputFormat,
+      outputFormat: problem.outputFormat,
+      constraints: problem.constraints,
+      difficulty: problem.difficulty,
+      tags: problem.tags,
+      submissions: problem.submissions,
+      testcases: problem.testcases,
+      note: problem.note,
+      tutorial: problem.tutorial,
+      solution: problem.solution,
+      createdBy: problem.createdBy,
+      timeLimit: problem.timeLimit,
+      memoryLimit: problem.memoryLimit
+    })
   };
 
-  useEffect(() => console.log(content), [content])
+  useEffect(() => {
+    console.log(problem.description)
+  }, [problem])
 
   useEffect(() => {
     if (typeof window !== 'undefined')
@@ -58,27 +77,17 @@ const Description = () => {
         <div className='text-2xl'>
           Description
         </div>
-        <div className='w-1/5 flex justify-evenly'>
-          <button className={`w-1/2 h-full rounded-l-md py-1 ${isEditor ? 'bg-white text-red-500' : ''}`} onClick={() => setIsEditor(true)}>Edit</button>
-          <button className={`w-1/2 h-full rounded-r-md py-1 ${isEditor ? '' : 'bg-white text-red-500'}`} onClick={() => setIsEditor(false)}>Preview</button>
-        </div>
       </nav>
 
       <div className='w-[90%] h-[80%] max-h-[80%] mt-10'>
-        {isEditor ?
-          <QuillEditor
-            value={content}
-            onChange={handleEditorChange}
-            modules={quillModules}
-            formats={quillFormats}
-            className="w-full h-full text-white"
-            id='create-problem-editor'
-          /> :
-          <div 
-            dangerouslySetInnerHTML={{ __html: content }} 
-            className='w-full h-full text-white' 
-          />
-        }
+        <QuillEditor
+          value={problem.description}
+          onChange={handleEditorChange}
+          modules={quillModules}
+          formats={quillFormats}
+          className="w-full h-full text-white"
+          id='create-problem-editor'
+        />
       </div>
     </div>
   )

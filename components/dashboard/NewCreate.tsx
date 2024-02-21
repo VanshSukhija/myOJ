@@ -1,11 +1,12 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ProblemType } from '@components/content/problemset/ProblemNavbar';
 import problemset from '@components/dashboard/problems.json';
 import { notFound, usePathname, useParams } from 'next/navigation'
 import Link from 'next/link';
+import { ProblemContext } from '@app/code/create/layout'
 
 const Tags = [
   "2-sat", "binary search", "bitmasks", "brute force", "chinese remainder theorem", "combinatorics", "constructive algorithms", "data structures", "dfs and similar", "divide and conquer", "dp", "dsu", "expression parsing", "fft", "flows", "games", "geometry", "graph matchings", "graphs", "greedy", "hashing", "implementation", "interactive", "math", "matrices", "meet-in-the-middle", "number theory", "probabilities", "schedules", "shortest paths", "sortings", "string suffix structures", "strings", "ternary search", "trees", "two pointers"
@@ -17,26 +18,45 @@ const NewCreate = () => {
   const tab = pathname[pathname.length - 1]
   const user = "user1"
 
-  const [problem, setProblem] = useState<ProblemType>({
-    id: Number(params.problemID),
-    name: "",
-    description: "",
-    inputFormat: "",
-    outputFormat: "",
-    constraints: "",
-    difficulty: 0,
-    tags: [],
-    submissions: [],
-    testcases: [],
-    note: "",
-    tutorial: "",
-    solution: "",
-    createdBy: "",
-    timeLimit: 0,
-    memoryLimit: 0
-  })
+  // const [problem, setProblem] = useState<ProblemType>({
+  //   id: Number(params.problemID),
+  //   name: "",
+  //   description: "",
+  //   inputFormat: "",
+  //   outputFormat: "",
+  //   constraints: "",
+  //   difficulty: 0,
+  //   tags: [],
+  //   submissions: [],
+  //   testcases: [],
+  //   note: "",
+  //   tutorial: "",
+  //   solution: "",
+  //   createdBy: "",
+  //   timeLimit: 0,
+  //   memoryLimit: 0
+  // })
+  const { problem, setProblem } = useContext(ProblemContext);
 
   useEffect(() => {
+    setProblem({
+      id: Number(params.problemID),
+      name: "",
+      description: "",
+      inputFormat: "",
+      outputFormat: "",
+      constraints: "",
+      difficulty: 0,
+      tags: [],
+      submissions: [],
+      testcases: [],
+      note: "",
+      tutorial: "",
+      solution: "",
+      createdBy: "",
+      timeLimit: 0,
+      memoryLimit: 0
+    })
     const fetchProblem = async () => {
       try {
         const arr = problemset.problems.filter((problem: ProblemType) => problem.id === Number(params.problemID))
@@ -94,7 +114,7 @@ const NewCreate = () => {
     }
 
     else if (name === "description") {
-      if (problem.description.length < 10) {
+      if (problem.description.length < 100) {
         return false
       }
     }
@@ -179,7 +199,7 @@ const NewCreate = () => {
                 }}>
                   <option value="">Select tags</option>
                   {
-                    Tags.map((tag: string) => {
+                    Tags.filter((t: string) => !problem.tags.includes(t)).map((tag: string) => {
                       return (
                         <option key={tag} value={tag} className='text-black focus:outline-none'>{tag}</option>
                       )
@@ -222,7 +242,7 @@ const NewCreate = () => {
               </div>
             </Link>
 
-            <Link href={`/code/create/${params.problemID}/formats`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'formats' ? '' : ''}`}>
+            <Link href={`/code/create/${params.problemID}/formats`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'formats' ? 'bg-white text-red-500' : ''}`}>
               <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("formatsConstraints") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between items-center'>
@@ -231,7 +251,7 @@ const NewCreate = () => {
               </div>
             </Link>
 
-            <Link href={`/code/create/${params.problemID}/testcases`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'testcases' ? '' : ''}`}>
+            <Link href={`/code/create/${params.problemID}/testcases`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'testcases' ? 'bg-white text-red-500' : ''}`}>
               <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("testcases") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between items-center'>
@@ -240,7 +260,7 @@ const NewCreate = () => {
               </div>
             </Link>
 
-            <Link href={`/code/create/${params.problemID}/solution`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'solution' ? '' : ''}`}>
+            <Link href={`/code/create/${params.problemID}/solution`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'solution' ? 'bg-white text-red-500' : ''}`}>
               <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("solution") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between items-center'>
@@ -249,7 +269,7 @@ const NewCreate = () => {
               </div>
             </Link>
 
-            <Link href={`/code/create/${params.problemID}/note`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'note' ? '' : ''}`}>
+            <Link href={`/code/create/${params.problemID}/note`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'note' ? 'bg-white text-red-500' : ''}`}>
               <div className='w-1 bg-transparent mr-1.5'></div>
 
               <div className='w-full flex justify-between items-center'>
