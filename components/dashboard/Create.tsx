@@ -13,7 +13,9 @@ const Create = () => {
       <div className='w-full flex flex-col items-center'>
         <div className='text-2xl font-bold my-1.5'>Create Problem</div>
 
-        <Link href={`/code/create/${problemID}/description`} className='bg-white text-red-500 text-center font-bold py-1 w-[90%] mt-1 mb-3'>New Problem</Link>
+        <Link href={`/code/create/${problemID}/description`} className='bg-white text-red-500 text-center font-bold py-1 w-[90%] mt-1 mb-3'>
+          New Problem
+        </Link>
 
         <div className='w-full'>
           <div className='font-bold px-1 text-xl text-center'>Your Problems</div>

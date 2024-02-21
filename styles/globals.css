@@ -2,26 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+#create-problem-editor .ql-toolbar {
+  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.ql-toolbar .ql-stroke {
+  fill: none !important;
+  stroke: #fff !important;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-} */
+.ql-toolbar .ql-fill {
+  fill: #fff !important;
+  stroke: none !important;
+}
+
+.ql-toolbar .ql-picker {
+  color: #fff !important;
+}
+
+.ql-toolbar .ql-picker-options {
+  color: rgb(127 29 29 / var(--tw-bg-opacity)) !important;
+}
+
+#create-problem-editor .ql-snow .ql-toolbar button:hover,
+#create-problem-editor .ql-snow .ql-toolbar button:focus,
+#create-problem-editor .ql-snow .ql-toolbar button.ql-active,
+#create-problem-editor .ql-snow.ql-toolbar .ql-picker-label:hover,
+#create-problem-editor .ql-snow.ql-toolbar .ql-picker-label.ql-active,
+#create-problem-editor .ql-snow.ql-toolbar .ql-picker-item:hover,
+#create-problem-editor .ql-snow.ql-toolbar .ql-picker-item.ql-selected {
+  color: rgb(239 68 68 / var(--tw-bg-opacity)) !important;
+  stroke: rgb(239 68 68 / var(--tw-bg-opacity)) !important;
+  fill: rgb(239 68 68 / var(--tw-bg-opacity)) !important;
+}
+
+.ql-tooltip {
+  left: auto !important;
+  right: 0 !important;
+  top: 0 !important;
+}

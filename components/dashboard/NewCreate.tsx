@@ -147,7 +147,7 @@ const NewCreate = () => {
 
               <div className='w-full'>
                 <label htmlFor='difficultyRating' className='font-bold'>Difficulty Rating: {problem.difficulty} </label>
-                <input id='difficultyRating' type='range' min={100} max={3000} step={100} defaultValue={100} className='w-full' name='difficulty' value={problem.difficulty} onChange={changeProblem} />
+                <input id='difficultyRating' type='range' min={100} max={3000} step={100} className='w-full' name='difficulty' value={problem.difficulty} onChange={changeProblem} />
               </div>
             </div>
 
