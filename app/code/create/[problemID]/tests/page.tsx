@@ -1,9 +1,9 @@
 import React from 'react'
-import Testcases from '@components/content/create/Testcases'
+import Tests from '@components/content/create/Tests'
 
 const page = () => {
   return (
-    <Testcases />
+    <Tests />
   )
 }
 

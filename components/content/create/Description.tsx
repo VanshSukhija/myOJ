@@ -10,36 +10,36 @@ const QuillEditor: any = dynamic(() => import('react-quill'), {
   loading: () => <p>Loading ...</p>
 });
 
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
+    [{ formula: 'latex' }],
+    [{ script: 'sub' }, { script: 'super' }],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link', 'image'],
+    ['clean'],
+  ],
+};
+
+const quillFormats = [
+  'header',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'formula',
+  'script',
+  'list',
+  'bullet',
+  'link',
+  'image',
+  'code-block',
+];
+
 const Description = () => {
   const { problem, setProblem } = useContext(ProblemContext);
-
-  const quillModules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
-      [{ formula: 'latex' }],
-      [{ script: 'sub' }, { script: 'super' }],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link', 'image'],
-      ['clean'],
-    ],
-  };
-
-  const quillFormats = [
-    'header',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'formula',
-    'script',
-    'list',
-    'bullet',
-    'link',
-    'image',
-    'code-block',
-  ];
 
   const handleEditorChange = (newContent: string) => {
     setProblem({
@@ -63,7 +63,7 @@ const Description = () => {
   };
 
   useEffect(() => {
-    console.log(problem.description)
+    console.log(problem)
   }, [problem])
 
   useEffect(() => {
@@ -79,16 +79,18 @@ const Description = () => {
         </div>
       </nav>
 
-      <div className='w-[90%] h-[80%] max-h-[80%] mt-10'>
+      <div className='w-full px-3 py-1 mb-3 border-b-2 border-red-500 font-bold text-2xl'>Problem Statement</div>
+
+      <div className='w-[90%] h-[80%] max-h-[80%] mb-10'>
         <QuillEditor
           value={problem.description}
           onChange={handleEditorChange}
           modules={quillModules}
           formats={quillFormats}
-          className="w-full h-full text-white"
-          id='create-problem-editor'
+          className="create-problem-editor w-full h-full text-white"
         />
       </div>
+      <br />
     </div>
   )
 }

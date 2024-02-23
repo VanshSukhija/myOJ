@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Testcases = () => {
+const Tests = () => {
   return (
     <div>
       Testcases
@@ -8,4 +8,4 @@ const Testcases = () => {
   )
 }
 
-export default Testcases
+export default Tests

@@ -73,13 +73,15 @@ const ProblemDescription = () => {
       </section>
       <br />
 
-      {data.note &&
+      {data.note && <>
         <section>
           <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Note</div>
           <pre className='whitespace-pre-wrap break-words'>
             {data.note}
           </pre>
         </section>
+        <br />
+      </>
       }
     </div>
   )

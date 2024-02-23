@@ -10,7 +10,7 @@
             "outputFormat" : "Print one integer — a number k such that, if you take k leftmost items and your friend takes the remaining n−k items, each of you and your friend get at least one item, your number of loaves is different from your friend's, and your number of onions is different from your friend's. If there are several possible answers, print any of them. If there are no possible answers, print the number −1.\n",
 
             "constraints" : "2 <= n <= 200\n",
-            "difficulty" : 800,
+            "difficulty" : 0,
             "tags" : ["math", "geometry"],
             "timeLimit" : 1000, 
             "memoryLimit" : 256,
@@ -59,7 +59,7 @@
             "outputFormat" : "Print one integer — a number k such that, if you take k leftmost items and your friend takes the remaining n−k items, each of you and your friend get at least one item, your number of loaves is different from your friend's, and your number of onions is different from your friend's. If there are several possible answers, print any of them. If there are no possible answers, print the number −1.\n",
 
             "constraints" : "2 <= n <= 200\n",
-            "difficulty" : 800,
+            "difficulty" : 1,
             "tags" : ["math", "geometry"],
             "timeLimit" : 1000, 
             "memoryLimit" : 256, 
@@ -108,7 +108,7 @@
             "outputFormat" : "Print one integer — a number k such that, if you take k leftmost items and your friend takes the remaining n−k items, each of you and your friend get at least one item, your number of loaves is different from your friend's, and your number of onions is different from your friend's. If there are several possible answers, print any of them. If there are no possible answers, print the number −1.\n",
 
             "constraints" : "2 <= n <= 200\n",
-            "difficulty" : 800,
+            "difficulty" : 2,
             "tags" : ["math", "geometry"],
             "timeLimit" : 1000, 
             "memoryLimit" : 256, 
@@ -157,7 +157,7 @@
             "outputFormat" : "Print one integer — a number k such that, if you take k leftmost items and your friend takes the remaining n−k items, each of you and your friend get at least one item, your number of loaves is different from your friend's, and your number of onions is different from your friend's. If there are several possible answers, print any of them. If there are no possible answers, print the number −1.\n",
 
             "constraints" : "2 <= n <= 200\n",
-            "difficulty" : 800,
+            "difficulty" : 0,
             "tags" : ["math", "geometry"],
             "timeLimit" : 1000, 
             "memoryLimit" : 256, 

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ProblemType } from '@components/content/problemset/ProblemNavbar';
@@ -17,25 +17,6 @@ const NewCreate = () => {
   const pathname = usePathname().split('/')
   const tab = pathname[pathname.length - 1]
   const user = "user1"
-
-  // const [problem, setProblem] = useState<ProblemType>({
-  //   id: Number(params.problemID),
-  //   name: "",
-  //   description: "",
-  //   inputFormat: "",
-  //   outputFormat: "",
-  //   constraints: "",
-  //   difficulty: 0,
-  //   tags: [],
-  //   submissions: [],
-  //   testcases: [],
-  //   note: "",
-  //   tutorial: "",
-  //   solution: "",
-  //   createdBy: "",
-  //   timeLimit: 0,
-  //   memoryLimit: 0
-  // })
   const { problem, setProblem } = useContext(ProblemContext);
 
   useEffect(() => {
@@ -75,7 +56,7 @@ const NewCreate = () => {
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        [name]: type === "number" || type === "range" ? Number(value) : value
+        [name]: type === "number" ? Number(value) : value
       }
     })
   }
@@ -85,12 +66,6 @@ const NewCreate = () => {
       if (problem.name.length < 5 || problem.name.length > 50) {
         return false
       } else if (problemset.problems.filter((prob: ProblemType) => problem.name === prob.name && problem.id !== prob.id).length > 0) {
-        return false
-      }
-    }
-
-    else if (name === "difficulty") {
-      if (problem.difficulty < 100 || problem.difficulty > 3000) {
         return false
       }
     }
@@ -120,19 +95,19 @@ const NewCreate = () => {
     }
 
     else if (name === "formatsConstraints") {
-      if (problem.inputFormat.length < 10 || problem.outputFormat.length < 10 || problem.constraints.length < 10) {
+      if (problem.inputFormat.length < 50 || problem.outputFormat.length < 50 || problem.constraints.length < 50) {
         return false
       }
     }
 
-    else if (name === "testcases") {
+    else if (name === "tests") {
       if (problem.testcases.length === 0) {
         return false
       }
     }
 
     else if (name === "solution") {
-      if (problem.solution.length < 10 || problem.tutorial.length < 10) {
+      if (problem.solution.length < 50 || problem.tutorial.length < 50) {
         return false
       }
     }
@@ -165,9 +140,27 @@ const NewCreate = () => {
             <div className='w-full flex p-2 pl-0'>
               <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("difficulty") ? 'bg-green-400' : ''}`}></div>
 
-              <div className='w-full'>
-                <label htmlFor='difficultyRating' className='font-bold'>Difficulty Rating: {problem.difficulty} </label>
-                <input id='difficultyRating' type='range' min={100} max={3000} step={100} className='w-full' name='difficulty' value={problem.difficulty} onChange={changeProblem} />
+              <div className='w-full flex p-2 pl-0'>
+                <label htmlFor='difficulty' className='font-bold w-1/2'>Difficulty: </label>
+                <div className='w-1/2 text-right flex justify-end'>
+                  <select
+                    name="difficultyRating"
+                    id="difficulty"
+                    className={`${problem.difficulty == 0 ? 'bg-green-500' : problem.difficulty == 1 ? 'bg-yellow-500' : 'bg-red-500'} px-1 focus:outline-none border-2 border-white`} value={problem.difficulty}
+                    onChange={(e) => {
+                      const select = e.target as HTMLSelectElement
+                      setProblem((prev: ProblemType) => {
+                        return {
+                          ...prev,
+                          difficulty: Number(select.value)
+                        }
+                      })
+                    }}>
+                    <option value="0" className='bg-green-500 hover:bg-green-500'>Easy</option>
+                    <option value="1" className='bg-yellow-500 hover:bg-yellow-500'>Medium</option>
+                    <option value="2" className='bg-red-500 hover:bg-red-500'>Hard</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -215,7 +208,7 @@ const NewCreate = () => {
               <div className='w-full flex justify-between'>
                 <label htmlFor='timeLimit' className='font-bold'>Time Limit:</label>
                 <div className='w-1/2 text-right flex justify-end'>
-                  <input type="number" id="timeLimit" className='w-1/2 text-black px-1 focus:outline-none' name='timeLimit' value={problem.timeLimit} onChange={changeProblem} />
+                  <input type="number" id="timeLimit" className='w-1/2 text-black px-1 focus:outline-none' name='timeLimit' value={problem.timeLimit} onChange={changeProblem} step={500} min={0} />
                   <div className='ml-1 w-1/6'>ms</div>
                 </div>
               </div>
@@ -227,7 +220,7 @@ const NewCreate = () => {
               <div className='w-full flex justify-between'>
                 <label htmlFor='memoryLimit' className='font-bold'>Memory Limit:</label>
                 <div className='w-1/2 text-right flex justify-end'>
-                  <input type="number" id="memoryLimit" className='w-1/2 text-black px-1 focus:outline-none' name='memoryLimit' value={problem.memoryLimit} onChange={changeProblem} />
+                  <input type="number" id="memoryLimit" className='w-1/2 text-black px-1 focus:outline-none' name='memoryLimit' value={problem.memoryLimit} onChange={changeProblem} step={128} min={0} />
                   <div className='ml-1 w-1/6'>MB</div>
                 </div>
               </div>
@@ -251,11 +244,11 @@ const NewCreate = () => {
               </div>
             </Link>
 
-            <Link href={`/code/create/${params.problemID}/testcases`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'testcases' ? 'bg-white text-red-500' : ''}`}>
-              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("testcases") ? 'bg-green-400' : ''}`}></div>
+            <Link href={`/code/create/${params.problemID}/tests`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'tests' ? 'bg-white text-red-500' : ''}`}>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("tests") ? 'bg-green-400' : ''}`}></div>
 
               <div className='w-full flex justify-between items-center'>
-                <span className='font-bold'>Testcases</span>
+                <span className='font-bold'>Tests</span>
                 <FontAwesomeIcon icon={faAngleRight} className="text-s" />
               </div>
             </Link>

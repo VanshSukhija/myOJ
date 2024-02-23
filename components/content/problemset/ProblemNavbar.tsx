@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisV, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faCloud, faComputer, faEllipsisV, faMemory, faPlay, faStore, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
 import problemset from "@components/dashboard/problems.json"
 import { notFound, useParams, usePathname } from 'next/navigation'
 import Link from 'next/link';
@@ -49,7 +49,7 @@ const ProblemNavbar = () => {
   const params = useParams()
   const pathname = usePathname().split('/')
   const data = getProblem(Number(params.problemID))
-  const tab = pathname[pathname.length-1]
+  const tab = pathname[pathname.length - 1]
 
   const [code, setCode] = useState<string>('')
   const [extension, setExtension] = useState<string>('')
@@ -109,13 +109,18 @@ const ProblemNavbar = () => {
         <div className='flex flex-col justify-between'>
           <div className='text-2xl font-bold'>{data.name}</div>
           <div className='text-white'>
-            {data.difficulty} | {
-              data.tags?.map((tag: string, index: number) => {
-                return (
-                  <span key={tag}>{index==data.tags.length-1 ? tag : tag + ','} </span>
-                )
-              })
-            }
+            {data.difficulty == 0 ? <span className='bg-green-500 px-2 rounded-lg'>Easy</span> :
+              data.difficulty == 1 ? <span className='bg-yellow-500 px-2 rounded-lg'>Medium</span> :
+                <span className='bg-red-500 px-2 rounded-lg'>Hard</span>
+            } |
+            {data.tags?.map((tag: string, index: number) => {
+              return (
+                <span key={tag}> {index == data.tags.length - 1 ? tag : tag + ','}</span>
+              )
+            })}
+          </div>
+          <div className="text-white">
+            <FontAwesomeIcon icon={faClock} title="Time Limit" /> <code title='Time Limit'>{data.timeLimit / 1000}s</code> | <FontAwesomeIcon icon={faThunderstorm} title="Memory Limit" /> <code title='Memory Limit'>{data.memoryLimit}MB</code>
           </div>
         </div>
 
