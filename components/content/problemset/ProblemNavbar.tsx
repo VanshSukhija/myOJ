@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faCloud, faComputer, faEllipsisV, faMemory, faPlay, faStore, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faEllipsisV, faPlay, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
 import problemset from "@components/dashboard/problems.json"
 import { notFound, useParams, usePathname } from 'next/navigation'
 import Link from 'next/link';
@@ -106,7 +106,7 @@ const ProblemNavbar = () => {
   return (
     <>
       <nav className='p-1.5 flex justify-between border-b-2 bg-cyan-600'>
-        <div className='flex flex-col justify-between'>
+        <div className='flex flex-col justify-between gap-1'>
           <div className='text-2xl font-bold'>{data.name}</div>
           <div className='text-white'>
             {data.difficulty == 0 ? <span className='bg-green-500 px-2 rounded-lg'>Easy</span> :
@@ -119,8 +119,15 @@ const ProblemNavbar = () => {
               )
             })}
           </div>
-          <div className="text-white">
-            <FontAwesomeIcon icon={faClock} title="Time Limit" /> <code title='Time Limit'>{data.timeLimit / 1000}s</code> | <FontAwesomeIcon icon={faThunderstorm} title="Memory Limit" /> <code title='Memory Limit'>{data.memoryLimit}MB</code>
+          <div className="text-white flex gap-4">
+            <div className='w-fit h-fit flex items-center gap-1'>
+              <FontAwesomeIcon icon={faClock} title="Time Limit" />
+              <code title='Time Limit'>{data.timeLimit / 1000}s</code>
+            </div>
+            <div className='w-fit h-fit flex items-center gap-1'>
+              <FontAwesomeIcon icon={faThunderstorm} title="Memory Limit" />
+              <code title='Memory Limit'>{data.memoryLimit}MB</code>
+            </div>
           </div>
         </div>
 

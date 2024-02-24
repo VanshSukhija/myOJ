@@ -104,6 +104,12 @@ const NewCreate = () => {
       if (problem.testcases.length === 0) {
         return false
       }
+
+      for (const testcase of problem.testcases) {
+        if (!testcase.input.length || testcase.input == '\n' || !testcase.output.length || testcase.output == '\n') {
+          return false
+        }
+      }
     }
 
     else if (name === "solution") {

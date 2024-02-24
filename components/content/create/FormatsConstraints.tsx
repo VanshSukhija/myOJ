@@ -4,6 +4,7 @@ import React, { useEffect, useContext } from 'react'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import { ProblemContext } from '@app/code/create/layout';
+import { ProblemType } from '@components/content/problemset/ProblemNavbar';
 
 const QuillEditor: any = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -65,23 +66,11 @@ const InputFormat = () => {
   const { problem, setProblem } = useContext(ProblemContext);
 
   const handleEditorChange = (newContent: string) => {
-    setProblem({
-      id: problem.id,
-      name: problem.name,
-      description: problem.description,
-      inputFormat: newContent,
-      outputFormat: problem.outputFormat,
-      constraints: problem.constraints,
-      difficulty: problem.difficulty,
-      tags: problem.tags,
-      submissions: problem.submissions,
-      testcases: problem.testcases,
-      note: problem.note,
-      tutorial: problem.tutorial,
-      solution: problem.solution,
-      createdBy: problem.createdBy,
-      timeLimit: problem.timeLimit,
-      memoryLimit: problem.memoryLimit
+    setProblem((prev: ProblemType) => {
+      return {
+        ...prev,
+        inputFormat: newContent
+      }
     })
   };
 
@@ -95,7 +84,7 @@ const InputFormat = () => {
       <div className='w-[90%] h-[80%] max-h-[80%] mb-10'>
         <QuillEditor
           value={problem.inputFormat}
-          onChange={handleEditorChange}
+          onChange={(newContent: string) => handleEditorChange(newContent)}
           modules={quillModules}
           formats={quillFormats}
           className="create-problem-editor w-full h-full text-white"
@@ -110,23 +99,11 @@ const OutputFormat = () => {
   const { problem, setProblem } = useContext(ProblemContext);
 
   const handleEditorChange = (newContent: string) => {
-    setProblem({
-      id: problem.id,
-      name: problem.name,
-      description: problem.description,
-      inputFormat: problem.inputFormat,
-      outputFormat: newContent,
-      constraints: problem.constraints,
-      difficulty: problem.difficulty,
-      tags: problem.tags,
-      submissions: problem.submissions,
-      testcases: problem.testcases,
-      note: problem.note,
-      tutorial: problem.tutorial,
-      solution: problem.solution,
-      createdBy: problem.createdBy,
-      timeLimit: problem.timeLimit,
-      memoryLimit: problem.memoryLimit
+    setProblem((prev: ProblemType) => {
+      return {
+        ...prev,
+        outputFormat: newContent
+      }
     })
   };
 
@@ -140,7 +117,7 @@ const OutputFormat = () => {
       <div className='w-[90%] h-[80%] max-h-[80%] mb-10'>
         <QuillEditor
           value={problem.outputFormat}
-          onChange={handleEditorChange}
+          onChange={(newContent: string) => handleEditorChange(newContent)}
           modules={quillModules}
           formats={quillFormats}
           className="create-problem-editor w-full h-full text-white"
@@ -155,23 +132,11 @@ const Constraints = () => {
   const { problem, setProblem } = useContext(ProblemContext);
 
   const handleEditorChange = (newContent: string) => {
-    setProblem({
-      id: problem.id,
-      name: problem.name,
-      description: problem.description,
-      inputFormat: problem.inputFormat,
-      outputFormat: problem.outputFormat,
-      constraints: newContent,
-      difficulty: problem.difficulty,
-      tags: problem.tags,
-      submissions: problem.submissions,
-      testcases: problem.testcases,
-      note: problem.note,
-      tutorial: problem.tutorial,
-      solution: problem.solution,
-      createdBy: problem.createdBy,
-      timeLimit: problem.timeLimit,
-      memoryLimit: problem.memoryLimit
+    setProblem((prev: ProblemType) => {
+      return {
+        ...prev,
+        constraints: newContent
+      }
     })
   };
 
@@ -185,7 +150,7 @@ const Constraints = () => {
       <div className='w-[90%] h-[80%] max-h-[80%] mb-10'>
         <QuillEditor
           value={problem.constraints}
-          onChange={handleEditorChange}
+          onChange={(newContent: string) => handleEditorChange(newContent)}
           modules={quillModules}
           formats={quillFormats}
           className="create-problem-editor w-full h-full text-white"

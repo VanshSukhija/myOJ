@@ -4,6 +4,7 @@ import React, { useEffect, useContext } from 'react'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import { ProblemContext } from '@app/code/create/layout';
+import { ProblemType } from '@components/content/problemset/ProblemNavbar';
 
 const QuillEditor: any = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -42,23 +43,11 @@ const Description = () => {
   const { problem, setProblem } = useContext(ProblemContext);
 
   const handleEditorChange = (newContent: string) => {
-    setProblem({
-      id: problem.id,
-      name: problem.name,
-      description: newContent,
-      inputFormat: problem.inputFormat,
-      outputFormat: problem.outputFormat,
-      constraints: problem.constraints,
-      difficulty: problem.difficulty,
-      tags: problem.tags,
-      submissions: problem.submissions,
-      testcases: problem.testcases,
-      note: problem.note,
-      tutorial: problem.tutorial,
-      solution: problem.solution,
-      createdBy: problem.createdBy,
-      timeLimit: problem.timeLimit,
-      memoryLimit: problem.memoryLimit
+    setProblem((prev: ProblemType) => {
+      return {
+        ...prev,
+        description: newContent
+      }
     })
   };
 
