@@ -36,21 +36,24 @@ const Create = () => {
 
 const EditProblem = ({ data }: { data: ProblemType }) => {
   return (
-    <Link href={`/code/create/${data.id}/description`} className={`w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`} >
+    <Link href={`/code/create/${data.id}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`} >
       <div className='w-full'>
         <div>{data.id} | {data.name}</div>
         <div className='truncate'>
           {
             data.tags.map((tag: string, index: number) => {
               return (
-                <span key={tag} className='text-xs text-slate-300'>{tag}{index === data.tags.length - 1 ? '' : ', '} </span>
+                <span key={tag} className='text-xs text-slate-300 group-hover:text-red-500'>{tag}{index === data.tags.length - 1 ? '' : ', '} </span>
               )
             })
           }
         </div>
       </div>
-      <div className='w-12 text-right'>
-        <div>{data.difficulty}</div>
+      <div className='w-20 text-right'>
+        {data.difficulty == 0 ? <div><span className='bg-green-500 px-2 rounded-lg group-hover:text-white'>Easy</span></div> :
+          data.difficulty == 1 ? <div><span className='bg-yellow-500 px-2 rounded-lg group-hover:text-white'>Medium</span></div> :
+            <div><span className='bg-red-600 px-2 rounded-lg group-hover:text-white'>Hard</span></div>
+        }
         <FontAwesomeIcon icon={faAngleRight} className="text-s" />
       </div>
     </Link>
