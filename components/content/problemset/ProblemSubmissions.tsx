@@ -1,17 +1,13 @@
-"use client"
-import React, { useState, useEffect } from 'react'
+"use client";
+import React from 'react'
 import { useParams } from 'next/navigation'
-import { getProblem } from '@components/content/problemset/ProblemNavbar'
+import { ProblemType } from '@utils/types';
+import { getProblem } from '@utils/functions'
 import submissions from '@components/content/problemset/submissions.json'
-import { ProblemType } from './ProblemNavbar'
 
 const ProblemSubmissions = () => {
   const params = useParams()
-  const [data, setData] = useState<ProblemType>(Object)
-
-  useEffect(() => {
-    setData(getProblem(Number(params.problemID)))
-  }, [])
+  const data: ProblemType = getProblem(Number(params.problemID))
 
   return (
     <div className='p-1'>

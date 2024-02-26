@@ -4,7 +4,7 @@ import React, { useEffect, useContext } from 'react'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import { ProblemContext } from '@app/code/create/layout';
-import { ProblemType } from '@components/content/problemset/ProblemNavbar';
+import { ProblemType } from '@utils/types';
 
 const QuillEditor: any = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -74,10 +74,6 @@ const InputFormat = () => {
     })
   };
 
-  useEffect(() => {
-    console.log(problem)
-  }, [problem])
-
   return (
     <>
       <div className='w-full px-3 py-1 mb-3 border-b-2 border-red-500 font-bold text-2xl'>Input Format</div>
@@ -107,10 +103,6 @@ const OutputFormat = () => {
     })
   };
 
-  useEffect(() => {
-    console.log(problem)
-  }, [problem])
-
   return (
     <>
       <div className='w-full px-3 py-1 mb-3 border-b-2 border-red-500 font-bold text-2xl'>Output Format</div>
@@ -139,10 +131,6 @@ const Constraints = () => {
       }
     })
   };
-
-  useEffect(() => {
-    console.log(problem)
-  }, [problem])
 
   return (
     <>

@@ -1,7 +1,7 @@
 "use client";
-import React, { Dispatch, SetStateAction, useContext, useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useContext } from 'react'
 import { ProblemContext } from '@app/code/create/layout';
-import { ProblemType } from '../problemset/ProblemNavbar';
+import { ProblemType } from '@utils/types';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
@@ -21,10 +21,6 @@ const Tests = () => {
       }
     })
   }
-
-  useEffect(() => {
-    console.log(problem)
-  }, [problem])
 
   return (
     <div className='h-screen w-full overflow-auto flex flex-1 flex-col justify-start items-center'>
@@ -65,7 +61,7 @@ const Testcase = (
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        testcases: prev.testcases.map((test, idx) => {
+        testcases: prev.testcases.map((test: any, idx: number) => {
           if (idx === index) {
             return {
               ...test,
@@ -82,7 +78,7 @@ const Testcase = (
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        testcases: prev.testcases.filter((_, idx) => idx !== index)
+        testcases: prev.testcases.filter((_: any, idx: number) => idx !== index)
       }
     })
   }
@@ -91,8 +87,8 @@ const Testcase = (
     <div className='flex gap-2 my-2'>
       <div className='w-[4%] flex flex-col gap-2 font-bold'>
         #{index + 1}
-        <FontAwesomeIcon 
-          icon={faPlus} 
+        <FontAwesomeIcon
+          icon={faPlus}
           className='rotate-45 text-red-500 text-xl cursor-pointer'
           title='Delete Test'
           onClick={handleDelete}

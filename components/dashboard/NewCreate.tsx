@@ -2,7 +2,7 @@
 import React, { useEffect, useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { ProblemType } from '@components/content/problemset/ProblemNavbar';
+import { ProblemType } from '@utils/types';
 import problemset from '@components/dashboard/problems.json';
 import { notFound, usePathname, useParams } from 'next/navigation'
 import Link from 'next/link';

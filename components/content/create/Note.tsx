@@ -4,7 +4,7 @@ import React, { useEffect, useContext } from 'react'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import { ProblemContext } from '@app/code/create/layout';
-import { ProblemType } from '@components/content/problemset/ProblemNavbar';
+import { ProblemType } from '@utils/types';
 
 const QuillEditor: any = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -50,10 +50,6 @@ const Note = () => {
       }
     })
   };
-
-  useEffect(() => {
-    console.log(problem)
-  }, [problem])
 
   useEffect(() => {
     if (typeof window !== 'undefined')

@@ -4,7 +4,7 @@ import Dashboard from '@components/dashboard/Dashboard'
 import Loading from './loading'
 import { useParams } from 'next/navigation'
 import NewCreate from '@components/dashboard/NewCreate'
-import { ProblemType } from '@components/content/problemset/ProblemNavbar'
+import { ProblemType } from '@utils/types'
 
 export const ProblemContext = createContext<{
   problem: ProblemType;

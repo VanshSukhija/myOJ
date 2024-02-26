@@ -2,48 +2,10 @@
 import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faEllipsisV, faPlay, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
-import problemset from "@components/dashboard/problems.json"
-import { notFound, useParams, usePathname } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import Link from 'next/link';
-
-export type ProblemType = {
-  id: number;
-  name: string;
-  description: string;
-  inputFormat: string;
-  outputFormat: string;
-  constraints: string;
-  timeLimit: number;
-  memoryLimit: number;
-  difficulty: number;
-  tags: string[];
-  submissions: { // to be removed
-    id: number;
-    user: string;
-    time: number;
-    result: string;
-  }[];
-  testcases: {
-    id: number;
-    input: string;
-    output: string;
-    explaination: string;
-  }[];
-  note: string;
-  tutorial: string;
-  solution: string;
-  createdBy: string;
-}
-
-export function getProblem(id: number) {
-  let data: ProblemType = Object()
-
-  const arr = problemset.problems.filter(e => e.id === id)
-  if (!arr.length) return notFound()
-  data = arr[0]
-
-  return data;
-}
+import { codeRunner, getProblem } from '@utils/functions';
+import { ProblemType } from '@utils/types';
 
 const ProblemNavbar = () => {
   const params = useParams()
@@ -57,27 +19,8 @@ const ProblemNavbar = () => {
 
   const runTestCases = async (e: any) => {
     e.preventDefault()
-    setOutputArray([]);
-    try {
-      for (const testcase of data.testcases) {
-        await fetch(`http://localhost:3000/code/problemset/problems/${data.id}/api`, {
-          method: 'POST',
-          body: JSON.stringify({
-            code: code,
-            extension: extension,
-            input: testcase.input,
-          }),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-          .then(res => res.json())
-          .then(data => setOutputArray(prev => [...prev, data.output]))
-          .catch(err => console.error(err))
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    const output: string[] = await codeRunner(data, code, extension)
+    setOutputArray(output)
   }
 
   useEffect(() => {
@@ -156,6 +99,11 @@ const ProblemNavbar = () => {
         <Link href={`/code/problemset/problems/${params.problemID}/solution`}>
           <button className={`w-1/6 border-r-2 py-1 px-2 ${tab === 'solution' ? 'bg-sky-950' : ''}`}>
             Solution
+          </button>
+        </Link>
+        <Link href={`/code/problemset/problems/${params.problemID}/ide`}>
+          <button className={`w-1/6 border-r-2 py-1 px-2 ${tab === 'ide' ? 'bg-sky-950' : ''}`}>
+            IDE
           </button>
         </Link>
       </nav>

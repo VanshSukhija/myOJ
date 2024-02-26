@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import { ProblemType } from '@components/content/problemset/ProblemNavbar';
+import { ProblemType } from '@utils/types';
 import problemset from '@components/dashboard/problems.json';
 
 const Create = () => {
