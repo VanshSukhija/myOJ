@@ -12,8 +12,6 @@ CREATE TABLE `Account` (
     `scope` VARCHAR(191) NULL,
     `id_token` TEXT NULL,
     `session_state` VARCHAR(191) NULL,
-    `oauth_token_secret` VARCHAR(191) NULL,
-    `oauth_token` VARCHAR(191) NULL,
 
     UNIQUE INDEX `Account_provider_providerAccountId_key`(`provider`, `providerAccountId`),
     PRIMARY KEY (`id`)
@@ -35,9 +33,9 @@ CREATE TABLE `User` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NULL,
     `email` VARCHAR(191) NULL,
-    `admin` BOOLEAN NOT NULL DEFAULT false,
     `emailVerified` DATETIME(3) NULL,
     `image` VARCHAR(191) NULL,
+    `isAdmin` BOOLEAN NOT NULL DEFAULT false,
 
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
