@@ -5,6 +5,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import 'react-quill/dist/quill.snow.css';
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
+import AuthProvider from '@components/AuthProvider';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,7 +21,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   )
 }

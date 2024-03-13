@@ -1,12 +1,15 @@
 "use client"
 import React from 'react'
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBrain, faCalendar, faComments, faGear, faHome, faPen, faUser } from "@fortawesome/free-solid-svg-icons";
+import { useSession } from 'next-auth/react';
 
 const Navbar = () => {
   const pathname = usePathname().split('/')
+  const { data: session } = useSession()
+  if(!session) redirect('/')
 
   return (
     <nav className="text-slate-400 bg-black h-screen w-12 flex flex-col justify-between">
@@ -30,7 +33,10 @@ const Navbar = () => {
 
       <ul className="flex flex-col items-center gap-2">
         <Link className='border-l-2 border-green-500 w-full text-center' href="/code/profile"> {/* green */}
-          <FontAwesomeIcon icon={faUser} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'profile' ? 'text-green-500' : ''}`} title="Profile" />
+          {session ?
+            <img src={session.user.image} className="w-8 h-8 rounded-full m-2 cursor-pointer border-2 border-green-500" title="Profile" /> :
+            <FontAwesomeIcon icon={faUser} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'profile' ? 'text-green-500' : ''}`} title="Profile" />
+          }
         </Link>
         <Link className='border-l-2 border-slate-600 w-full text-center' href="/code/settings"> {/* slate */}
           <FontAwesomeIcon icon={faGear} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'settings' ? 'text-slate-600' : ''}`} title="Settings" />

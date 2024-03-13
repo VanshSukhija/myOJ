@@ -23,8 +23,16 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt'
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      return `${baseUrl}/code/home`
+    async session({ session, token }) {
+      session.user.id = token.id;
+      return session;
+    }, 
+    async jwt({ token, user, account }) {
+      if(account){
+        token.accessToken = account.access_token
+        token.id = user?.id
+      }
+      return token
     }
   }
 };
