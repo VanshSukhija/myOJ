@@ -1,5 +1,5 @@
 import React from 'react'
-import SolutionExplaination from '@components/content/create/SolutionExplaination'
+import SolutionExplaination from '@components/content/create/problem/SolutionExplaination'
 
 const page = () => {
   return (

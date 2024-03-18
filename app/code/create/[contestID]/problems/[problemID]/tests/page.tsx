@@ -1,9 +1,9 @@
 import React from 'react'
-import Note from '@components/content/create/Note'
+import Tests from '@components/content/create/problem/Tests'
 
 const page = () => {
   return (
-    <Note />
+    <Tests />
   )
 }
 

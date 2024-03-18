@@ -6,24 +6,25 @@ import { ProblemType } from '@utils/types';
 import problemset from '@components/dashboard/problems.json';
 
 const Create = () => {
-  const problemID = Math.floor(Math.random() * 1000000000)
+  const contestID = Math.floor(Math.random() * 100000000)
   const user = 'user1'
+
   return (
     <div className='w-full flex h-screen flex-col items-center justify-between bg-red-900'>
       <div className='w-full flex flex-col items-center'>
-        <div className='text-2xl font-bold my-1.5'>Create Problem</div>
+        <div className='text-2xl font-bold my-1.5'>Create Contest</div>
 
-        <Link href={`/code/create/${problemID}/description`} className='bg-white text-red-500 text-center font-bold py-1 w-[90%] mt-1 mb-3'>
-          New Problem
+        <Link href={`/code/create/${contestID}/description`} className='bg-white text-red-500 text-center font-bold py-1 w-[90%] mt-1 mb-3'>
+          New Contest
         </Link>
 
         <div className='w-full'>
-          <div className='font-bold px-1 text-xl text-center'>Your Problems</div>
+          <div className='font-bold px-1 text-xl text-center'>Your Contests</div>
           <div className='bg-red-500 w-full flex flex-col'>
             {problemset.problems.filter((prob: ProblemType) => prob.createdBy === user).map((problem: ProblemType) => {
               return (
                 <div key={problem.id} className='w-full'>
-                  <EditProblem data={problem} />
+                  <EditContest data={problem} />
                 </div>
               )
             })}
@@ -34,7 +35,7 @@ const Create = () => {
   )
 }
 
-const EditProblem = ({ data }: { data: ProblemType }) => {
+const EditContest = ({ data }: { data: ProblemType }) => {
   return (
     <Link href={`/code/create/${data.id}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`} >
       <div className='w-full'>

@@ -1,9 +1,10 @@
 import React from 'react'
-import Tests from '@components/content/create/Tests'
 
 const page = () => {
   return (
-    <Tests />
+    <div>
+      Add Problems To Contest
+    </div>
   )
 }
 

@@ -26,3 +26,14 @@ export type ProblemType = {
   solution: string;
   createdBy: string;
 }
+
+export type ContestType = {
+  id: number;
+  name: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+  registrationTime: string;
+  problems: ProblemType[]
+  createdBy: string;
+}

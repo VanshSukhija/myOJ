@@ -1,5 +1,5 @@
 import React from 'react'
-import FormatsConstraints from '@components/content/create/FormatsConstraints'
+import FormatsConstraints from '@components/content/create/problem/FormatsConstraints'
 
 const page = () => {
   return (

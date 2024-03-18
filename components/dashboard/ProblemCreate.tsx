@@ -1,12 +1,13 @@
 "use client"
 import React, { useEffect, useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { ProblemType } from '@utils/types';
+import { faAngleLeft, faAngleRight, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { ContestType, ProblemType } from '@utils/types';
 import problemset from '@components/dashboard/problems.json';
-import { notFound, usePathname, useParams } from 'next/navigation'
+import { usePathname, useParams } from 'next/navigation'
 import Link from 'next/link';
-import { ProblemContext } from '@app/code/create/layout'
+import { ContestContext, ProblemContext } from '@app/code/create/layout'
+import { useRouter } from 'next/navigation';
 
 const Tags = [
   "2-sat", "binary search", "bitmasks", "brute force", "chinese remainder theorem", "combinatorics", "constructive algorithms", "data structures", "dfs and similar", "divide and conquer", "dp", "dsu", "expression parsing", "fft", "flows", "games", "geometry", "graph matchings", "graphs", "greedy", "hashing", "implementation", "interactive", "math", "matrices", "meet-in-the-middle", "number theory", "probabilities", "schedules", "shortest paths", "sortings", "string suffix structures", "strings", "ternary search", "trees", "two pointers"
@@ -14,42 +15,25 @@ const Tags = [
 
 const NewCreate = () => {
   const params = useParams()
+  const router = useRouter()
   const pathname = usePathname().split('/')
   const tab = pathname[pathname.length - 1]
-  const user = "user1"
   const { problem, setProblem } = useContext(ProblemContext);
+  const { contest, setContest } = useContext(ContestContext);
+  const idx = Number(params.problemID) - 1
 
   useEffect(() => {
-    setProblem({
-      id: Number(params.problemID),
-      name: "",
-      description: "",
-      inputFormat: "",
-      outputFormat: "",
-      constraints: "",
-      difficulty: 0,
-      tags: [],
-      submissions: [],
-      testcases: [],
-      note: "",
-      tutorial: "",
-      solution: "",
-      createdBy: "",
-      timeLimit: 0,
-      memoryLimit: 0
-    })
-    const fetchProblem = async () => {
-      try {
-        const arr = problemset.problems.filter((problem: ProblemType) => problem.id === Number(params.problemID))
-        if (arr.length === 0) return;
-        if (arr[0].createdBy !== user) return notFound();
-        setProblem(arr[0])
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchProblem();
+    setProblem(contest.problems[idx])
   }, [])
+
+  useEffect(() => {
+    setContest((prev: ContestType) => {
+      return {
+        ...prev,
+        problems: [...prev.problems.slice(0, idx), problem, ...prev.problems.slice(idx + 1)]
+      }
+    })
+  }, [problem])
 
   const changeProblem = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target
@@ -121,11 +105,30 @@ const NewCreate = () => {
     return true
   }
 
+  const deleteProblem = () => {
+    setContest((prev: ContestType) => {
+      return {
+        ...prev,
+        problems: prev.problems.filter((prob: ProblemType) => prob.id !== problem.id)
+      }
+    })
+
+    router.push(`/code/create/${contest.id}/description`)
+  }
+
   return (
     <main className='text-white w-1/4 overflow-y-auto'>
       <div className='w-full flex h-screen flex-col items-center justify-between bg-red-900'>
         <div className='w-full flex flex-col items-center'>
-          <div className='text-2xl font-bold my-1.5'>Create Problem</div>
+          <div className='text-2xl font-bold my-1.5 flex items-center'>
+            <Link href={`/code/create/${contest.id}/description`} className='cursor-pointer'>
+              <FontAwesomeIcon
+                icon={faAngleLeft}
+                className="text-s relative right-20 cursor-pointer"
+              />
+            </Link>
+            <span>Create Problem</span>
+          </div>
 
           <div className='bg-red-500 w-full h-[100%] overflow-y-auto'>
             <div className='w-full flex p-2 pl-0'>
@@ -280,7 +283,12 @@ const NewCreate = () => {
         </div>
 
         <div className='w-full flex text-red-500 font-bold bg-red-900 p-2'>
-          <button className='bg-white py-1 w-full'>Review</button>
+          <button
+            className='bg-white py-1 w-full'
+            onClick={deleteProblem}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </main>
