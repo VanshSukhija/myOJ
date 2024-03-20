@@ -1,13 +1,24 @@
-import React from 'react'
+"use client";
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import { ProblemType } from '@utils/types';
-import problemset from '@components/dashboard/problems.json';
+import { ContestType } from '@utils/types';
+import { useSession } from 'next-auth/react';
 
 const Create = () => {
-  const contestID = Math.floor(Math.random() * 100000000)
-  const user = 'user1'
+  const { data: session } = useSession()
+  const contestID = `${Date.now()}`
+  const [allContests, setAllContests] = useState<ContestType[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/create/api`)
+      const data = await res.json()
+      setAllContests(() => data)
+    }
+    fetchData()
+  }, [])
 
   return (
     <div className='w-full flex h-screen flex-col items-center justify-between bg-red-900'>
@@ -21,13 +32,17 @@ const Create = () => {
         <div className='w-full'>
           <div className='font-bold px-1 text-xl text-center'>Your Contests</div>
           <div className='bg-red-500 w-full flex flex-col'>
-            {problemset.problems.filter((prob: ProblemType) => prob.createdBy === user).map((problem: ProblemType) => {
-              return (
-                <div key={problem.id} className='w-full'>
-                  <EditContest data={problem} />
-                </div>
-              )
-            })}
+            {
+              allContests
+                .filter((contest: ContestType) => contest.createdBy === session?.user.id)
+                .map((contest: ContestType, idx: number) => {
+                  return (
+                    <div key={idx} className='w-full'>
+                      <EditContest data={contest} />
+                    </div>
+                  )
+                })
+            }
           </div>
         </div>
       </div>
@@ -35,12 +50,12 @@ const Create = () => {
   )
 }
 
-const EditContest = ({ data }: { data: ProblemType }) => {
+const EditContest = ({ data }: { data: ContestType }) => {
   return (
     <Link href={`/code/create/${data.id}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`} >
       <div className='w-full'>
         <div>{data.id} | {data.name}</div>
-        <div className='truncate'>
+        {/* <div className='truncate'>
           {
             data.tags.map((tag: string, index: number) => {
               return (
@@ -48,12 +63,13 @@ const EditContest = ({ data }: { data: ProblemType }) => {
               )
             })
           }
-        </div>
+        </div> */}
       </div>
       <div className='w-20 text-right'>
-        {data.difficulty == 0 ? <div><span className='bg-green-500 px-2 rounded-lg group-hover:text-white'>Easy</span></div> :
-          data.difficulty == 1 ? <div><span className='bg-yellow-500 px-2 rounded-lg group-hover:text-white'>Medium</span></div> :
-            <div><span className='bg-red-600 px-2 rounded-lg group-hover:text-white'>Hard</span></div>
+        {
+          // data.difficulty == 0 ? <div><span className='bg-green-500 px-2 rounded-lg group-hover:text-white'>Easy</span></div> :
+          //   data.difficulty == 1 ? <div><span className='bg-yellow-500 px-2 rounded-lg group-hover:text-white'>Medium</span></div> :
+          //     <div><span className='bg-red-600 px-2 rounded-lg group-hover:text-white'>Hard</span></div>
         }
         <FontAwesomeIcon icon={faAngleRight} className="text-s" />
       </div>

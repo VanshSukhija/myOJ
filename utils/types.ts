@@ -1,5 +1,5 @@
 export type ProblemType = {
-  id: number;
+  id: string | string[];
   name: string;
   description: string;
   inputFormat: string;
@@ -28,7 +28,7 @@ export type ProblemType = {
 }
 
 export type ContestType = {
-  id: number;
+  id: string | string[];
   name: string;
   description: string;
   startTime: string;

@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation'
 import { ContestType, ProblemType } from '@utils/types'
 import ContestCreate from '@components/dashboard/ContestCreate'
 import NewCreate from '@components/dashboard/ProblemCreate'
+import { useSession } from 'next-auth/react'
 
 export const ContestContext = createContext<{
   contest: ContestType;
@@ -27,39 +28,39 @@ export const ProblemContext = createContext<{
   }
 });
 
-const emptyContest: ContestType = {
-  id: 0,
-  name: "",
-  description: "",
-  createdBy: "user1",
-  startTime: "",
-  endTime: "",
-  registrationTime: "",
-  problems: [],
-}
-
-const emptyProblem: ProblemType = {
-  id: 0,
-  name: "",
-  description: "",
-  inputFormat: "",
-  outputFormat: "",
-  constraints: "",
-  difficulty: 0,
-  tags: [],
-  submissions: [],
-  testcases: [],
-  note: "",
-  tutorial: "",
-  solution: "",
-  createdBy: "user1",
-  timeLimit: 0,
-  memoryLimit: 0
-
-}
-
 const layout = ({ children }: { children: React.ReactNode }) => {
   const params = useParams()
+  const { data: session } = useSession()
+
+  const emptyContest: ContestType = {
+    id: `${Date.now()}`,
+    name: "",
+    description: "",
+    createdBy: session?.user.id,
+    startTime: "",
+    endTime: "",
+    registrationTime: "",
+    problems: [],
+  }
+  const emptyProblem: ProblemType = {
+    id: `${Date.now()}`,
+    name: "",
+    description: "",
+    inputFormat: "",
+    outputFormat: "",
+    constraints: "",
+    difficulty: 0,
+    tags: [],
+    submissions: [],
+    testcases: [],
+    note: "",
+    tutorial: "",
+    solution: "",
+    createdBy: session?.user.id,
+    timeLimit: 0,
+    memoryLimit: 0
+  }
+
   const [contest, setContest] = useState<ContestType>(emptyContest)
   const [problem, setProblem] = useState<ProblemType>(emptyProblem)
 

@@ -3,7 +3,6 @@ import React, { useEffect, useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft, faAngleRight, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ContestType, ProblemType } from '@utils/types';
-import problemset from '@components/dashboard/problems.json';
 import { usePathname, useParams } from 'next/navigation'
 import Link from 'next/link';
 import { ContestContext, ProblemContext } from '@app/code/create/layout'
@@ -48,8 +47,6 @@ const NewCreate = () => {
   const validateProblem = (name: string) => {
     if (name === "name") {
       if (problem.name.length < 5 || problem.name.length > 50) {
-        return false
-      } else if (problemset.problems.filter((prob: ProblemType) => problem.name === prob.name && problem.id !== prob.id).length > 0) {
         return false
       }
     }

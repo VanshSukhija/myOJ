@@ -6,53 +6,54 @@ import { ContestType, ProblemType } from '@utils/types';
 import { usePathname, useParams, useRouter } from 'next/navigation'
 import Link from 'next/link';
 import { ContestContext } from '@app/code/create/layout'
-
-const emptyProblem: ProblemType = {
-  id: 0,
-  name: "",
-  description: "",
-  inputFormat: "",
-  outputFormat: "",
-  constraints: "",
-  difficulty: 0,
-  tags: [],
-  submissions: [],
-  testcases: [],
-  note: "",
-  tutorial: "",
-  solution: "",
-  createdBy: "user1",
-  timeLimit: 0,
-  memoryLimit: 0
-}
-
-const emptyContest: ContestType = {
-  id: 0,
-  name: "",
-  description: "",
-  createdBy: "user1",
-  startTime: "",
-  endTime: "",
-  registrationTime: "",
-  problems: [],
-}
+import { useSession } from 'next-auth/react';
 
 const ContestCreate = () => {
   const params = useParams()
   const router = useRouter()
   const pathname = usePathname().split('/')
   const tab = pathname[pathname.length - 1]
-  const user = "user1"
   const { contest, setContest } = useContext(ContestContext);
+  const { data: session } = useSession()
 
   useEffect(() => {
     setContest((prev: ContestType) => {
       return {
         ...prev,
-        id: Number(params.contestID)
+        id: params.contestID
       }
     })
   }, [])
+
+  const emptyProblem: ProblemType = {
+    id: `${Date.now()}`,
+    name: "",
+    description: "",
+    inputFormat: "",
+    outputFormat: "",
+    constraints: "",
+    difficulty: 0,
+    tags: [],
+    submissions: [],
+    testcases: [],
+    note: "",
+    tutorial: "",
+    solution: "",
+    createdBy: session?.user.id,
+    timeLimit: 0,
+    memoryLimit: 0
+  }
+  
+  const emptyContest: ContestType = {
+    id: `${Date.now()}`,
+    name: "",
+    description: "",
+    createdBy: session?.user.id,
+    startTime: "",
+    endTime: "",
+    registrationTime: "",
+    problems: [],
+  }
 
   const changeContestDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -99,12 +100,33 @@ const ContestCreate = () => {
       }
     }
 
+    if(contest.problems.length === 0) {
+      return false
+    }
+
     return true
   }
 
   const deleteContest = () => {
     setContest(emptyContest)
     router.push('/code/create')
+  }
+
+  const createContest = async () => {
+    if(!validateContestDetails("name") || !validateContestDetails("start time") || !validateContestDetails("end time") || !validateContestDetails("registration time") || !validateContestDetails("description")) {
+      return
+    }
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/create/api`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(contest)
+    })
+    const data = await res.json()
+    console.log(data)
+    deleteContest();
   }
 
   return (
@@ -170,9 +192,6 @@ const ContestCreate = () => {
                 <FontAwesomeIcon icon={faAngleRight} className="text-s" />
               </div>
             </Link>
-
-
-
           </div>
 
           <div className='w-full mt-1'>
@@ -188,15 +207,15 @@ const ContestCreate = () => {
                   }
                 })} />
             </div>
+
             <div className='bg-red-500 w-full flex flex-col'>
               {
                 contest.problems
-                  .filter((prob: ProblemType) => prob.createdBy === user)
+                  .filter((prob: ProblemType) => prob.createdBy === session?.user.id)
                   .map((problem: ProblemType, idx: number) => {
-                    problem.id = idx + 1
                     return (
-                      <div key={problem.id} className='w-full'>
-                        <ContestProblems problemData={problem} contestData={contest} />
+                      <div key={idx} className='w-full'>
+                        <ContestProblems problemData={problem} contestData={contest} index={idx} />
                       </div>
                     )
                   })
@@ -206,7 +225,7 @@ const ContestCreate = () => {
         </div>
 
         <div className='w-full flex gap-2 font-bold bg-red-900 p-2'>
-          <button className='bg-white text-red-500 py-1 w-full'>Create</button>
+          <button className='bg-white text-red-500 py-1 w-full' onClick={createContest}>Create</button>
           <button className='bg-red-500 text-white py-1 w-full' onClick={deleteContest}>Delete</button>
         </div>
       </div>
@@ -214,11 +233,11 @@ const ContestCreate = () => {
   )
 }
 
-const ContestProblems = ({ problemData, contestData }: { problemData: ProblemType, contestData: ContestType }) => {
+const ContestProblems = ({ problemData, contestData, index }: { problemData: ProblemType, contestData: ContestType, index: number }) => {
   return (
-    <Link href={`/code/create/${contestData.id}/problems/${problemData.id}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`} >
+    <Link href={`/code/create/${contestData.id}/problems/${index+1}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`}>
       <div className='w-full'>
-        <div>{problemData.id} | {problemData.name}</div>
+        <div>{index+1} | {problemData.name}</div>
         <div className='truncate'>
           {
             problemData.tags.map((tag: string, index: number) => {

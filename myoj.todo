@@ -1,7 +1,12 @@
+Update ProblemType
+    - Parse problem tags to string from array and vice versa
+    - Remove submission property
+    - Do something about the testcase array
+
 Implement MySQL queries for getting and posting data
 Implement Queues for problem submission
 Add Blog section to the website
-Create profile page for user
+Create Profile page for user
 
 Design home page for website
 Make website responsive
