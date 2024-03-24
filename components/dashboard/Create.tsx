@@ -1,24 +1,32 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Link from 'next/link';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { ContestType } from '@utils/types';
 import { useSession } from 'next-auth/react';
+import { ContestContext } from '@app/code/create/layout';
 
 const Create = () => {
   const { data: session } = useSession()
   const contestID = `${Date.now()}`
   const [allContests, setAllContests] = useState<ContestType[]>([])
+  const { hasRendered, setHasRendered } = useContext(ContestContext);
 
   useEffect(() => {
+    setHasRendered(() => false)
+
     const fetchData = async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/create/api`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/contests/api`)
       const data = await res.json()
       setAllContests(() => data)
     }
+
     fetchData()
   }, [])
+
+  useEffect(() => console.log(allContests), [allContests])
+  useEffect(() => console.log(hasRendered), [hasRendered])
 
   return (
     <div className='w-full flex h-screen flex-col items-center justify-between bg-red-900'>
@@ -38,7 +46,7 @@ const Create = () => {
                 .map((contest: ContestType, idx: number) => {
                   return (
                     <div key={idx} className='w-full'>
-                      <EditContest data={contest} />
+                      <EditContest contest={contest} />
                     </div>
                   )
                 })
@@ -50,16 +58,16 @@ const Create = () => {
   )
 }
 
-const EditContest = ({ data }: { data: ContestType }) => {
+const EditContest = ({ contest }: { contest: ContestType }) => {
   return (
-    <Link href={`/code/create/${data.id}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`} >
+    <Link href={`/code/create/${contest.contestID}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`} >
       <div className='w-full'>
-        <div>{data.id} | {data.name}</div>
+        <div>{contest.contestID} | {contest.contestName}</div>
         {/* <div className='truncate'>
           {
-            data.tags.map((tag: string, index: number) => {
+            contest.tags.map((tag: string, index: number) => {
               return (
-                <span key={tag} className='text-xs text-slate-300 group-hover:text-red-500'>{tag}{index === data.tags.length - 1 ? '' : ', '} </span>
+                <span key={tag} className='text-xs text-slate-300 group-hover:text-red-500'>{tag}{index === contest.tags.length - 1 ? '' : ', '} </span>
               )
             })
           }

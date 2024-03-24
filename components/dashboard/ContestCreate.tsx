@@ -13,28 +13,44 @@ const ContestCreate = () => {
   const router = useRouter()
   const pathname = usePathname().split('/')
   const tab = pathname[pathname.length - 1]
-  const { contest, setContest } = useContext(ContestContext);
+  const { contest, setContest, hasRendered, setHasRendered } = useContext(ContestContext);
   const { data: session } = useSession()
 
   useEffect(() => {
-    setContest((prev: ContestType) => {
-      return {
-        ...prev,
-        id: params.contestID
-      }
-    })
-  }, [])
+    const fetchData = async () => {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/contests/api`, {
+        method: 'POST',
+        body: JSON.stringify({
+          contestID: params.contestID
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => res.json())
+        .then(result => {
+          setContest(() => {
+            return result || emptyContest;
+          })
+          setHasRendered(true)
+        })
+        .catch(err => console.log(err))
+    }
+
+    !hasRendered && fetchData()
+  }, [params.contestID])
+
+  // useEffect(() => console.log(contest), [contest]);
 
   const emptyProblem: ProblemType = {
-    id: `${Date.now()}`,
-    name: "",
-    description: "",
+    problemID: `${Date.now()}`,
+    problemName: "",
+    problemDescription: "",
     inputFormat: "",
     outputFormat: "",
     constraints: "",
     difficulty: 0,
-    tags: [],
-    submissions: [],
+    tags: '',
     testcases: [],
     note: "",
     tutorial: "",
@@ -43,11 +59,11 @@ const ContestCreate = () => {
     timeLimit: 0,
     memoryLimit: 0
   }
-  
+
   const emptyContest: ContestType = {
-    id: `${Date.now()}`,
-    name: "",
-    description: "",
+    contestID: `${Date.now()}`,
+    contestName: "",
+    contestDescription: "",
     createdBy: session?.user.id,
     startTime: "",
     endTime: "",
@@ -67,7 +83,7 @@ const ContestCreate = () => {
 
   const validateContestDetails = (name: string) => {
     if (name === "name") {
-      if (contest.name.length < 5 || contest.name.length > 50) {
+      if (contest.contestName.length < 5 || contest.contestName.length > 50) {
         return false
       }
     }
@@ -95,13 +111,9 @@ const ContestCreate = () => {
     }
 
     if (name === "description") {
-      if (contest.description.length < 10) {
+      if (contest.contestDescription.length < 10) {
         return false
       }
-    }
-
-    if(contest.problems.length === 0) {
-      return false
     }
 
     return true
@@ -113,7 +125,7 @@ const ContestCreate = () => {
   }
 
   const createContest = async () => {
-    if(!validateContestDetails("name") || !validateContestDetails("start time") || !validateContestDetails("end time") || !validateContestDetails("registration time") || !validateContestDetails("description")) {
+    if (!validateContestDetails("name") || !validateContestDetails("start time") || !validateContestDetails("end time") || !validateContestDetails("registration time") || !validateContestDetails("description")) {
       return
     }
 
@@ -129,6 +141,10 @@ const ContestCreate = () => {
     deleteContest();
   }
 
+  const fixDateTime = (datetime: string) => {
+    return datetime.replace(':00.000Z', '');
+  }
+
   return (
     <main className='text-white w-1/4 overflow-y-auto'>
       <div className='w-full flex h-screen flex-col items-center justify-between bg-red-900'>
@@ -139,7 +155,7 @@ const ContestCreate = () => {
             <div className='w-full flex p-2 pl-0'>
               <div className='w-1 bg-transparent mr-1.5'></div>
 
-              <div className='w-full font-bold'>Contest ID: {contest.id}</div>
+              <div className='w-full font-bold'>Contest ID: {contest.contestID}</div>
             </div>
 
             <div className='w-full flex p-2 pl-0'>
@@ -147,7 +163,15 @@ const ContestCreate = () => {
 
               <div className='w-full'>
                 <label htmlFor='contestName' className='font-bold cursor-pointer'>Contest Name:</label>
-                <input id='contestName' name='name' type='text' className='w-full text-black focus:outline-none px-1' placeholder='The Easiest Contest Of All Time' value={contest.name} onChange={changeContestDetails} />
+                <input
+                  id='contestName'
+                  name='contestName'
+                  type='text'
+                  className='w-full text-black focus:outline-none px-1'
+                  placeholder='The Easiest Contest Of All Time'
+                  value={contest.contestName}
+                  onChange={changeContestDetails}
+                />
               </div>
             </div>
 
@@ -157,7 +181,14 @@ const ContestCreate = () => {
               <div className='w-full flex justify-between'>
                 <label htmlFor='registrationTime' className='font-bold'>Registration Time:</label>
                 <div className='w-1/2 text-right flex justify-end'>
-                  <input type="datetime-local" id="registrationTime" className='w-full text-black px-1 focus:outline-none' name='registrationTime' value={contest.registrationTime} onChange={changeContestDetails} />
+                  <input
+                    type="datetime-local"
+                    id="registrationTime"
+                    className='w-full text-black px-1 focus:outline-none'
+                    name='registrationTime'
+                    value={fixDateTime(contest.registrationTime)}
+                    onChange={changeContestDetails}
+                  />
                 </div>
               </div>
             </div>
@@ -168,7 +199,14 @@ const ContestCreate = () => {
               <div className='w-full flex justify-between'>
                 <label htmlFor='startTime' className='font-bold'>Start Time:</label>
                 <div className='w-1/2 text-right flex justify-end'>
-                  <input type="datetime-local" id="startTime" className='w-full text-black px-1 focus:outline-none' name='startTime' value={contest.startTime} onChange={changeContestDetails} />
+                  <input
+                    type="datetime-local"
+                    id="startTime"
+                    className='w-full text-black px-1 focus:outline-none'
+                    name='startTime'
+                    value={fixDateTime(contest.startTime)}
+                    onChange={changeContestDetails}
+                  />
                 </div>
               </div>
             </div>
@@ -179,7 +217,14 @@ const ContestCreate = () => {
               <div className='w-full flex justify-between'>
                 <label htmlFor='endTime' className='font-bold'>End Time:</label>
                 <div className='w-1/2 text-right flex justify-end'>
-                  <input type="datetime-local" id="endTime" className='w-full text-black px-1 focus:outline-none' name='endTime' value={contest.endTime} onChange={changeContestDetails} />
+                  <input
+                    type="datetime-local"
+                    id="endTime"
+                    className='w-full text-black px-1 focus:outline-none'
+                    name='endTime'
+                    value={fixDateTime(contest.endTime)}
+                    onChange={changeContestDetails}
+                  />
                 </div>
               </div>
             </div>
@@ -235,16 +280,18 @@ const ContestCreate = () => {
 
 const ContestProblems = ({ problemData, contestData, index }: { problemData: ProblemType, contestData: ContestType, index: number }) => {
   return (
-    <Link href={`/code/create/${contestData.id}/problems/${index+1}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`}>
+    <Link href={`/code/create/${contestData.contestID}/problems/${index + 1}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`}>
       <div className='w-full'>
-        <div>{index+1} | {problemData.name}</div>
+        <div>{index + 1} | {problemData.problemName}</div>
         <div className='truncate'>
           {
-            problemData.tags.map((tag: string, index: number) => {
-              return (
-                <span key={tag} className='text-xs text-slate-300 group-hover:text-red-500'>{tag}{index === problemData.tags.length - 1 ? '' : ', '} </span>
-              )
-            })
+            problemData.tags
+              .split(',')
+              .map((tag: string, idx: number) => {
+                return (
+                  tag && <span key={idx} className='text-xs text-slate-300 group-hover:text-red-500'>{tag}{idx === problemData.tags.split(',').length - 1 ? '' : ', '}</span>
+                )
+              })
           }
         </div>
       </div>

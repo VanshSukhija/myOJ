@@ -1,25 +1,18 @@
 export type ProblemType = {
-  id: string | string[];
-  name: string;
-  description: string;
+  problemID: string | string[];
+  problemName: string;
+  problemDescription: string;
   inputFormat: string;
   outputFormat: string;
   constraints: string;
   timeLimit: number;
   memoryLimit: number;
   difficulty: number;
-  tags: string[];
-  submissions: { // to be removed
-    id: number;
-    user: string;
-    time: number;
-    result: string;
-  }[];
+  tags: string;
   testcases: {
-    id: number;
+    id: string | string[];
     input: string;
-    output: string;
-    explaination: string;
+    expectedOutput: string;
   }[];
   note: string;
   tutorial: string;
@@ -28,9 +21,9 @@ export type ProblemType = {
 }
 
 export type ContestType = {
-  id: string | string[];
-  name: string;
-  description: string;
+  contestID: string | string[];
+  contestName: string;
+  contestDescription: string;
   startTime: string;
   endTime: string;
   registrationTime: string;

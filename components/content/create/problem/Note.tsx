@@ -5,39 +5,12 @@ import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import { ProblemContext } from '@app/code/create/layout';
 import { ProblemType } from '@utils/types';
+import { quillModules, quillFormats } from '@utils/constants';
 
 const QuillEditor: any = dynamic(() => import('react-quill'), {
   ssr: false,
   loading: () => <p>Loading ...</p>
 });
-
-const quillModules = {
-  toolbar: [
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
-    [{ formula: 'latex' }],
-    [{ script: 'sub' }, { script: 'super' }],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['link', 'image'],
-    ['clean'],
-  ],
-};
-
-const quillFormats = [
-  'header',
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'blockquote',
-  'formula',
-  'script',
-  'list',
-  'bullet',
-  'link',
-  'image',
-  'code-block',
-];
 
 const Note = () => {
   const { problem, setProblem } = useContext(ProblemContext);

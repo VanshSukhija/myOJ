@@ -5,39 +5,12 @@ import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import { ContestContext } from '@app/code/create/layout';
 import { ContestType } from '@utils/types';
+import { quillFormats, quillModules } from '@utils/constants';
 
 const QuillEditor: any = dynamic(() => import('react-quill'), {
   ssr: false,
   loading: () => <p>Loading ...</p>
 });
-
-const quillModules = {
-  toolbar: [
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code-block'],
-    [{ formula: 'latex' }],
-    [{ script: 'sub' }, { script: 'super' }],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['link', 'image'],
-    ['clean'],
-  ],
-};
-
-const quillFormats = [
-  'header',
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'blockquote',
-  'formula',
-  'script',
-  'list',
-  'bullet',
-  'link',
-  'image',
-  'code-block',
-];
 
 const Description = () => {
   const { contest, setContest } = useContext(ContestContext);
@@ -46,7 +19,7 @@ const Description = () => {
     setContest((prev: ContestType) => {
       return {
         ...prev,
-        description: newContent
+        contestDescription: newContent
       }
     })
   };
@@ -68,7 +41,7 @@ const Description = () => {
 
       <div className='w-[90%] h-[80%] max-h-[80%] mb-10'>
         <QuillEditor
-          value={contest.description}
+          value={contest.contestDescription}
           onChange={handleEditorChange}
           modules={quillModules}
           formats={quillFormats}

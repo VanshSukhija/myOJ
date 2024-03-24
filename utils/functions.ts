@@ -1,11 +1,10 @@
-import { ProblemType } from '@utils/types';
-import problemset from "@components/dashboard/problems.json";
+import { ContestType, ProblemType } from '@utils/types';
 
 export async function codeRunner(problem: ProblemType, code: string, language: string) {
   let outPutArray: string[] = [];
   try {
     for (const testcase of problem.testcases) {
-      await fetch(`http://localhost:3000/code/problemset/problems/${problem.id}/api`, {
+      await fetch(`http://localhost:3000/code/problemset/problems/${problem.problemID}/api`, {
         method: 'POST',
         body: JSON.stringify({
           code: code,
@@ -26,13 +25,40 @@ export async function codeRunner(problem: ProblemType, code: string, language: s
   return outPutArray;
 }
 
-export function getProblem(id: number) {
-  let data: ProblemType = Object()
+export async function getProblem(problemID: string | string[]) {
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/problemset/problems/${problemID}/getProblemByID`, {
+    method: 'POST',
+    body: JSON.stringify({
+      problemID: problemID
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(res => res.json())
+    .then(result => {
+      return result;
+    })
+    .catch(err => console.error(err))
 
-  const arr = problemset.problems.filter((e: ProblemType) => e.id === id)
-  if (arr.length){
-    data = arr[0]
-  }
-
-  return data;
+  return null;
 }
+
+// export async function getContest(contestID: string | string[]) {
+//   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/contests/api`, {
+//     method: 'POST',
+//     body: JSON.stringify({
+//       contestID: contestID
+//     }),
+//     headers: {
+//       'Content-Type': 'application/json'
+//     }
+//   })
+//     .then(res => res.json())
+//     .then(result => {
+//       return result;
+//     })
+//     .catch(err => console.error(err))
+
+//   return null;
+// }

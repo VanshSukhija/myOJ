@@ -13,10 +13,9 @@ const Tests = () => {
       return {
         ...prev,
         testcases: [...prev.testcases, {
-          id: prev.testcases.length,
+          id: `${Date.now()}`,
           input: '',
-          output: '',
-          explaination: ''
+          expectedOutput: '',
         }]
       }
     })
@@ -33,8 +32,8 @@ const Tests = () => {
       <div className='w-full px-3 py-1 mb-3 border-b-2 border-red-500 font-bold text-2xl'>Tests</div>
 
       <div className='w-full px-3 mb-10'>
-        {problem.testcases.map((test, index) => (
-          <Testcase index={index} data={test} setProblem={setProblem} />
+        {problem.testcases.map((test, idx) => (
+          <Testcase index={idx} data={test} setProblem={setProblem} />
         ))}
 
         <button
@@ -51,7 +50,7 @@ const Testcase = (
   { index, data, setProblem }:
     {
       index: number,
-      data: { id: number, input: string, output: string, explaination: string },
+      data: { id: string | string[], input: string, expectedOutput: string },
       setProblem: Dispatch<SetStateAction<ProblemType>>
     }
 ) => {
@@ -105,12 +104,12 @@ const Testcase = (
         className='focus:outline-none focus:outline-red-500 focus:border-none resize-none w-1/2 px-2 py-1 overflow-y-auto bg-black text-white border border-white'
       />
       <textarea
-        value={data.output}
+        value={data.expectedOutput}
         cols={30}
         rows={5}
         placeholder='expected output'
         wrap="true"
-        name='output'
+        name='expectedOutput'
         onChange={handleChange}
         className='focus:outline-none focus:outline-red-500 focus:border-none resize-none w-1/2 px-2 py-1 overflow-y-auto bg-black text-white border border-white'
       />

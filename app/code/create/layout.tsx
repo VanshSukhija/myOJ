@@ -11,9 +11,15 @@ import { useSession } from 'next-auth/react'
 export const ContestContext = createContext<{
   contest: ContestType;
   setContest: React.Dispatch<React.SetStateAction<ContestType>>;
+  hasRendered: boolean;
+  setHasRendered: React.Dispatch<React.SetStateAction<boolean>>;
 }>({
   contest: Object(),
   setContest: function (value: React.SetStateAction<ContestType>): void {
+    throw new Error('Function not implemented.')
+  },
+  hasRendered: false,
+  setHasRendered: function (value: React.SetStateAction<boolean>): void {
     throw new Error('Function not implemented.')
   }
 });
@@ -33,9 +39,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = useSession()
 
   const emptyContest: ContestType = {
-    id: `${Date.now()}`,
-    name: "",
-    description: "",
+    contestID: `${Date.now()}`,
+    contestName: "",
+    contestDescription: "",
     createdBy: session?.user.id,
     startTime: "",
     endTime: "",
@@ -43,15 +49,14 @@ const layout = ({ children }: { children: React.ReactNode }) => {
     problems: [],
   }
   const emptyProblem: ProblemType = {
-    id: `${Date.now()}`,
-    name: "",
-    description: "",
+    problemID: `${Date.now()}`,
+    problemName: "",
+    problemDescription: "",
     inputFormat: "",
     outputFormat: "",
     constraints: "",
     difficulty: 0,
-    tags: [],
-    submissions: [],
+    tags: '',
     testcases: [],
     note: "",
     tutorial: "",
@@ -63,9 +68,10 @@ const layout = ({ children }: { children: React.ReactNode }) => {
 
   const [contest, setContest] = useState<ContestType>(emptyContest)
   const [problem, setProblem] = useState<ProblemType>(emptyProblem)
+  const [hasRendered, setHasRendered] = useState(false)
 
   return (
-    <ContestContext.Provider value={{ contest, setContest }}>
+    <ContestContext.Provider value={{ contest, setContest, hasRendered, setHasRendered }}>
       <ProblemContext.Provider value={{ problem, setProblem }}>
         <Suspense fallback={<Loading />}>
           {
