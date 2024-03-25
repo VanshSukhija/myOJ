@@ -30,3 +30,13 @@ export type ContestType = {
   problems: ProblemType[]
   createdBy: string;
 }
+
+export type OnlyContestsType = {
+  contestID: string | string[];
+  contestName: string;
+  contestDescription: string;
+  startTime: string;
+  endTime: string;
+  registrationTime: string;
+  createdBy: string;
+}

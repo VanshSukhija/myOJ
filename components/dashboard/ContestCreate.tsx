@@ -7,6 +7,7 @@ import { usePathname, useParams, useRouter } from 'next/navigation'
 import Link from 'next/link';
 import { ContestContext } from '@app/code/create/layout'
 import { useSession } from 'next-auth/react';
+import { fixDateTime } from '@utils/functions';
 
 const ContestCreate = () => {
   const params = useParams()
@@ -40,7 +41,7 @@ const ContestCreate = () => {
     !hasRendered && fetchData()
   }, [params.contestID])
 
-  // useEffect(() => console.log(contest), [contest]);
+  useEffect(() => console.log(contest), [contest]);
 
   const emptyProblem: ProblemType = {
     problemID: `${Date.now()}`,
@@ -126,6 +127,7 @@ const ContestCreate = () => {
 
   const createContest = async () => {
     if (!validateContestDetails("name") || !validateContestDetails("start time") || !validateContestDetails("end time") || !validateContestDetails("registration time") || !validateContestDetails("description")) {
+      console.log('Make all the fields green')
       return
     }
 
@@ -139,10 +141,6 @@ const ContestCreate = () => {
     const data = await res.json()
     console.log(data)
     deleteContest();
-  }
-
-  const fixDateTime = (datetime: string) => {
-    return datetime.replace(':00.000Z', '');
   }
 
   return (

@@ -1,9 +1,4 @@
-Update ProblemType
-    - Parse problem tags to string from array and vice versa
-    - Remove submission property
-    - Do something about the testcase array
-
-Implement MySQL queries for getting and posting data
+Implement Delete route in Testcases and Problems 
 Implement Queues for problem submission
 Add Blog section to the website
 Create Profile page for user

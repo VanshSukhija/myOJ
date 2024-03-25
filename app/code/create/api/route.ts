@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import excuteQuery from "@utils/database";
 import { ContestType } from "@utils/types";
+import { fixDateTime } from "@utils/functions";
 
 export async function GET() {
   try {
@@ -23,9 +24,9 @@ export async function POST(req: Request) {
     contest.contestName,
     contest.contestDescription,
     contest.createdBy,
-    contest.registrationTime,
-    contest.startTime,
-    contest.endTime
+    fixDateTime(contest.registrationTime),
+    fixDateTime(contest.startTime),
+    fixDateTime(contest.endTime)
   ]
 
   const problemValues = contest.problems.map((problem) => {

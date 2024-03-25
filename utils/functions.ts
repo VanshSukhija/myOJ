@@ -1,4 +1,4 @@
-import { ContestType, ProblemType } from '@utils/types';
+import { ProblemType } from '@utils/types';
 
 export async function codeRunner(problem: ProblemType, code: string, language: string) {
   let outPutArray: string[] = [];
@@ -42,6 +42,10 @@ export async function getProblem(problemID: string | string[]) {
     .catch(err => console.error(err))
 
   return null;
+}
+
+export const fixDateTime = (datetime: string) => {
+  return datetime.replace(':00.000Z', '');
 }
 
 // export async function getContest(contestID: string | string[]) {

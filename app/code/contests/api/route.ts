@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import excuteQuery from "@utils/database";
 import { ContestType, ProblemType } from "@utils/types";
+import { fixDateTime } from "@utils/functions";
 
 export async function GET() {
   try {
