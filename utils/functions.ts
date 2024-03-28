@@ -48,21 +48,9 @@ export const fixDateTime = (datetime: string) => {
   return datetime.replace(':00.000Z', '');
 }
 
-// export async function getContest(contestID: string | string[]) {
-//   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/contests/api`, {
-//     method: 'POST',
-//     body: JSON.stringify({
-//       contestID: contestID
-//     }),
-//     headers: {
-//       'Content-Type': 'application/json'
-//     }
-//   })
-//     .then(res => res.json())
-//     .then(result => {
-//       return result;
-//     })
-//     .catch(err => console.error(err))
-
-//   return null;
-// }
+export const addDateTimeOffset = (date: string) => {
+  const currDate = new Date(date);
+  const offset = currDate.getTimezoneOffset() || 0;
+  const newDate = new Date(currDate.getTime() - (offset * 60 * 1000));
+  return newDate.toISOString().replace(':00.000Z', '');
+}

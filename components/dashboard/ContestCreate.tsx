@@ -7,7 +7,7 @@ import { usePathname, useParams, useRouter } from 'next/navigation'
 import Link from 'next/link';
 import { ContestContext } from '@app/code/create/layout'
 import { useSession } from 'next-auth/react';
-import { fixDateTime } from '@utils/functions';
+import { addDateTimeOffset } from '@utils/functions';
 
 const ContestCreate = () => {
   const params = useParams()
@@ -31,9 +31,14 @@ const ContestCreate = () => {
         .then(res => res.json())
         .then(result => {
           setContest(() => {
-            return result || emptyContest;
+            return {
+              ...result,
+              startTime: addDateTimeOffset(result.startTime),
+              endTime: addDateTimeOffset(result.endTime),
+              registrationTime: addDateTimeOffset(result.registrationTime)
+            } || emptyContest;
           })
-          setHasRendered(true)
+          setHasRendered(() => true)
         })
         .catch(err => console.log(err))
     }
@@ -41,6 +46,7 @@ const ContestCreate = () => {
     !hasRendered && fetchData()
   }, [params.contestID])
 
+  useEffect(() => console.log(hasRendered), [hasRendered]);
   useEffect(() => console.log(contest), [contest]);
 
   const emptyProblem: ProblemType = {
@@ -84,13 +90,13 @@ const ContestCreate = () => {
 
   const validateContestDetails = (name: string) => {
     if (name === "name") {
-      if (contest.contestName.length < 5 || contest.contestName.length > 50) {
+      if (contest.contestName?.length < 5 || contest.contestName?.length > 50) {
         return false
       }
     }
 
     if (name === "start time") {
-      if (contest.startTime.length === 0) {
+      if (contest.startTime?.length === 0) {
         return false
       } else if (contest.startTime < new Date().toISOString() || contest.registrationTime > contest.startTime) {
         return false
@@ -98,7 +104,7 @@ const ContestCreate = () => {
     }
 
     if (name === "end time") {
-      if (contest.endTime.length === 0) {
+      if (contest.endTime?.length === 0) {
         return false
       } else if (contest.endTime < contest.startTime) {
         return false
@@ -106,13 +112,13 @@ const ContestCreate = () => {
     }
 
     if (name === "registration time") {
-      if (contest.registrationTime.length === 0) {
+      if (contest.registrationTime?.length === 0) {
         return false
       }
     }
 
     if (name === "description") {
-      if (contest.contestDescription.length < 10) {
+      if (contest.contestDescription?.length < 10) {
         return false
       }
     }
@@ -121,13 +127,14 @@ const ContestCreate = () => {
   }
 
   const deleteContest = () => {
-    setContest(emptyContest)
+    setContest(() => emptyContest)
+    setHasRendered(() => false)
     router.push('/code/create')
   }
 
   const createContest = async () => {
     if (!validateContestDetails("name") || !validateContestDetails("start time") || !validateContestDetails("end time") || !validateContestDetails("registration time") || !validateContestDetails("description")) {
-      console.log('Make all the fields green')
+      alert('Make all the fields green')
       return
     }
 
@@ -184,7 +191,7 @@ const ContestCreate = () => {
                     id="registrationTime"
                     className='w-full text-black px-1 focus:outline-none'
                     name='registrationTime'
-                    value={fixDateTime(contest.registrationTime)}
+                    value={contest.registrationTime}
                     onChange={changeContestDetails}
                   />
                 </div>
@@ -202,7 +209,7 @@ const ContestCreate = () => {
                     id="startTime"
                     className='w-full text-black px-1 focus:outline-none'
                     name='startTime'
-                    value={fixDateTime(contest.startTime)}
+                    value={contest.startTime}
                     onChange={changeContestDetails}
                   />
                 </div>
@@ -220,7 +227,7 @@ const ContestCreate = () => {
                     id="endTime"
                     className='w-full text-black px-1 focus:outline-none'
                     name='endTime'
-                    value={fixDateTime(contest.endTime)}
+                    value={contest.endTime}
                     onChange={changeContestDetails}
                   />
                 </div>
