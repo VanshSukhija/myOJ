@@ -156,3 +156,18 @@ export async function POST(req: Request) {
     return NextResponse.json(error);
   }
 }
+
+export async function DELETE(req: Request) {
+  const { table, column, id } = await req.json();
+
+  try {
+    const results = await excuteQuery({
+      query: `
+        DELETE FROM ${table} WHERE ${column} = ${id};
+      `,
+    });
+    return NextResponse.json(results);
+  } catch (error) {
+    return NextResponse.json(error);
+  }
+}

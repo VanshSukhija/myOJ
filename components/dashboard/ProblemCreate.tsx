@@ -99,15 +99,28 @@ const NewCreate = () => {
     return true
   }
 
-  const deleteProblem = () => {
-    setContest((prev: ContestType) => {
-      return {
-        ...prev,
-        problems: prev.problems.filter((prob: ProblemType) => prob.problemID !== problem.problemID)
+  const deleteProblem = async () => {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/create/api`, {
+      method: 'DELETE',
+      body: JSON.stringify({ table: `problem`, column: `problemID`, id: problem.problemID }),
+      headers: {
+        'Content-Type': 'application/json'
       }
     })
+      .then(res => res.json())
+      .then(data => {
+        setContest((prev: ContestType) => {
+          return {
+            ...prev,
+            problems: prev.problems.filter((prob: ProblemType) => prob.problemID !== problem.problemID)
+          }
+        })
 
-    router.push(`/code/create/${contest.contestID}/description`)
+        console.log(data);
+
+        router.push(`/code/create/${contest.contestID}/description`)
+      })
+      .catch(err => console.error(err))
   }
 
   return (

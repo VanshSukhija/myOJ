@@ -33,7 +33,7 @@ const Tests = () => {
 
       <div className='w-full px-3 mb-10'>
         {problem.testcases.map((test, idx) => (
-          <Testcase index={idx} data={test} setProblem={setProblem} />
+          <Testcase key={idx} index={idx} data={test} setProblem={setProblem} />
         ))}
 
         <button
@@ -73,13 +73,25 @@ const Testcase = (
     })
   }
 
-  const handleDelete = () => {
-    setProblem((prev: ProblemType) => {
-      return {
-        ...prev,
-        testcases: prev.testcases.filter((_: any, idx: number) => idx !== index)
+  const handleDelete = async () => {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/create/api`, {
+      method: 'DELETE',
+      body: JSON.stringify({ table: `test`, column: `testID`, id: data.id }),
+      headers: {
+        'Content-Type': 'application/json'
       }
     })
+      .then(res => res.json())
+      .then(data => {
+        setProblem((prev: ProblemType) => {
+          return {
+            ...prev,
+            testcases: prev.testcases.filter((_: any, idx: number) => idx !== index)
+          }
+        });
+        console.log(data);
+      })
+      .catch(err => console.error(err))
   }
 
   return (
