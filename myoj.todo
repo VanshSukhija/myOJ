@@ -1,6 +1,9 @@
-Implement Delete route in Testcases and Problems 
-Implement Queues for problem submission
-Add Blog section to the website
+Update Problemset pages
+Create Contest section
+    - List all previous contests with number of participants
+    - Register button to register in a contest
+    - Dynamic contest page opening to description and problem list on the dashboard
+Create Blog section
 Create Profile page for user
 
 Design home page for website

@@ -126,10 +126,24 @@ const ContestCreate = () => {
     return true
   }
 
-  const deleteContest = () => {
-    setContest(() => emptyContest)
-    setHasRendered(() => false)
-    router.push('/code/create')
+  const deleteContest = async () => {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/create/api`, {
+      method: 'DELETE',
+      body: JSON.stringify({ table: `contest`, column: `contestID`, id: contest.contestID }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setContest(() => emptyContest)
+        setHasRendered(() => false)
+        
+        console.log(data)
+
+        router.push('/code/create')
+      })
+      .catch(err => console.error(err))
   }
 
   const createContest = async () => {
