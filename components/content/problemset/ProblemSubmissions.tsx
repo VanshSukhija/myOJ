@@ -1,13 +1,10 @@
 "use client";
-import React from 'react'
-import { useParams } from 'next/navigation'
-import { ProblemType } from '@utils/types';
-import { getProblem } from '@utils/functions'
+import React, { useContext } from 'react'
 import submissions from '@components/content/problemset/submissions.json'
+import { SelectedProblemContext } from '@app/code/problemset/layout';
 
 const ProblemSubmissions = () => {
-  const params = useParams()
-  const data: ProblemType = getProblem(Number(params.problemID))
+  const { selectedProblem } = useContext(SelectedProblemContext)
 
   return (
     <div className='p-1'>

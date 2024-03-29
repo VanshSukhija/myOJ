@@ -1,25 +1,48 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faEllipsisV, faPlay, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
-import { useParams, usePathname } from 'next/navigation'
+import { notFound, useParams, usePathname } from 'next/navigation'
 import Link from 'next/link';
-import { codeRunner, getProblem } from '@utils/functions';
-import { ProblemType } from '@utils/types';
+import { codeRunner } from '@utils/functions';
+import { SelectedProblemContext } from '@app/code/problemset/layout';
 
 const ProblemNavbar = () => {
   const params = useParams()
   const pathname = usePathname().split('/')
-  const data = getProblem(Number(params.problemID))
+  const { selectedProblem, setSelectedProblem } = useContext(SelectedProblemContext)
   const tab = pathname[pathname.length - 1]
 
   const [code, setCode] = useState<string>('')
   const [extension, setExtension] = useState<string>('')
   const [outputArray, setOutputArray] = useState<string[]>([])
 
+  useEffect(() => {
+    setSelectedProblem(null);
+
+    const fetchProblem = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/problemset/problems/${params.problemID}/getProblemByID`, {
+          method: 'POST',
+          body: JSON.stringify({ problemID: params.problemID }),
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        const data = await response.json();
+        console.log(data);
+        data.status === 'success' ? setSelectedProblem(() => data.data) : console.error(data.message), notFound();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchProblem();
+  }, [])
+
   const runTestCases = async (e: any) => {
     e.preventDefault()
-    const output: string[] = await codeRunner(data, code, extension)
+    const output: string[] = await codeRunner(selectedProblem!, code, extension)
     setOutputArray(output)
   }
 
@@ -50,26 +73,30 @@ const ProblemNavbar = () => {
     <>
       <nav className='p-1.5 flex justify-between border-b-2 bg-cyan-600'>
         <div className='flex flex-col justify-between gap-1'>
-          <div className='text-2xl font-bold'>{data.name}</div>
+          <div className='text-2xl font-bold'>{selectedProblem?.problemName}</div>
           <div className='text-white'>
-            {data.difficulty == 0 ? <span className='bg-green-500 px-2 rounded-lg'>Easy</span> :
-              data.difficulty == 1 ? <span className='bg-yellow-500 px-2 rounded-lg'>Medium</span> :
+            {selectedProblem?.difficulty == 0 ? <span className='bg-green-500 px-2 rounded-lg'>Easy</span> :
+              selectedProblem?.difficulty == 1 ? <span className='bg-yellow-500 px-2 rounded-lg'>Medium</span> :
                 <span className='bg-red-500 px-2 rounded-lg'>Hard</span>
             } |
-            {data.tags?.map((tag: string, index: number) => {
-              return (
-                <span key={tag}> {index == data.tags.length - 1 ? tag : tag + ','}</span>
-              )
-            })}
+            {
+              selectedProblem?.tags
+                .split(',')
+                .map((tag: string, index: number) => {
+                  return (
+                    <span key={tag}> {index == selectedProblem?.tags.split(',').length - 1 ? tag : tag + ','}</span>
+                  )
+                })
+            }
           </div>
           <div className="text-white flex gap-4">
             <div className='w-fit h-fit flex items-center gap-1'>
               <FontAwesomeIcon icon={faClock} title="Time Limit" />
-              <code title='Time Limit'>{data.timeLimit / 1000}s</code>
+              <code title='Time Limit'>{selectedProblem && selectedProblem.timeLimit / 1000}s</code>
             </div>
             <div className='w-fit h-fit flex items-center gap-1'>
               <FontAwesomeIcon icon={faThunderstorm} title="Memory Limit" />
-              <code title='Memory Limit'>{data.memoryLimit}MB</code>
+              <code title='Memory Limit'>{selectedProblem?.memoryLimit}MB</code>
             </div>
           </div>
         </div>

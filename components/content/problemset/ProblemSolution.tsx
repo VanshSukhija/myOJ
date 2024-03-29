@@ -1,32 +1,50 @@
 "use client"
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
-import { ProblemType } from '@utils/types';
-import { getProblem } from '@utils/functions'
+import React, { useContext } from 'react'
+import { SelectedProblemContext } from '@app/code/problemset/layout';
+import { Editor as CodeEditor } from '@monaco-editor/react';
+
 
 const ProblemSolution = () => {
-  const params = useParams()
-  const [data, setData] = useState<ProblemType>(Object)
-
-  useEffect(() => {
-    setData(getProblem(Number(params.problemID)))
-  }, [])
+  const { selectedProblem } = useContext(SelectedProblemContext)
 
   return (
-    <div className='p-1'>
+    <div className='p-1 h-full'>
       <section>
         <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Explanation</div>
-        <pre className='whitespace-pre-wrap break-words'>
-          {data.tutorial}
-        </pre>
+        <div
+          className="ql-editor"
+          dangerouslySetInnerHTML={{ __html: selectedProblem?.tutorial || '' }}>
+        </div>
       </section>
       <br />
 
-      <section>
-        <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Code</div>
-        <pre className='whitespace-pre-wrap break-words'>
-          {data.solution}
-        </pre>
+      <section className='h-full flex justify-start flex-col items-center gap-2'>
+        <div className='w-full px-3 py-1 border-b-2 border-cyan-600 font-bold text-2xl flex justify-between'>
+          Solution
+          <select
+            className='text-black text-lg font-normal focus:outline-none focus:ring-2 focus:ring-cyan-600 pr-2'
+            value={selectedProblem?.solutionLanguage || 'cpp'}
+          >
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+            <option value="python">Python</option>
+          </select>
+        </div>
+
+        <div className='w-[90%] h-full max-h-[80%]'>
+          <CodeEditor
+            language={selectedProblem?.solutionLanguage || 'cpp'}
+            value={selectedProblem?.solution}
+            theme="vs-dark"
+            wrapperProps={{ style: { height: '100%', width: '100%' } }}
+            className='w-full h-full text-white border border-white'
+            options={{
+              wordWrap: 'on',
+              readOnly: true
+            }}
+          />
+        </div>
+        <br />
       </section>
     </div>
   )

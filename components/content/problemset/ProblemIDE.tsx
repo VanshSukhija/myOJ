@@ -1,21 +1,18 @@
 "use client"
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import React, { useContext, useEffect, useState } from 'react'
 import { Editor as CodeEditor } from '@monaco-editor/react';
-import { ProblemType } from '@utils/types';
-import { codeRunner, getProblem } from '@utils/functions';
+import { codeRunner } from '@utils/functions';
+import { SelectedProblemContext } from '@app/code/problemset/layout';
 
 const ProblemIDE = () => {
-  const params = useParams()
   const [code, setCode] = useState<string>('')
   const [language, setLanguage] = useState<string>('cpp')
   const [outputArray, setOutputArray] = useState<string[]>([])
-
-  const data: ProblemType = getProblem(Number(params.problemID))
+  const { selectedProblem } = useContext(SelectedProblemContext)
 
   const runTestCases = async (e: any) => {
     e.preventDefault()
-    const output: string[] = await codeRunner(data, code, language)
+    const output: string[] = await codeRunner(selectedProblem!, code, language)
     setOutputArray(output)
   }
 

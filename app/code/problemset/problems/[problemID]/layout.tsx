@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import Loading from './loading'
 import ProblemNavbar from '@components/content/problemset/ProblemNavbar'
+import ProblemFooter from '@components/content/problemset/ProblemFooter'
 
 const layout = ({
   children
@@ -12,8 +13,9 @@ const layout = ({
     <div className="flex-col h-screen overflow-auto">
       <Suspense fallback={<Loading />}>
         <ProblemNavbar />
+        {children}
+        <ProblemFooter />
       </Suspense>
-      {children}
     </div>
   )
 }

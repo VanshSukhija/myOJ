@@ -1,48 +1,45 @@
 "use client"
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
-import { ProblemType } from '@utils/types';
-import { getProblem } from '@utils/functions'
+import React, { useContext } from 'react'
+import { SelectedProblemContext } from '@app/code/problemset/layout';
 
 const ProblemDescription = () => {
-  const params = useParams()
-  const [data, setData] = useState<ProblemType>(Object)
-
-  useEffect(() => {
-    setData(getProblem(Number(params.problemID)))
-  }, [])
+  const { selectedProblem } = useContext(SelectedProblemContext)
 
   return (
     <div className='p-1'>
       <section>
         <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Description</div>
-        <pre className='whitespace-pre-wrap break-words'>
-          {data?.description}
-        </pre>
+        <div
+          className="ql-editor"
+          dangerouslySetInnerHTML={{ __html: selectedProblem?.problemDescription || '' }}>
+        </div>
       </section>
       <br />
 
       <section>
         <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Input</div>
-        <pre className='whitespace-pre-wrap break-words'>
-          {data.inputFormat}
-        </pre>
+        <div
+          className="ql-editor"
+          dangerouslySetInnerHTML={{ __html: selectedProblem?.inputFormat || '' }}>
+        </div>
       </section>
       <br />
 
       <section>
         <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Output</div>
-        <pre className='whitespace-pre-wrap break-words'>
-          {data.outputFormat}
-        </pre>
+        <div
+          className="ql-editor"
+          dangerouslySetInnerHTML={{ __html: selectedProblem?.outputFormat || '' }}>
+        </div>
       </section>
       <br />
 
       <section>
         <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Constraints</div>
-        <pre className='whitespace-pre-wrap break-words'>
-          {data.constraints}
-        </pre>
+        <div
+          className="ql-editor"
+          dangerouslySetInnerHTML={{ __html: selectedProblem?.constraints || '' }}>
+        </div>
       </section>
       <br />
 
@@ -58,14 +55,16 @@ const ProblemDescription = () => {
           <tbody>
             <tr>
               <td className='border-2 border-slate-600'>
-                <pre className='whitespace-pre-wrap break-words'>
-                  {data.testcases?.length ? data.testcases[0].input : ''}
-                </pre>
+                <div
+                  className="ql-editor"
+                  dangerouslySetInnerHTML={{ __html: selectedProblem?.testcases[0].input || '' }}>
+                </div>
               </td>
               <td className='border-2 border-slate-600'>
-                <pre className='whitespace-pre-wrap break-words'>
-                  {data.testcases?.length ? data.testcases[0].output : ''}
-                </pre>
+                <div
+                  className="ql-editor"
+                  dangerouslySetInnerHTML={{ __html: selectedProblem?.testcases[0].expectedOutput || '' }}>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -73,15 +72,18 @@ const ProblemDescription = () => {
       </section>
       <br />
 
-      {data.note && <>
-        <section>
-          <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Note</div>
-          <pre className='whitespace-pre-wrap break-words'>
-            {data.note}
-          </pre>
-        </section>
-        <br />
-      </>
+      {
+        selectedProblem?.note &&
+        <>
+          <section>
+            <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Note</div>
+            <div
+              className="ql-editor"
+              dangerouslySetInnerHTML={{ __html: selectedProblem?.note || '' }}>
+            </div>
+          </section>
+          <br />
+        </>
       }
     </div>
   )
