@@ -1,70 +1,25 @@
 "use client";
-import dynamic from 'next/dynamic'
-import React, { useEffect, useContext, useState } from 'react'
-import katex from 'katex'
-import 'katex/dist/katex.min.css'
+import React, { useContext, useState, useEffect } from 'react'
+import { Editor as CodeEditor } from '@monaco-editor/react';
 import { ProblemContext } from '@app/code/create/layout';
 import { ProblemType } from '@utils/types';
-import { Editor as CodeEditor } from '@monaco-editor/react';
-import { quillModules, quillFormats } from '@utils/constants';
 
-const QuillEditor: any = dynamic(() => import('react-quill'), {
-  ssr: false,
-  loading: () => <p>Loading ...</p>
-});
-
-const SolutionExplaination = () => {
-  useEffect(() => {
-    if (typeof window !== 'undefined')
-      window.katex = katex
-  }, [katex])
-
+const CheckersCode = () => {
   return (
     <div className='w-full h-screen overflow-auto flex flex-1 flex-col justify-start items-center'>
       <nav className='w-full h-fit bg-red-500 flex justify-between items-center py-1.5 px-3 font-bold'>
         <div className='text-2xl'>
-          Solution & Explaination
+          Checker's Code
         </div>
       </nav>
 
-      <Tutorial />
-
-      <Solution />
+      <Checker />
 
     </div>
   )
 }
 
-const Tutorial = () => {
-  const { problem, setProblem } = useContext(ProblemContext);
-
-  const handleEditorChange = (newContent: string) => {
-    setProblem((prev: ProblemType) => {
-      return {
-        ...prev,
-        tutorial: newContent
-      }
-    })
-  };
-
-  return (
-    <>
-      <div className='w-full px-3 py-1 mb-3 border-b-2 border-red-500 font-bold text-2xl'>Tutorial</div>
-      <div className='w-[90%] h-[80%] max-h-[80%] mb-10'>
-        <QuillEditor
-          value={problem.tutorial}
-          onChange={handleEditorChange}
-          modules={quillModules}
-          formats={quillFormats}
-          className="create-problem-editor w-full h-full text-white"
-        />
-      </div>
-      <br />
-    </>
-  )
-}
-
-const Solution = () => {
+const Checker = () => {
   const { problem, setProblem } = useContext(ProblemContext);
   const [language, setLanguage] = useState<string>('cpp');
 
@@ -72,7 +27,7 @@ const Solution = () => {
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        solution: newContent || ''
+        checkerCode: newContent || ''
       }
     })
   };
@@ -81,7 +36,7 @@ const Solution = () => {
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        solutionLanguage: language
+        checkerLanguage: language
       }
     })
   }, [language]);
@@ -89,7 +44,7 @@ const Solution = () => {
   return (
     <>
       <div className='w-full px-3 py-1 mb-3 border-b-2 border-red-500 font-bold text-2xl flex justify-between'>
-        Solution
+        Code
         <select
           className='text-black text-lg font-normal focus:outline-none focus:ring-2 focus:ring-red-500 pr-2'
           value={language}
@@ -104,7 +59,7 @@ const Solution = () => {
       <div className='w-[90%] h-[80%] max-h-[80%] mb-10'>
         <CodeEditor
           language={language}
-          value={problem.solution}
+          value={problem.checkerCode}
           theme="vs-dark"
           wrapperProps={{ style: { height: '100%', width: '100%' } }}
           onChange={(value) => handleEditorChange(value)}
@@ -119,4 +74,4 @@ const Solution = () => {
   )
 }
 
-export default SolutionExplaination
+export default CheckersCode

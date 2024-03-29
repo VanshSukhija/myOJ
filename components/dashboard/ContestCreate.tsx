@@ -31,12 +31,16 @@ const ContestCreate = () => {
         .then(res => res.json())
         .then(result => {
           setContest(() => {
-            return {
-              ...result,
+            return result===null ? emptyContest : {
+              contestID: result.contestID,
+              contestName: result.contestName,
+              contestDescription: result.contestDescription,
+              createdBy: result.createdBy,
               startTime: addDateTimeOffset(result.startTime),
               endTime: addDateTimeOffset(result.endTime),
-              registrationTime: addDateTimeOffset(result.registrationTime)
-            } || emptyContest;
+              registrationTime: addDateTimeOffset(result.registrationTime),
+              problems: result.problems
+            }
           })
           setHasRendered(() => true)
         })
@@ -51,6 +55,7 @@ const ContestCreate = () => {
 
   const emptyProblem: ProblemType = {
     problemID: `${Date.now()}`,
+    contestID: params.contestID,
     problemName: "",
     problemDescription: "",
     inputFormat: "",
@@ -64,7 +69,10 @@ const ContestCreate = () => {
     solution: "",
     createdBy: session?.user.id,
     timeLimit: 0,
-    memoryLimit: 0
+    memoryLimit: 0,
+    solutionLanguage: "",
+    checkerCode: "",
+    checkerLanguage: ""
   }
 
   const emptyContest: ContestType = {
@@ -95,7 +103,7 @@ const ContestCreate = () => {
       }
     }
 
-    if (name === "start time") {
+    else if (name === "start time") {
       if (contest.startTime?.length === 0) {
         return false
       } else if (contest.startTime < new Date().toISOString() || contest.registrationTime > contest.startTime) {
@@ -103,7 +111,7 @@ const ContestCreate = () => {
       }
     }
 
-    if (name === "end time") {
+    else if (name === "end time") {
       if (contest.endTime?.length === 0) {
         return false
       } else if (contest.endTime < contest.startTime) {
@@ -111,14 +119,20 @@ const ContestCreate = () => {
       }
     }
 
-    if (name === "registration time") {
+    else if (name === "registration time") {
       if (contest.registrationTime?.length === 0) {
         return false
       }
     }
 
-    if (name === "description") {
+    else if (name === "description") {
       if (contest.contestDescription?.length < 10) {
+        return false
+      }
+    }
+
+    else if (name === "problems") {
+      if (!contest.problems.length) {
         return false
       }
     }
@@ -138,7 +152,7 @@ const ContestCreate = () => {
       .then(data => {
         setContest(() => emptyContest)
         setHasRendered(() => false)
-        
+
         console.log(data)
 
         router.push('/code/create')
@@ -147,7 +161,7 @@ const ContestCreate = () => {
   }
 
   const createContest = async () => {
-    if (!validateContestDetails("name") || !validateContestDetails("start time") || !validateContestDetails("end time") || !validateContestDetails("registration time") || !validateContestDetails("description")) {
+    if (!validateContestDetails("name") || !validateContestDetails("start time") || !validateContestDetails("end time") || !validateContestDetails("registration time") || !validateContestDetails("description") || !validateContestDetails("problems")) {
       alert('Make all the fields green')
       return
     }
@@ -161,7 +175,10 @@ const ContestCreate = () => {
     })
     const data = await res.json()
     console.log(data)
-    deleteContest();
+    setContest(() => emptyContest)
+    setHasRendered(() => false)
+
+    router.push('/code/create')
   }
 
   return (

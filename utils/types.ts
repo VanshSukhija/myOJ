@@ -1,5 +1,6 @@
 export type ProblemType = {
   problemID: string | string[];
+  contestID: string | string[];
   problemName: string;
   problemDescription: string;
   inputFormat: string;
@@ -18,6 +19,9 @@ export type ProblemType = {
   tutorial: string;
   solution: string;
   createdBy: string;
+  solutionLanguage: string;
+  checkerCode: string;
+  checkerLanguage: string;
 }
 
 export type ContestType = {

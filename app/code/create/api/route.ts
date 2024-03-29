@@ -45,7 +45,10 @@ export async function POST(req: Request) {
       problem.tags,
       problem.note,
       problem.tutorial,
-      problem.solution
+      problem.solution,
+      problem.solutionLanguage,
+      problem.checkerCode,
+      problem.checkerLanguage
     ];
   })
 
@@ -54,6 +57,7 @@ export async function POST(req: Request) {
       return [
         testcase.id,
         problem.problemID,
+        contest.contestID,
         testcase.input,
         testcase.expectedOutput
       ];
@@ -105,12 +109,15 @@ export async function POST(req: Request) {
           tags, 
           note, 
           tutorial, 
-          solution
+          solution,
+          solutionLanguage,
+          checkerCode,
+          checkerLanguage
         ) 
         VALUES ${
           contest.problems.map((_) => {
             return `(
-              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )`;
           }).join(", ")
         }
@@ -126,12 +133,16 @@ export async function POST(req: Request) {
           tags = VALUES(tags), 
           note = VALUES(note), 
           tutorial = VALUES(tutorial), 
-          solution = VALUES(solution)
+          solution = VALUES(solution),
+          solutionLanguage = VALUES(solutionLanguage),
+          checkerCode = VALUES(checkerCode),
+          checkerLanguage = VALUES(checkerLanguage)
         ;
 
         INSERT INTO test (
           testID, 
           problemID, 
+          contestID,
           input, 
           expectedOutput
         )
@@ -139,7 +150,7 @@ export async function POST(req: Request) {
           contest.problems.map((problem) => {
             return problem.testcases.map((_) => {
               return `(
-                ?, ?, ?, ?
+                ?, ?, ?, ?, ?
               )`;
             }).join(", ");
           }).join(", ")

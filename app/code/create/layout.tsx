@@ -50,6 +50,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
   }
   const emptyProblem: ProblemType = {
     problemID: `${Date.now()}`,
+    contestID: "",
     problemName: "",
     problemDescription: "",
     inputFormat: "",
@@ -63,7 +64,10 @@ const layout = ({ children }: { children: React.ReactNode }) => {
     solution: "",
     createdBy: session?.user.id,
     timeLimit: 0,
-    memoryLimit: 0
+    memoryLimit: 0,
+    solutionLanguage: "",
+    checkerCode: "",
+    checkerLanguage: "",
   }
 
   const [contest, setContest] = useState<ContestType>(emptyContest)

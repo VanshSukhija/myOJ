@@ -6,10 +6,7 @@ import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ProblemType } from '@utils/types';
-
-const Tags = [
-  "2-sat", "binary search", "bitmasks", "brute force", "chinese remainder theorem", "combinatorics", "constructive algorithms", "data structures", "dfs and similar", "divide and conquer", "dp", "dsu", "expression parsing", "fft", "flows", "games", "geometry", "graph matchings", "graphs", "greedy", "hashing", "implementation", "interactive", "math", "matrices", "meet-in-the-middle", "number theory", "probabilities", "schedules", "shortest paths", "sortings", "string suffix structures", "strings", "ternary search", "trees", "two pointers"
-]
+import { Tags } from '@utils/constants';
 
 const fetchData = async () => {
   try {
@@ -32,13 +29,13 @@ const Problemset = () => {
         <Filters />
 
         {
-          problemset.problems.map((problem: ProblemType) => {
-            return (
-              <div key={problem.id} className='w-full'>
-                <Problem data={problem} />
-              </div>
-            )
-          })
+          // problemset.problems.map((problem: ProblemType, idx: number) => {
+          //   return (
+          //     <div key={idx} className='w-full'>
+          //       <Problem data={problem} />
+          //     </div>
+          //   )
+          // })
         }
       </div>
 
@@ -80,17 +77,19 @@ const Filters = () => {
 const Problem = ({ data }: { data: ProblemType }) => {
 
   const params = useParams()
-  const isSelected = data.id.toString() === params.problemID
+  const isSelected = data.problemID.toString() === params.problemID
   const isAccepted = true;
 
   return (
-    <Link href={`/code/problemset/problems/${data.id}/description`} className={`group w-full py-1 pr-2 flex justify-between items-center border-y-2 border-slate-400 hover:text-cyan-600 hover:bg-white ${isSelected ? "bg-cyan-600" : ""}`} >
+    <Link href={`/code/problemset/problems/${data.problemID}/description`} className={`group w-full py-1 pr-2 flex justify-between items-center border-y-2 border-slate-400 hover:text-cyan-600 hover:bg-white ${isSelected ? "bg-cyan-600" : ""}`} >
       <div className={`w-1 h-12 bg-green-400 mr-1.5`}></div>
       <div className='w-full'>
-        <div>{data.id} | {data.name}</div>
+        <div>{data.problemID} | {data.problemName}</div>
         <div className='truncate'>
           {
-            data.tags.map((tag: string, index: number) => {
+            data.tags
+            .split(',')
+            .map((tag: string, index: number) => {
               return (
                 <span key={tag} className='text-xs text-slate-300 group-hover:text-cyan-600'>{tag}{index === data.tags.length - 1 ? '' : ', '} </span>
               )

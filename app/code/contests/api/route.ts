@@ -35,6 +35,7 @@ export async function POST(req: Request) {
     res.forEach((problem: any) => {
       let newProb: ProblemType = {
         problemID: problem.problemID,
+        contestID: problem.contestID,
         problemName: problem.problemName,
         problemDescription: problem.problemDescription,
         inputFormat: problem.inputFormat,
@@ -54,7 +55,10 @@ export async function POST(req: Request) {
         note: problem.note,
         tutorial: problem.tutorial,
         solution: problem.solution,
-        createdBy: problem.createdBy
+        createdBy: problem.createdBy,
+        solutionLanguage: problem.solutionLanguage,
+        checkerCode: problem.checkerCode,
+        checkerLanguage: problem.checkerLanguage
       }
 
       if (!problemsArray.length || problemsArray[problemsArray.length - 1].problemID !== newProb.problemID) {

@@ -23,33 +23,39 @@ export async function POST(req: Request) {
       query: `
         SELECT * FROM problem
         WHERE problemID = ${problemID}
-        INNER JOIN testcase ON problem.problemID = testcase.problemID;
+        INNER JOIN test ON problem.problemID = test.problemID;
       `
     });
 
     const data: ProblemType = {
-      id: results[0].problemID,
-      name: results[0].name,
-      description: results[0].description,
+      problemID: results[0].problemID,
+      contestID: results[0].contestID,
+      problemName: results[0].problemName,
+      problemDescription: results[0].problemDescription,
       inputFormat: results[0].inputFormat,
       outputFormat: results[0].outputFormat,
       constraints: results[0].constraints,
       timeLimit: results[0].timeLimit,
       memoryLimit: results[0].memoryLimit,
-      difficulty: results[0].difficulty,
+      difficulty: results[0].difficulty === 'EASY' ? 0 : results[0].difficulty === 'MEDIUM' ? 1 : 2,
       tags: results[0].tags,
-      testcases: results.map((result: any) => ({
-        id: result.testcaseID,
-        input: result.input,
-        expectedOutput: result.expectedOutput
-      })),
+      testcases: results.map((result: any) => {
+        return {
+          id: result.testID,
+          input: result.input,
+          expectedOutput: result.expectedOutput
+        }
+      }).sort((a: any, b: any) => a.id - b.id),
       note: results[0].note,
       tutorial: results[0].tutorial,
       solution: results[0].solution,
-      createdBy: results[0].createdBy
+      createdBy: results[0].createdBy,
+      solutionLanguage: results[0].solutionLanguage,
+      checkerCode: results[0].checkerCode,
+      checkerLanguage: results[0].checkerLanguage
     }
 
-    return NextResponse.json(results);
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(error);
   }

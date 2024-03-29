@@ -91,7 +91,13 @@ const NewCreate = () => {
     }
 
     else if (name === "solution") {
-      if (problem.solution.length < 50 || problem.tutorial.length < 50) {
+      if (problem.solution.length < 50 || !problem.solutionLanguage.length || problem.tutorial.length < 50) {
+        return false
+      }
+    }
+
+    else if (name === "checker") {
+      if (problem.checkerCode.length < 50 || !problem.checkerLanguage.length) {
         return false
       }
     }
@@ -277,6 +283,15 @@ const NewCreate = () => {
 
               <div className='w-full flex justify-between items-center'>
                 <span className='font-bold'>Solution & Explaination</span>
+                <FontAwesomeIcon icon={faAngleRight} className="text-s" />
+              </div>
+            </Link>
+
+            <Link href={`/code/create/${params.contestID}/problems/${params.problemID}/checker`} className={`w-full flex p-2 pl-0 hover:bg-white hover:text-red-500 cursor-pointer ${tab === 'checker' ? 'bg-white text-red-500' : ''}`}>
+              <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("checker") ? 'bg-green-400' : ''}`}></div>
+
+              <div className='w-full flex justify-between items-center'>
+                <span className='font-bold'>Checker's Code</span>
                 <FontAwesomeIcon icon={faAngleRight} className="text-s" />
               </div>
             </Link>
