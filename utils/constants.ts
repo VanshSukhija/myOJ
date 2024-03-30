@@ -29,3 +29,9 @@ export const quillFormats = [
   'image',
   'code-block',
 ];
+
+export const programmingLanguages = {
+  'cpp': 'C++',
+  'python': 'Python',
+  'java': 'Java',
+}

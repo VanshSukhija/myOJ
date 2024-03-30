@@ -1,9 +1,16 @@
 "use client"
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { SelectedProblemContext } from '@app/code/problemset/layout';
+import katex from 'katex'
+import 'katex/dist/katex.min.css'
 
 const ProblemDescription = () => {
   const { selectedProblem } = useContext(SelectedProblemContext)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined')
+      window.katex = katex
+  }, [katex])
 
   return (
     <div className='p-1'>

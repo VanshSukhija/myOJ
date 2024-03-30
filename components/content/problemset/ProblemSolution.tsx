@@ -2,7 +2,7 @@
 import React, { useContext } from 'react'
 import { SelectedProblemContext } from '@app/code/problemset/layout';
 import { Editor as CodeEditor } from '@monaco-editor/react';
-
+import { programmingLanguages } from '@utils/constants';
 
 const ProblemSolution = () => {
   const { selectedProblem } = useContext(SelectedProblemContext)
@@ -18,20 +18,17 @@ const ProblemSolution = () => {
       </section>
       <br />
 
-      <section className='h-full flex justify-start flex-col items-center gap-2'>
-        <div className='w-full px-3 py-1 border-b-2 border-cyan-600 font-bold text-2xl flex justify-between'>
+      <section className='h-full max-h-[75%] flex justify-start flex-col items-center gap-2'>
+        <div className='w-full px-3 py-1 border-b-2 border-cyan-600 font-bold text-2xl'>
           Solution
-          <select
-            className='text-black text-lg font-normal focus:outline-none focus:ring-2 focus:ring-cyan-600 pr-2'
-            value={selectedProblem?.solutionLanguage || 'cpp'}
-          >
-            <option value="cpp">C++</option>
-            <option value="java">Java</option>
-            <option value="python">Python</option>
-          </select>
+          ({
+            selectedProblem?.solutionLanguage === 'cpp' ? programmingLanguages.cpp :
+              selectedProblem?.solutionLanguage === 'java' ? programmingLanguages.java :
+                selectedProblem?.solutionLanguage === 'python' ? programmingLanguages.python : ''
+          })
         </div>
 
-        <div className='w-[90%] h-full max-h-[80%]'>
+        <div className='w-[90%] h-full'>
           <CodeEditor
             language={selectedProblem?.solutionLanguage || 'cpp'}
             value={selectedProblem?.solution}

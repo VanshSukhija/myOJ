@@ -57,6 +57,7 @@ export type DisplayProblemType = {
   solutionLanguage: string;
   checkerCode: string;
   checkerLanguage: string;
+  username: string;
 }
 
 export type ContestType = {

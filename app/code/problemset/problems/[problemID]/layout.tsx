@@ -10,7 +10,7 @@ const layout = ({
 }) => {
 
   return (
-    <div className="flex-col h-screen overflow-auto">
+    <div className="flex-col flex-1 h-screen overflow-auto">
       <Suspense fallback={<Loading />}>
         <ProblemNavbar />
         {children}

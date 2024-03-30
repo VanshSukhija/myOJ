@@ -37,7 +37,9 @@ const Description = () => {
         </div>
       </nav>
 
-      <div className='w-full px-3 py-1 mb-3 border-b-2 border-red-500 font-bold text-2xl'>Problem Statement</div>
+      <div className='w-full px-3 py-1 mb-3 border-b-2 border-red-500 font-bold text-2xl'>
+        Problem Statement
+      </div>
 
       <div className='w-[90%] h-[80%] max-h-[80%] mb-10'>
         <QuillEditor

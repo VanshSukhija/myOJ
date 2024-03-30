@@ -19,7 +19,8 @@ const layout = (
     children
   }: {
     children: React.ReactNode
-}) => {
+  }
+) => {
 
   const [selectedProblem, setSelectedProblem] = useState<DisplayProblemType | null>(null)
 

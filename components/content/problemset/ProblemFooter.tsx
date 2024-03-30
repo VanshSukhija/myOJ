@@ -5,12 +5,13 @@ import React, { useContext } from 'react'
 const ProblemFooter = () => {
   const { selectedProblem } = useContext(SelectedProblemContext)
   return (
-    <div className='w-full bg-cyan-600 py-2 px-1 border-t-2 border-white'>
+    selectedProblem &&
+    <div className='w-full h-fit bg-cyan-600 py-2 px-2 border-t-2 border-white flex justify-between mt-5'>
       <div className='text-white text-sm'>
         {selectedProblem?.contestName}
       </div>
       <div className='text-white text-sm'>
-        {selectedProblem?.createdBy}
+        {selectedProblem?.username}
       </div>
     </div>
   )

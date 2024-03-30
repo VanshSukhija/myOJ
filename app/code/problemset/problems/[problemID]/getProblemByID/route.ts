@@ -7,8 +7,9 @@ export async function POST(req: Request) {
   try {
     const results: any = await excuteQuery({
       query: `
-        SELECT problem.*, contest.contestName FROM problem
+        SELECT problem.*, contest.contestName, user.name AS username FROM problem
         INNER JOIN contest ON contest.contestID = problem.contestID
+        INNER JOIN user ON user.id = problem.createdBy
         WHERE problem.problemID = ?;
 
         SELECT testID, input, expectedOutput FROM test
@@ -50,7 +51,8 @@ export async function POST(req: Request) {
       createdBy: results[0][0].createdBy,
       solutionLanguage: results[0][0].solutionLanguage,
       checkerCode: results[0][0].checkerCode,
-      checkerLanguage: results[0][0].checkerLanguage
+      checkerLanguage: results[0][0].checkerLanguage,
+      username: results[0][0].username
     }
 
     return NextResponse.json({
