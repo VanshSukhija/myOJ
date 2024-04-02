@@ -1,15 +1,12 @@
 FROM ubuntu:latest
 
 RUN apt-get update
-RUN apt-get install -y bc g++ python3-dev openjdk-11-jdk
-
-ENV TIMEOUT_SECONDS=1
-ENV MEMORY_LIMIT_KB=131072
+RUN apt-get install -y bc time g++ python3-dev openjdk-17-jdk
 
 WORKDIR /app
 
 COPY . /app/
 
-RUN chmod +x /app/run.sh
+RUN chmod +x /app/code-runner-script.sh
 
-ENTRYPOINT ["/app/run.sh"]
+ENTRYPOINT ["/app/code-runner-script.sh"]

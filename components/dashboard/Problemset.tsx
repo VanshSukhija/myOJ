@@ -7,16 +7,17 @@ import { useParams } from 'next/navigation';
 import { OnlyProblemType } from '@utils/types';
 import { Tags } from '@utils/constants';
 
-// const fetchData = async () => {
-//   try {
-//     const response = await fetch('http://localhost:3000/code/problemset/docker');
-//     const data = await response.json();
-//     console.log(data);
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-// fetchData();
+const fetchData = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/code/problemset/docker');
+    const data = await response.json();
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+fetchData();
 
 const Problemset = () => {
   const [allProblems, setAllProblems] = useState<OnlyProblemType[]>([]);

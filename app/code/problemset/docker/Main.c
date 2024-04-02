@@ -4,8 +4,10 @@
 #include<math.h>
 
 int main(){
-    int a, b;
-    scanf("%d%d", &a, &b);
-    printf("%d\n", a+b);
+    long long a, b;
+    scanf("%lld", &a);
+    
+    printf("HELLO WORLD\n");
+
     return 0;
 }

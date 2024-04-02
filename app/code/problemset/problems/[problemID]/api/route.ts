@@ -9,7 +9,7 @@ const execAsync = promisify(exec);
 export async function POST(req: Request, res: Response) {
   // container has already been built
   const data = await req.json()
-  const filePath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', `source_code.${data.extension}`);
+  const filePath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', `Main.${data.extension}`);
   const inputPath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', 'input.txt');
 
   // write the code to source file
@@ -24,8 +24,8 @@ export async function POST(req: Request, res: Response) {
 
   // run the code
   try {
-    const cmd = `docker run -v ${filePath}:/app/source_code.${data.extension} -v ${inputPath}:/app/input.txt myoj-code-runner ${data.extension}`
     const cwd = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker');
+    const cmd = `docker run -v ${cwd}:/app/ myoj-code-runner ${data.extension} 1 512`
     const runOutput = await execAsync(cmd, { cwd: cwd });
     return NextResponse.json({ message: 'Code ran successfully', output: runOutput });
   } catch (error) {

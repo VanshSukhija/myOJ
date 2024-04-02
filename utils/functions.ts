@@ -16,7 +16,10 @@ export async function codeRunner(problem: ProblemType, code: string, language: s
         }
       })
         .then(res => res.json())
-        .then(data => outPutArray.push(data.output))
+        .then(data => {
+          console.log(data);
+          outPutArray.push(data.output)
+        })
         .catch(err => console.error(err))
     }
   } catch (err) {
