@@ -1,14 +1,16 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import { signIn, useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 const page = () => {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
+  const router = useRouter()
 
-  if (session) {
-    redirect('/code/home')
-  }
+  useEffect(() => {
+    if(status === 'loading') return;
+    if(session) router.push('/code/home');
+  }, [session, status, router])
 
   const handleSignIn = async (provider: string) => {
     await signIn(provider, { callbackUrl: '/code/home' })

@@ -1,15 +1,20 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link';
-import { redirect, usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBrain, faCalendar, faComments, faGear, faHome, faPen, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from 'next-auth/react';
 
 const Navbar = () => {
   const pathname = usePathname().split('/')
-  const { data: session } = useSession()
-  if(!session) redirect('/')
+  const { data: session, status } = useSession()
+  const router = useRouter()
+  
+  useEffect(() => {
+    if(status === 'loading') return;
+    if(!session) router.push('/')
+  }, [session, status, router])
 
   return (
     <nav className="text-slate-400 bg-black h-screen w-12 flex flex-col justify-between">

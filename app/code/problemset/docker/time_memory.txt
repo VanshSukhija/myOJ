@@ -1,3 +1,4 @@
-time_taken 0.27
-memory_used 439396
+Command terminated by signal 11
+time_taken 0.01
+memory_used 11524
 exit_status 0

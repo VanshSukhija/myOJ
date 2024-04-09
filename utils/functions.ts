@@ -10,6 +10,9 @@ export async function codeRunner(problem: ProblemType, code: string, language: s
           code: code,
           extension: language,
           input: testcase.input,
+          expectedOutput: testcase.expectedOutput,
+          timeLimit: Number(problem.timeLimit/1000),
+          memoryLimit: Number(1024*problem.memoryLimit)
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -18,7 +21,11 @@ export async function codeRunner(problem: ProblemType, code: string, language: s
         .then(res => res.json())
         .then(data => {
           console.log(data);
-          outPutArray.push(data.output)
+          if(data.status){
+            outPutArray.push(data.output);
+          } else {
+            outPutArray.push(data.error);
+          }
         })
         .catch(err => console.error(err))
     }

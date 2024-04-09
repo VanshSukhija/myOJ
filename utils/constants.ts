@@ -35,3 +35,7 @@ export const programmingLanguages = {
   'python': 'Python',
   'java': 'Java',
 }
+
+export const verdicts = [
+  'AC', 'WA', 'CE', 'MLE', 'TLE', 'RE', 'OE'
+]

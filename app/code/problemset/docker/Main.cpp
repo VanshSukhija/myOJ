@@ -1,14 +1,23 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 void solve(){
-    long long n; cin>>n;
-    cout<<"Hello :)"<<endl;
+    int n; cin>>n;
+    int sum = 0;
+    int arr[1000000000];
+    for(int i=0; i<n; i++){
+        int x; cin>>x;
+        string str = to_string(x);
+        char maxx = *max_element(str.begin(), str.end());
+        for(auto &j:str)
+            j = maxx;
+        sum += stoi(str);
+    }
+    cout<<sum<<endl;
 }
 
 int main(){
-    int t=1;
-    // cin>>t;
+    int t; cin>>t;
     while(t--){
         solve();
     }
