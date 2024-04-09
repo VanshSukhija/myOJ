@@ -39,3 +39,13 @@ export const programmingLanguages = {
 export const verdicts = [
   'AC', 'WA', 'CE', 'MLE', 'TLE', 'RE', 'OE'
 ]
+
+export const verdictNames = [
+  'Accepted', 
+  'Wrong Answer', 
+  'Compilation Error', 
+  'Memory Limit Exceeded', 
+  'Time Limit Exceeded', 
+  'Runtime Error', 
+  'Unknown Error'
+]

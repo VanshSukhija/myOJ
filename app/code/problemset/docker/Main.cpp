@@ -4,9 +4,11 @@ using namespace std;
 void solve(){
     int n; cin>>n;
     int sum = 0;
-    int arr[1000000000];
-    for(int i=0; i<n; i++){
-        int x; cin>>x;
+    vector<int> arr(n);
+    for(int i=0; i<n; i++)
+        cin>>arr[i];
+    for(int i=0; i<1e6; i++){
+        int x = 5;
         string str = to_string(x);
         char maxx = *max_element(str.begin(), str.end());
         for(auto &j:str)

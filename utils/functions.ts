@@ -1,18 +1,19 @@
-import { ProblemType } from '@utils/types';
+import { ProblemType, SubmissionOutputType } from '@utils/types';
 
 export async function codeRunner(problem: ProblemType, code: string, language: string) {
-  let outPutArray: string[] = [];
+  let outPutArray: SubmissionOutputType[] = [];
   try {
     for (const testcase of problem.testcases) {
-      await fetch(`http://localhost:3000/code/problemset/problems/${problem.problemID}/api`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/problemset/problems/${problem.problemID}/api`, {
         method: 'POST',
         body: JSON.stringify({
           code: code,
           extension: language,
           input: testcase.input,
           expectedOutput: testcase.expectedOutput,
-          timeLimit: Number(problem.timeLimit/1000),
-          memoryLimit: Number(1024*problem.memoryLimit)
+          timeLimit: Number(problem.timeLimit / 1000),
+          memoryLimit: Number(1024 * problem.memoryLimit),
+          submissionTime: Date.now()
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -20,12 +21,7 @@ export async function codeRunner(problem: ProblemType, code: string, language: s
       })
         .then(res => res.json())
         .then(data => {
-          console.log(data);
-          if(data.status){
-            outPutArray.push(data.output);
-          } else {
-            outPutArray.push(data.error);
-          }
+          outPutArray.push(data);
         })
         .catch(err => console.error(err))
     }

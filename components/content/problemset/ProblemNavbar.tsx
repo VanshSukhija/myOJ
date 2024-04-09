@@ -6,6 +6,7 @@ import { notFound, useParams, usePathname } from 'next/navigation'
 import Link from 'next/link';
 import { codeRunner } from '@utils/functions';
 import { SelectedProblemContext } from '@app/code/problemset/layout';
+import { SubmissionOutputType } from '@utils/types';
 
 const ProblemNavbar = () => {
   const params = useParams()
@@ -15,7 +16,7 @@ const ProblemNavbar = () => {
 
   const [code, setCode] = useState<string>('')
   const [extension, setExtension] = useState<string>('')
-  const [outputArray, setOutputArray] = useState<string[]>([])
+  const [outputArray, setOutputArray] = useState<SubmissionOutputType[]>([])
 
   useEffect(() => {
     setSelectedProblem(null);
@@ -42,8 +43,8 @@ const ProblemNavbar = () => {
 
   const runTestCases = async (e: any) => {
     e.preventDefault()
-    const output: string[] = await codeRunner(selectedProblem!, code, extension)
-    setOutputArray(output)
+    const output: SubmissionOutputType[] = await codeRunner(selectedProblem!, code, extension)
+    setOutputArray(() => output)
   }
 
   useEffect(() => {
@@ -77,7 +78,9 @@ const ProblemNavbar = () => {
           <div className='text-white'>
             {selectedProblem?.difficulty == 0 ? <span className='bg-green-500 px-2 rounded-lg'>Easy</span> :
               selectedProblem?.difficulty == 1 ? <span className='bg-yellow-500 px-2 rounded-lg'>Medium</span> :
-                <span className='bg-red-500 px-2 rounded-lg'>Hard</span>
+                selectedProblem?.difficulty == 2 ?
+                  <span className='bg-red-500 px-2 rounded-lg'>Hard</span> :
+                  <span className='bg-gray-500 px-2 rounded-lg'>Unknown</span>
             } |
             {
               selectedProblem?.tags

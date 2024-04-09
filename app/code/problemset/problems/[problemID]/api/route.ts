@@ -3,14 +3,13 @@ import fs from 'fs';
 import path from 'path';
 import { promisify } from "util";
 import { exec } from "child_process";
-import { verdicts } from "@utils/constants";
 
 const execAsync = promisify(exec);
 
 export async function POST(req: Request, res: Response) {
   // image has already been built
   const data = await req.json()
-  const { code, extension, input, expectedOutput, timeLimit, memoryLimit } = data;
+  const { code, extension, input, expectedOutput, timeLimit, memoryLimit, submissionTime } = data;
   const filePath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', `Main.${data.extension}`);
   const inputPath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', 'input.txt');
   const expectedOutputPath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', 'expectedOutput.txt');
@@ -39,47 +38,51 @@ export async function POST(req: Request, res: Response) {
     // const cmd = `docker run -v ${cwd}:/app/ myoj-code-runner ${extension} ${timeLimit} ${memoryLimit}`
 
     const runOutput = await execAsync(cmd, { cwd: cwd });
-    
+
     const timeTaken: string = fs.readFileSync(time_memoryPath, 'utf8')
-    .split('\n')
-    .filter((line: string) => line.includes('time_taken'))[0]
-    .split(' ')[1] || "0.00";
+      .split('\n')
+      .filter((line: string) => line.includes('time_taken'))[0]
+      .split(' ')[1] || "0.00";
 
     const memoryUsed: string = fs.readFileSync(time_memoryPath, 'utf8')
-    .split('\n')
-    .filter((line: string) => line.includes('memory_used'))[0]
-    .split(' ')[1] || "0";
-    
+      .split('\n')
+      .filter((line: string) => line.includes('memory_used'))[0]
+      .split(' ')[1] || "0";
+
     const output: string = fs.readFileSync(outputPath, 'utf8').trim();
 
     return NextResponse.json({
       status: 1,
+      runOutput: runOutput,
       timeTaken: timeTaken,
       memoryUsed: memoryUsed,
       output: output,
-      verdict: "AC",
-      runOutput: runOutput
+      submissionTime: submissionTime,
+      code: code,
+      language: extension,
     });
-  } catch (error: any) {
+  } catch (error) {
     const timeTaken: string = fs.readFileSync(time_memoryPath, 'utf8')
-    .split('\n')
-    .filter((line: string) => line.includes('time_taken'))[0]
-    .split(' ')[1] || "0.00";
+      .split('\n')
+      .filter((line: string) => line.includes('time_taken'))[0]
+      .split(' ')[1] || "0.00";
 
     const memoryUsed: string = fs.readFileSync(time_memoryPath, 'utf8')
-    .split('\n')
-    .filter((line: string) => line.includes('memory_used'))[0]
-    .split(' ')[1] || "0";
-    
+      .split('\n')
+      .filter((line: string) => line.includes('memory_used'))[0]
+      .split(' ')[1] || "0";
+
     const output: string = fs.readFileSync(outputPath, 'utf8').trim();
-    
+
     return NextResponse.json({
       status: 0,
       error: error,
-      output: output,
       timeTaken: timeTaken,
-      memoryUsed: (memoryUsed <= String(memoryLimit)) ? memoryUsed : memoryLimit.toString(),
-      verdict: verdicts[error.code]
+      memoryUsed: memoryUsed,
+      output: output,
+      submissionTime: submissionTime,
+      code: code,
+      language: extension,
     });
   }
 }

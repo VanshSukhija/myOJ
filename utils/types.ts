@@ -10,11 +10,7 @@ export type ProblemType = {
   memoryLimit: number;
   difficulty: number;
   tags: string;
-  testcases: {
-    id: string | string[];
-    input: string;
-    expectedOutput: string;
-  }[];
+  testcases: TestcaseType[];
   note: string;
   tutorial: string;
   solution: string;
@@ -22,6 +18,12 @@ export type ProblemType = {
   solutionLanguage: string;
   checkerCode: string;
   checkerLanguage: string;
+}
+
+export type TestcaseType = {
+  id: string | string[];
+  input: string;
+  expectedOutput: string;
 }
 
 export type OnlyProblemType = {
@@ -45,11 +47,7 @@ export type DisplayProblemType = {
   memoryLimit: number;
   difficulty: number;
   tags: string;
-  testcases: {
-    id: string | string[];
-    input: string;
-    expectedOutput: string;
-  }[];
+  testcases: TestcaseType[];
   note: string;
   tutorial: string;
   solution: string;
@@ -79,4 +77,34 @@ export type OnlyContestsType = {
   endTime: string;
   registrationTime: string;
   createdBy: string;
+}
+
+export type SubmissionOutputType = {
+  status: number;
+  timeTaken: string;
+  memoryUsed: string;
+  output: string;
+  error?: {
+    cmd: string;
+    code: number;
+    signal: string | null;
+    stdout: string;
+    stderr: string;
+    killed: boolean;
+  };
+  runOutput?: {
+    stdout: string;
+    stderr: string;
+  };
+}
+
+export type PostSubmissionType = {
+  submissionID: string | string[];
+  problemID: string | string[];
+  id: string | string[];
+  code: string;
+  language: string;
+  timeTaken: string;
+  memoryUsed: string;
+  verdict: number;
 }
