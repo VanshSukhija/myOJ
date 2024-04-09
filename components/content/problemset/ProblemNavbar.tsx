@@ -19,7 +19,7 @@ const ProblemNavbar = () => {
   const [outputArray, setOutputArray] = useState<SubmissionOutputType[]>([])
 
   useEffect(() => {
-    setSelectedProblem(null);
+    // setSelectedProblem(null);
 
     const fetchProblem = async () => {
       try {
@@ -39,7 +39,7 @@ const ProblemNavbar = () => {
     }
 
     fetchProblem();
-  }, [])
+  }, [params.problemID])
 
   const runTestCases = async (e: any) => {
     e.preventDefault()
@@ -117,22 +117,22 @@ const ProblemNavbar = () => {
 
       <nav className='w-full border-b-2'>
         <Link href={`/code/problemset/problems/${params.problemID}/description`}>
-          <button className={`w-1/6 border-x-2 py-1 px-2 ${tab === 'description' ? 'bg-sky-950' : ''}`}>
+          <button className={`w-1/6 border-x-2 py-1 px-2 hover:bg-white hover:text-cyan-600 ${tab === 'description' ? 'bg-cyan-600 text-white' : ''}`}>
             Description
           </button>
         </Link>
         <Link href={`/code/problemset/problems/${params.problemID}/submissions`}>
-          <button className={`w-1/6 border-r-2 py-1 px-2 ${tab === 'submissions' ? 'bg-sky-950' : ''}`}>
+          <button className={`w-1/6 border-r-2 py-1 px-2 hover:bg-white hover:text-cyan-600 ${tab === 'submissions' ? 'bg-cyan-600 text-white' : ''}`}>
             Submissions
           </button>
         </Link>
         <Link href={`/code/problemset/problems/${params.problemID}/solution`}>
-          <button className={`w-1/6 border-r-2 py-1 px-2 ${tab === 'solution' ? 'bg-sky-950' : ''}`}>
+          <button className={`w-1/6 border-r-2 py-1 px-2 hover:bg-white hover:text-cyan-600 ${tab === 'solution' ? 'bg-cyan-600 text-white' : ''}`}>
             Solution
           </button>
         </Link>
         <Link href={`/code/problemset/problems/${params.problemID}/ide`}>
-          <button className={`w-1/6 border-r-2 py-1 px-2 ${tab === 'ide' ? 'bg-sky-950' : ''}`}>
+          <button className={`w-1/6 border-r-2 py-1 px-2 hover:bg-white hover:text-cyan-600 ${tab === 'ide' ? 'bg-cyan-600 text-white' : ''}`}>
             IDE
           </button>
         </Link>

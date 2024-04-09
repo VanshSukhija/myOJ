@@ -32,6 +32,7 @@ export type OnlyProblemType = {
   problemName: string;
   difficulty: number;
   tags: string;
+  minimumVerdict: number | null;
 }
 
 export type DisplayProblemType = {
@@ -107,4 +108,17 @@ export type PostSubmissionType = {
   timeTaken: string;
   memoryUsed: string;
   verdict: number;
+}
+
+export type SubmissionsByProblemType = {
+  submissionID: string | string[];
+  problemID: string | string[];
+  id: string | string[];
+  code: string;
+  language: string;
+  timeTaken: string;
+  memoryUsed: string;
+  verdict: number;
+  username: string;
+  problemName: string;
 }

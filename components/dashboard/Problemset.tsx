@@ -46,7 +46,7 @@ const Problemset = () => {
         <Filters />
 
         {
-          allProblems.map((problem: OnlyProblemType, idx: number) => {
+          allProblems.length > 0 && allProblems.map((problem: OnlyProblemType, idx: number) => {
             return (
               <div key={idx} className='w-full'>
                 <Problem problem={problem} index={idx + 1} />
@@ -56,7 +56,7 @@ const Problemset = () => {
         }
       </div>
 
-      {/* <code>{'<<'} {'<'} | 1 | 2 | 3 | 4 | 5 | {'>'} {'>>'}</code> */}
+      <code>{'<<'} {'<'} | 1 | 2 | 3 | 4 | 5 | {'>'} {'>>'}</code>
     </div>
   )
 }
@@ -94,14 +94,13 @@ const Filters = () => {
 const Problem = ({ problem, index }: { problem: OnlyProblemType, index: number }) => {
   const params = useParams()
   const isSelected = problem.problemID === params.problemID
-  const isAccepted = true;
 
   return (
-    <Link 
+    <Link
       href={`/code/problemset/problems/${problem.problemID}/description`}
       className={`group w-full py-1 pr-2 flex justify-between items-center border-y-2 border-slate-400 hover:text-cyan-600 hover:bg-white ${isSelected ? "bg-cyan-600" : ""}`}
     >
-      <div className={`w-1 h-12 bg-green-400 mr-1.5`}></div>
+      <div className={`w-1 h-12 mr-1.5 ${problem.minimumVerdict === null ? '' : problem.minimumVerdict === 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
       <div className='w-full'>
         <div>#{index} | {problem.problemName}</div>
         <div className='truncate'>

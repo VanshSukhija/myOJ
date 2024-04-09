@@ -6,7 +6,12 @@ export async function GET() {
   try {
     const results: any = await excuteQuery({
       query: `
-        SELECT problemID, contestID, problemName, difficulty, tags FROM problem
+        SELECT problem.problemID, problem.contestID, problem.problemName, problem.difficulty, problem.tags, temp.minimumVerdict FROM problem
+        LEFT JOIN (
+          SELECT MIN(submission.verdict) AS minimumVerdict, problem.problemID FROM submission
+          RIGHT JOIN problem ON submission.problemID = problem.problemID
+          GROUP BY problem.problemID
+        ) AS temp ON temp.problemID = problem.problemID
         ORDER BY problem.problemID DESC;
       `,
     });
@@ -17,7 +22,8 @@ export async function GET() {
         contestID: result.contestID,
         problemName: result.problemName,
         difficulty: result.difficulty=== 'EASY' ? 0 : result.difficulty === 'MEDIUM' ? 1 : 2,
-        tags: result.tags
+        tags: result.tags,
+        minimumVerdict: result.minimumVerdict
       }
     }));
   } catch (error) {
