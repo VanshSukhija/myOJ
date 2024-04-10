@@ -45,7 +45,7 @@ const Create = () => {
           <div className='font-bold px-1 text-xl text-center'>Your Contests</div>
           <div className='bg-red-500 w-full flex flex-col'>
             {
-              allContests?.map((contest: OnlyContestsType, idx: number) => {
+              allContests.length > 0 && allContests.map((contest: OnlyContestsType, idx: number) => {
                 return (
                   <div key={idx} className='w-full'>
                     <EditContest contest={contest} index={idx} />

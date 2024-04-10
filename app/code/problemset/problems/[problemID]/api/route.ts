@@ -8,9 +8,17 @@ const execAsync = promisify(exec);
 
 export async function POST(req: Request, res: Response) {
   // image has already been built
-  const data = await req.json()
-  const { code, extension, input, expectedOutput, timeLimit, memoryLimit, submissionTime } = data;
-  const filePath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', `Main.${data.extension}`);
+  const { 
+    code,
+    extension,
+    input,
+    expectedOutput,
+    timeLimit,
+    memoryLimit,
+    submissionTime,
+    userID,
+  } = await req.json();
+  const filePath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', `Main.${extension}`);
   const inputPath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', 'input.txt');
   const expectedOutputPath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', 'expectedOutput.txt');
   const outputPath = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker', 'output.txt');
@@ -31,10 +39,12 @@ export async function POST(req: Request, res: Response) {
     if (err) throw err;
   });
 
+  console.log('user id:', userID)
+
   // run the code
   try {
     const cwd = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker');
-    const cmd = `docker run -v ${filePath}:/app/Main.${extension} -v ${inputPath}:/app/input.txt -v ${expectedOutputPath}:/app/expectedOutput.txt -v ${outputPath}:/app/output.txt -v ${time_memoryPath}:/app/time_memory.txt myoj-code-runner ${extension} ${timeLimit} ${memoryLimit}`
+    const cmd = `docker run -v ${filePath}:/app/Main.${extension} -v ${inputPath}:/app/input.txt -v ${expectedOutputPath}:/app/expectedOutput.txt -v ${outputPath}:/app/output.txt -v ${time_memoryPath}:/app/time_memory.txt --name ${userID} --rm vanshsukhija/myoj-code-runner ${extension} ${timeLimit} ${memoryLimit}`
     // const cmd = `docker run -v ${cwd}:/app/ myoj-code-runner ${extension} ${timeLimit} ${memoryLimit}`
 
     const runOutput = await execAsync(cmd, { cwd: cwd });

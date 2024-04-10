@@ -28,22 +28,29 @@ const ProblemIDE = () => {
 
   const runTestCases = async (e: any) => {
     e.preventDefault()
-    if (!selectedProblem) return
+    if (!selectedProblem) return;
+    if (status === 'loading') return;
+    if (!session) return;
+
     setOutputArray(() => [])
-    const output: SubmissionOutputType[] = await codeRunner(selectedProblem, code, language)
+    const output: SubmissionOutputType[] = await codeRunner(selectedProblem, code, language, session.user.id as string)
     setOutputArray(() => output)
   }
 
   const runCustomCase = async (e: any) => {
     e.preventDefault()
-    if (!selectedProblem) return
+    if (!selectedProblem) return;
+    if (status === 'loading') return;
+    if (!session) return;
+
+    setCustomOutput(null)
     const output: SubmissionOutputType[] = await codeRunner({
       ...selectedProblem, testcases: [{
         id: "custom",
         input: customInput,
         expectedOutput: ''
       }]
-    }, code, language)
+    }, code, language, session.user.id as string)
     setCustomOutput(output[0])
   }
 
@@ -51,22 +58,23 @@ const ProblemIDE = () => {
     if (!selectedProblem) return
     setCustomInput(selectedProblem.testcases[0].input)
   }, [selectedProblem])
-  
+
   useEffect(() => {
-    if(!outputArray.length) return;
+    if (!outputArray.length) return;
 
     const postSubmission = async () => {
-      if(!selectedProblem) return
-      if(status === 'loading') return;
-      if(!session) return;
+      if (!selectedProblem) return
+      if (status === 'loading') return;
+      if (!session) return;
+
       const submission: PostSubmissionType = {
         submissionID: `${Date.now()}`,
         problemID: selectedProblem.problemID,
         id: session.user.id,
         code: code,
         language: language,
-        timeTaken: outputArray.map(output => Number(output.timeTaken)*100/100).sort((a, b) => b - a)[0].toString(), // max time taken
-        memoryUsed: outputArray.map(output => Number(output.memoryUsed)*100/100).sort((a, b) => b - a)[0].toString(), // max memory used
+        timeTaken: outputArray.map(output => Number(output.timeTaken) * 100 / 100).sort((a, b) => b - a)[0].toString(), // max time taken
+        memoryUsed: outputArray.map(output => Number(output.memoryUsed) * 100 / 100).sort((a, b) => b - a)[0].toString(), // max memory used
         verdict: firstNonZeroCode(outputArray),
       }
 
@@ -89,7 +97,7 @@ const ProblemIDE = () => {
     postSubmission();
   }, [outputArray]);
 
-  // useEffect(() => console.log(customOutput), [customOutput]);
+  // useEffect(() => console.log(session, status), [session]);
 
   const parseCustomOutput = (output: SubmissionOutputType | null) => {
     if (output === null) return ''

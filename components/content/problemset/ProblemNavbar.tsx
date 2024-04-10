@@ -7,12 +7,14 @@ import Link from 'next/link';
 import { codeRunner } from '@utils/functions';
 import { SelectedProblemContext } from '@app/code/problemset/layout';
 import { SubmissionOutputType } from '@utils/types';
+import { useSession } from 'next-auth/react';
 
 const ProblemNavbar = () => {
   const params = useParams()
   const pathname = usePathname().split('/')
   const { selectedProblem, setSelectedProblem } = useContext(SelectedProblemContext)
   const tab = pathname[pathname.length - 1]
+  const { data: session, status } = useSession()
 
   const [code, setCode] = useState<string>('')
   const [extension, setExtension] = useState<string>('')
@@ -43,7 +45,12 @@ const ProblemNavbar = () => {
 
   const runTestCases = async (e: any) => {
     e.preventDefault()
-    const output: SubmissionOutputType[] = await codeRunner(selectedProblem!, code, extension)
+    if (!selectedProblem) return;
+    if (status === 'loading') return;
+    if (!session) return;
+    
+    setOutputArray(() => [])
+    const output: SubmissionOutputType[] = await codeRunner(selectedProblem, code, extension, session.user.id as string)
     setOutputArray(() => output)
   }
 

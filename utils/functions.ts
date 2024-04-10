@@ -1,6 +1,6 @@
 import { ProblemType, SubmissionOutputType } from '@utils/types';
 
-export async function codeRunner(problem: ProblemType, code: string, language: string) {
+export async function codeRunner(problem: ProblemType, code: string, language: string, userID: string) {
   let outPutArray: SubmissionOutputType[] = [];
   try {
     for (const testcase of problem.testcases) {
@@ -13,7 +13,8 @@ export async function codeRunner(problem: ProblemType, code: string, language: s
           expectedOutput: testcase.expectedOutput,
           timeLimit: Number(problem.timeLimit / 1000),
           memoryLimit: Number(1024 * problem.memoryLimit),
-          submissionTime: Date.now()
+          submissionTime: Date.now(),
+          userID: userID,
         }),
         headers: {
           'Content-Type': 'application/json'

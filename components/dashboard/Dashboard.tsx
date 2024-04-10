@@ -1,11 +1,11 @@
 import React from 'react'
-import Home from "./Home"
-import Problemset from "./Problemset"
-import Contests from "./Contests"
-import Blogs from "./Blogs"
-import Create from "./Create"
-import Profile from "./Profile"
-import Settings from "./Settings"
+import Home from '@components/dashboard/Home'
+import Problemset from '@components/dashboard/Problemset'
+import Contests from '@components/dashboard/Contests'
+import Blogs from '@components/dashboard/Blogs'
+import Create from '@components/dashboard/Create'
+import Profile from '@components/dashboard/Profile'
+import Settings from '@components/dashboard/Settings'
 
 const Dashboard = ({ active }: { active: string }) => {
 
