@@ -3,7 +3,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div>
+    <div className='overflow-y-auto h-screen'>
       <ContestDescription />
     </div>
   )

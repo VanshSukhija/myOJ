@@ -19,7 +19,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { contestID, userID } = await req.json();
+  const { contestID } = await req.json();
 
   try {
     const result: any = await excuteQuery({
@@ -27,13 +27,19 @@ export async function POST(req: Request) {
           SELECT * FROM contest
           WHERE contestID = ?;
 
-          SELECT COUNT(DISTINCT id) AS participantCount FROM party
-          WHERE contestID = ? AND id = ?;
+          SELECT user.id, user.name, user.email, user.image, user.isAdmin FROM party
+          INNER JOIN user ON user.id = party.id
+          WHERE contestID = '1711721422159'
+          ORDER BY user.name ASC;
         `,
-      values: [contestID, contestID, userID]
+      values: [contestID, contestID]
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json({
+      status: "success",
+      contestDetails: result[0].length > 0 ? result[0][0] : null,
+      participants: result[1]
+    });
   } catch (error) {
     return NextResponse.json(error);
   }

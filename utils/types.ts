@@ -126,3 +126,11 @@ export type ContestWithParticipantsType = {
   endTime: string;
   participantCount: number;
 }
+
+export type UserType = {
+  id: string | string[];
+  name: string;
+  email: string;
+  image: string;
+  isAdmin: boolean;
+}

@@ -108,8 +108,8 @@ const ContestList = ({ contest }: { contest: ContestWithParticipantsType }) => {
           <span className='font-bold'>{contest.contestName}</span>
         </div>
         <div>
-          {String(new Date(contest.startTime).toLocaleDateString())}
-          {', ' + String(new Date(contest.startTime).toLocaleTimeString())} |
+          {String(new Date(contest.startTime).toLocaleDateString())} |
+          {' ' + String(new Date(contest.startTime).toLocaleTimeString())} |
           {' ' + timeDifference(new Date(contest.endTime), new Date(contest.startTime))}
         </div>
       </div>
