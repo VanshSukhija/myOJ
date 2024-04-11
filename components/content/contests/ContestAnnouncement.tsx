@@ -66,18 +66,18 @@ const ContestDescription = () => {
     <div>
       <ContestHeader contest={contest} />
 
-      <div className='w-full h-full px-3 py-2 overflow-auto'>
+      <div className='w-full h-full overflow-auto'>
         <div
           dangerouslySetInnerHTML={{ __html: contest.contestDescription }}
-          className='h-fit min-h-full'
+          className='ql-editor'
         />
       </div>
 
-      <div className='w-full py-2 flex justify-center items-center'>
+      <div className='w-full py-2 flex justify-center items-center gap-2'>
         {
           new Date(contest.startTime) < new Date() ?
             <Link
-              href={`/contests/${contest.contestID}/problems`}
+              href={`/code/contests/${contest.contestID}/problems`}
               className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'
             >
               Go To Contest
@@ -90,17 +90,26 @@ const ContestDescription = () => {
                     className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'
                     onClick={registerUserToContest}
                   >
-                    Register
+                    Register :)
                   </div> :
                   <div
                     className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'
                     onClick={UnegisterUserToContest}
                   >
-                    Unregister
+                    Unregister :(
                   </div> :
               <div className='border-2 border-pink-500 px-3 py-2'>
                 Registration will start on {new Date(contest.registrationTime).toLocaleString()}
               </div>
+        }
+        {
+          new Date(contest.registrationTime) < new Date() &&
+          <Link
+            href={`/code/contests/${contest.contestID}/participants`}
+            className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'
+          >
+            See Participants
+          </Link>
         }
       </div>
     </div>

@@ -57,8 +57,6 @@ export async function POST(req: Request) {
           solution: problem.solution,
           createdBy: problem.createdBy,
           solutionLanguage: problem.solutionLanguage,
-          checkerCode: problem.checkerCode,
-          checkerLanguage: problem.checkerLanguage
         }
   
         if (!problemsArray.length || problemsArray[problemsArray.length - 1].problemID !== newProb.problemID) {

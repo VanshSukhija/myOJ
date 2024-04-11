@@ -70,9 +70,7 @@ const ContestCreate = () => {
     createdBy: session?.user.id,
     timeLimit: 0,
     memoryLimit: 0,
-    solutionLanguage: "",
-    checkerCode: "",
-    checkerLanguage: ""
+    solutionLanguage: ""
   }
 
   const emptyContest: ContestType = {

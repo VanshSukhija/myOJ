@@ -115,10 +115,10 @@ const ContestList = ({ contest }: { contest: ContestWithParticipantsType }) => {
       </div>
 
       <div className='w-20 text-right'>
-        <Link href={`/code/contests/${contest.contestID}/participants`} className='flex gap-1 justify-end items-center hover:underline'>
+        <div className='flex gap-1 justify-end items-center'>
           <span>{contest.participantCount}</span>
           <FontAwesomeIcon icon={faPeopleGroup} className="text-s" />
-        </Link>
+        </div>
         <FontAwesomeIcon icon={faAngleRight} className="text-s" />
       </div>
     </Link>

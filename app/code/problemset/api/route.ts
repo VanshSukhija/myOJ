@@ -67,9 +67,7 @@ export async function POST(req: Request) {
       tutorial: results[0].tutorial,
       solution: results[0].solution,
       createdBy: results[0].createdBy,
-      solutionLanguage: results[0].solutionLanguage,
-      checkerCode: results[0].checkerCode,
-      checkerLanguage: results[0].checkerLanguage
+      solutionLanguage: results[0].solutionLanguage
     }
 
     return NextResponse.json(problem);

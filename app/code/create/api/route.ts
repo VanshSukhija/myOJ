@@ -47,8 +47,6 @@ export async function POST(req: Request) {
       problem.tutorial,
       problem.solution,
       problem.solutionLanguage,
-      problem.checkerCode,
-      problem.checkerLanguage
     ];
   })
 
@@ -110,14 +108,12 @@ export async function POST(req: Request) {
           note, 
           tutorial, 
           solution,
-          solutionLanguage,
-          checkerCode,
-          checkerLanguage
+          solutionLanguage
         ) 
         VALUES ${
           contest.problems.map((_) => {
             return `(
-              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )`;
           }).join(", ")
         }
@@ -134,9 +130,7 @@ export async function POST(req: Request) {
           note = VALUES(note), 
           tutorial = VALUES(tutorial), 
           solution = VALUES(solution),
-          solutionLanguage = VALUES(solutionLanguage),
-          checkerCode = VALUES(checkerCode),
-          checkerLanguage = VALUES(checkerLanguage)
+          solutionLanguage = VALUES(solutionLanguage)
         ;
 
         INSERT INTO test (

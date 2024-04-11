@@ -16,8 +16,6 @@ export type ProblemType = {
   solution: string;
   createdBy: string;
   solutionLanguage: string;
-  checkerCode: string;
-  checkerLanguage: string;
 }
 
 export type TestcaseType = {
@@ -54,8 +52,6 @@ export type DisplayProblemType = {
   solution: string;
   createdBy: string;
   solutionLanguage: string;
-  checkerCode: string;
-  checkerLanguage: string;
   username: string;
 }
 

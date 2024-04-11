@@ -66,8 +66,6 @@ const layout = ({ children }: { children: React.ReactNode }) => {
     timeLimit: 0,
     memoryLimit: 0,
     solutionLanguage: "",
-    checkerCode: "",
-    checkerLanguage: "",
   }
 
   const [contest, setContest] = useState<ContestType>(emptyContest)

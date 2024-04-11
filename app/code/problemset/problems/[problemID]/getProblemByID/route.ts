@@ -50,8 +50,6 @@ export async function POST(req: Request) {
       solution: results[0][0].solution,
       createdBy: results[0][0].createdBy,
       solutionLanguage: results[0][0].solutionLanguage,
-      checkerCode: results[0][0].checkerCode,
-      checkerLanguage: results[0][0].checkerLanguage,
       username: results[0][0].username
     }
 
