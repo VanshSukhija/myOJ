@@ -122,3 +122,11 @@ export type SubmissionsByProblemType = {
   username: string;
   problemName: string;
 }
+
+export type ContestWithParticipantsType = {
+  contestID: string | string[];
+  contestName: string;
+  startTime: string;
+  endTime: string;
+  participantCount: number;
+}

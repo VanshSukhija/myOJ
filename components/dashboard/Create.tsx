@@ -7,13 +7,16 @@ import { OnlyContestsType } from '@utils/types';
 import { useSession } from 'next-auth/react';
 
 const Create = () => {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const contestID = `${Date.now()}`
   const [allContests, setAllContests] = useState<OnlyContestsType[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/contests/api/getAllContests`, {
+      if(status === 'loading') return
+      if(!session) return
+
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/contests/api/getAllContestsByUser`, {
         method: 'POST',
         body: JSON.stringify({ userID: session?.user.id }),
         headers: {
@@ -28,7 +31,7 @@ const Create = () => {
     }
 
     fetchData()
-  }, [])
+  }, [session])
 
   useEffect(() => console.log(allContests), [allContests])
 
