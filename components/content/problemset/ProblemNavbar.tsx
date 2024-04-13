@@ -133,11 +133,6 @@ const ProblemNavbar = () => {
             Submissions
           </button>
         </Link>
-        <Link href={`/code/problemset/problems/${params.problemID}/solution`}>
-          <button className={`w-1/6 border-r-2 py-1 px-2 hover:bg-white hover:text-cyan-600 ${tab === 'solution' ? 'bg-cyan-600 text-white' : ''}`}>
-            Solution
-          </button>
-        </Link>
         <Link href={`/code/problemset/problems/${params.problemID}/ide`}>
           <button className={`w-1/6 border-r-2 py-1 px-2 hover:bg-white hover:text-cyan-600 ${tab === 'ide' ? 'bg-cyan-600 text-white' : ''}`}>
             IDE

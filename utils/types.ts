@@ -12,10 +12,7 @@ export type ProblemType = {
   tags: string;
   testcases: TestcaseType[];
   note: string;
-  tutorial: string;
-  solution: string;
   createdBy: string;
-  solutionLanguage: string;
 }
 
 export type TestcaseType = {
@@ -48,10 +45,7 @@ export type DisplayProblemType = {
   tags: string;
   testcases: TestcaseType[];
   note: string;
-  tutorial: string;
-  solution: string;
   createdBy: string;
-  solutionLanguage: string;
   username: string;
 }
 

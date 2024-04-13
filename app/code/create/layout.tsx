@@ -60,12 +60,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
     tags: '',
     testcases: [],
     note: "",
-    tutorial: "",
-    solution: "",
     createdBy: session?.user.id,
     timeLimit: 0,
     memoryLimit: 0,
-    solutionLanguage: "",
   }
 
   const [contest, setContest] = useState<ContestType>(emptyContest)

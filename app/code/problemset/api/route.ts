@@ -64,10 +64,7 @@ export async function POST(req: Request) {
         }
       }),
       note: results[0].note,
-      tutorial: results[0].tutorial,
-      solution: results[0].solution,
       createdBy: results[0].createdBy,
-      solutionLanguage: results[0].solutionLanguage
     }
 
     return NextResponse.json(problem);

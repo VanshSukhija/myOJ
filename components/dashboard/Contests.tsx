@@ -3,6 +3,7 @@ import { faAngleRight, faPeopleGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ContestWithParticipantsType } from '@utils/types';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
 const Contests = () => {
@@ -91,6 +92,8 @@ const Contests = () => {
 }
 
 const ContestList = ({ contest }: { contest: ContestWithParticipantsType }) => {
+  const params = useParams()
+
   function timeDifference(dt2: Date, dt1: Date): string {
     const diff = dt2.getTime() - dt1.getTime();
     const hours = diff / (1000 * 60 * 60);
@@ -101,7 +104,7 @@ const ContestList = ({ contest }: { contest: ContestWithParticipantsType }) => {
   return (
     <Link
       href={`/code/contests/${contest.contestID}/announcement`}
-      className={`group w-full p-1 flex justify-between items-center hover:text-pink-500 hover:bg-white border-y border-slate-300`}
+      className={`group w-full p-1 flex justify-between items-center hover:text-pink-500 hover:bg-white border-y border-slate-300 ${params.contestID && params.contestID === contest.contestID ? 'bg-white text-pink-500' : ''}`}
     >
       <div className='w-full'>
         <div>

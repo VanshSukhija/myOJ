@@ -46,10 +46,7 @@ export async function POST(req: Request) {
         }
       }),
       note: results[0][0].note,
-      tutorial: results[0][0].tutorial,
-      solution: results[0][0].solution,
       createdBy: results[0][0].createdBy,
-      solutionLanguage: results[0][0].solutionLanguage,
       username: results[0][0].username
     }
 

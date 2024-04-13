@@ -53,10 +53,7 @@ export async function POST(req: Request) {
           }
         ],
         note: problem.note,
-        tutorial: problem.tutorial,
-        solution: problem.solution,
         createdBy: problem.createdBy,
-        solutionLanguage: problem.solutionLanguage,
       }
 
       if (!problemsArray.length || problemsArray[problemsArray.length - 1].problemID !== newProb.problemID) {

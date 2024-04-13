@@ -44,9 +44,6 @@ export async function POST(req: Request) {
       problem.memoryLimit,
       problem.tags,
       problem.note,
-      problem.tutorial,
-      problem.solution,
-      problem.solutionLanguage,
     ];
   })
 
@@ -105,15 +102,12 @@ export async function POST(req: Request) {
           timeLimit, 
           memoryLimit, 
           tags, 
-          note, 
-          tutorial, 
-          solution,
-          solutionLanguage
+          note,
         ) 
         VALUES ${
           contest.problems.map((_) => {
             return `(
-              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+              ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )`;
           }).join(", ")
         }
@@ -127,10 +121,7 @@ export async function POST(req: Request) {
           timeLimit = VALUES(timeLimit), 
           memoryLimit = VALUES(memoryLimit), 
           tags = VALUES(tags), 
-          note = VALUES(note), 
-          tutorial = VALUES(tutorial), 
-          solution = VALUES(solution),
-          solutionLanguage = VALUES(solutionLanguage)
+          note = VALUES(note),
         ;
 
         INSERT INTO test (

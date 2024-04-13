@@ -65,12 +65,9 @@ const ContestCreate = () => {
     tags: '',
     testcases: [],
     note: "",
-    tutorial: "",
-    solution: "",
     createdBy: session?.user.id,
     timeLimit: 0,
     memoryLimit: 0,
-    solutionLanguage: ""
   }
 
   const emptyContest: ContestType = {
