@@ -28,6 +28,7 @@ export type OnlyProblemType = {
   difficulty: number;
   tags: string;
   minimumVerdict: number | null;
+  acceptedSubmissions: number | null;
 }
 
 export type DisplayProblemType = {

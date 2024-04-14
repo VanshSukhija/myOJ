@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import Loading from './loading'
 import ProblemNavbar from '@components/content/problemset/ProblemNavbar'
 import ProblemFooter from '@components/content/problemset/ProblemFooter'
-import { SelectedProblemContext } from '@app/code/problemset/layout';
+import { SelectedProblemContext } from '@app/code/contests/layout';
 
 const layout = ({
   children
@@ -13,9 +13,9 @@ const layout = ({
   return (
     <div className="flex-col flex-1 h-screen overflow-auto">
       <Suspense fallback={<Loading />}>
-        <ProblemNavbar SelectedProblemContext={SelectedProblemContext} primaryColor='cyan-600' />
+        <ProblemNavbar SelectedProblemContext={SelectedProblemContext} primaryColor='pink-500' />
         {children}
-        <ProblemFooter SelectedProblemContext={SelectedProblemContext} primaryColor='cyan-600' />
+        <ProblemFooter SelectedProblemContext={SelectedProblemContext} primaryColor='pink-500' />
       </Suspense>
     </div>
   )

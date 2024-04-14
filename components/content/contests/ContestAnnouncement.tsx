@@ -1,16 +1,17 @@
 "use client";
-import { OnlyContestsType, UserType } from '@utils/types';
-import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import { UserType } from '@utils/types';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useContext, useEffect, useState } from 'react'
 import ContestHeader from '@components/content/contests/ContestHeader';
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
-import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import ContestParticipants from './ContestParticipants';
+import { SelectedContestContext } from '@app/code/contests/layout';
+import Link from 'next/link';
 
 const ContestDescription = () => {
-  const [contest, setContest] = useState<OnlyContestsType | null>(null)
+  const { selectedContest, setSelectedContest } = useContext(SelectedContestContext)
   const [participants, setParticipants] = useState<UserType[] | null>(null)
   const params = useParams()
   const { data: session, status } = useSession();
@@ -19,6 +20,7 @@ const ContestDescription = () => {
 
   useEffect(() => {
     const fetchContest = async () => {
+      if (params.contestID === undefined) return
       if (status === 'loading') return
       if (!session) return
 
@@ -29,7 +31,7 @@ const ContestDescription = () => {
       const data = await res.json()
       console.log(data)
       if (data.status === 'error') return
-      setContest(data.contestDetails)
+      setSelectedContest(() => data.contestDetails)
       data.participants && setParticipants(data.participants)
       data.participants && setIsRegistered(data.participants.some((participant: any) => participant.id === session.user.id))
     }
@@ -69,23 +71,23 @@ const ContestDescription = () => {
   }
 
   return (
-    contest &&
+    selectedContest &&
     <div>
-      <ContestHeader contest={contest} />
+      <ContestHeader contest={selectedContest} />
 
       <div className='w-full h-full'>
         <div
-          dangerouslySetInnerHTML={{ __html: contest.contestDescription }}
+          dangerouslySetInnerHTML={{ __html: selectedContest.contestDescription }}
           className='ql-editor'
         />
       </div>
 
       <div className='w-full py-2 flex flex-col justify-center items-center gap-2'>
         {
-          new Date(contest.startTime) < new Date() ?
-            (isRegistered === true || new Date(contest.endTime) < new Date()) ?
+          new Date(selectedContest.startTime) < new Date() ?
+            (isRegistered === true || new Date(selectedContest.endTime) < new Date()) ?
               <Link
-                href={`/code/contests/${contest.contestID}/problems`}
+                href={`/code/contests/${selectedContest.contestID}/problems`}
                 className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'
               >
                 Go To Contest
@@ -94,7 +96,7 @@ const ContestDescription = () => {
                 Contest is running. You are not registered.
               </div>
             :
-            new Date(contest.registrationTime) < new Date() ?
+            new Date(selectedContest.registrationTime) < new Date() ?
               isRegistered === null ?
                 <div>Loading...</div>
                 :
@@ -114,11 +116,11 @@ const ContestDescription = () => {
                   </div>
               :
               <div className='border-2 border-pink-500 px-3 py-2'>
-                Registration will start on {new Date(contest.registrationTime).toLocaleString()}.
+                Registration will start on {new Date(selectedContest.registrationTime).toLocaleString()}.
               </div>
         }
         {
-          new Date(contest.registrationTime) < new Date() &&
+          new Date(selectedContest.registrationTime) < new Date() &&
           <div
             onClick={() => setIsShowingParticipants(prev => !prev)}
             className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'

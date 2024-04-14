@@ -2,35 +2,6 @@ import { NextResponse } from "next/server";
 import excuteQuery from "@utils/database";
 import { ProblemType } from "@utils/types";
 
-export async function GET() {
-  try {
-    const results: any = await excuteQuery({
-      query: `
-        SELECT problem.problemID, problem.contestID, problem.problemName, problem.difficulty, problem.tags, temp.minimumVerdict FROM problem
-        LEFT JOIN (
-          SELECT MIN(submission.verdict) AS minimumVerdict, problem.problemID FROM submission
-          RIGHT JOIN problem ON submission.problemID = problem.problemID
-          GROUP BY problem.problemID
-        ) AS temp ON temp.problemID = problem.problemID
-        ORDER BY problem.problemID DESC;
-      `,
-    });
-
-    return NextResponse.json(results.map((result: any) => {
-      return {
-        problemID: result.problemID,
-        contestID: result.contestID,
-        problemName: result.problemName,
-        difficulty: result.difficulty=== 'EASY' ? 0 : result.difficulty === 'MEDIUM' ? 1 : 2,
-        tags: result.tags,
-        minimumVerdict: result.minimumVerdict
-      }
-    }));
-  } catch (error) {
-    return NextResponse.json(error);
-  }
-}
-
 export async function POST(req: Request) {
   const { problemID } = await req.json();
   try {

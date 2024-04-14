@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
           SELECT user.id, user.name, user.email, user.image, user.isAdmin FROM party
           INNER JOIN user ON user.id = party.id
-          WHERE contestID = '1711721422159'
+          WHERE contestID = ?
           ORDER BY user.name ASC;
         `,
       values: [contestID, contestID]
@@ -41,6 +41,6 @@ export async function POST(req: Request) {
       participants: result[1]
     });
   } catch (error) {
-    return NextResponse.json(error);
+    return NextResponse.json({status: "error", error});
   }
 }

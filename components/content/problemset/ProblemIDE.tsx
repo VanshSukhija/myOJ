@@ -2,14 +2,19 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Editor as CodeEditor } from '@monaco-editor/react';
 import { codeRunner } from '@utils/functions';
-import { SelectedProblemContext } from '@app/code/problemset/layout';
-import { PostSubmissionType, SubmissionOutputType } from '@utils/types';
+import { DisplayProblemType, PostSubmissionType, SubmissionOutputType } from '@utils/types';
 import { verdictNames } from '@utils/constants';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from 'next-auth/react';
 
-const ProblemIDE = () => {
+const ProblemIDE = ({ SelectedProblemContext, primaryColor }: {
+  SelectedProblemContext: React.Context<{
+    selectedProblem: DisplayProblemType | null;
+    setSelectedProblem: React.Dispatch<React.SetStateAction<DisplayProblemType | null>>
+  }>,
+  primaryColor: string,
+}) => {
   const [code, setCode] = useState<string>('')
   const [language, setLanguage] = useState<string>('cpp')
   const [outputArray, setOutputArray] = useState<SubmissionOutputType[]>([])
@@ -115,10 +120,10 @@ const ProblemIDE = () => {
 
   return (
     <div className='p-1 w-full h-full flex flex-col gap-3'>
-      <div className='border-b-2 border-cyan-600 font-bold text-2xl flex justify-between items-center'>
+      <div className={`border-b-2 border-${primaryColor} font-bold text-2xl flex justify-between items-center`}>
         Code Editor
         <select
-          className='text-white bg-transparent text-lg font-normal focus:outline-none focus:border border-cyan-600 px-2 h-fit'
+          className={`text-white bg-transparent text-lg font-normal focus:outline-none focus:border border-${primaryColor} px-2 h-fit`}
           value={language}
           onChange={(event) => setLanguage(event.target.value)}
         >
@@ -147,7 +152,7 @@ const ProblemIDE = () => {
           <textarea
             cols={30}
             rows={5}
-            className='w-1/2 bg-black text-white border-2 border-cyan-600 focus:outline-none p-1'
+            className={`w-1/2 bg-black text-white border-2 border-${primaryColor} focus:outline-none p-1`}
             placeholder='Enter Custom Input'
             onChange={(e) => setCustomInput(e.target.value)}
             defaultValue={customInput}
@@ -156,7 +161,7 @@ const ProblemIDE = () => {
           <textarea
             cols={30}
             rows={5}
-            className='w-1/2 bg-black text-white border-2 border-cyan-600 focus:outline-none p-1'
+            className={`w-1/2 bg-black text-white border-2 border-${primaryColor} focus:outline-none p-1`}
             placeholder='Output for Custom Input will appear here'
             readOnly
             defaultValue={parseCustomOutput(customOutput)}
@@ -165,8 +170,8 @@ const ProblemIDE = () => {
         </div>
 
         <div className='flex gap-2'>
-          <button className='bg-cyan-600 px-2 py-1 rounded-full border-2 border-white w-28 min-w-fit hover:bg-white hover:text-cyan-600' onClick={runCustomCase}>Run</button>
-          <button className='bg-cyan-600 px-2 py-1 rounded-full border-2 border-white w-28 min-w-fit hover:bg-white hover:text-cyan-600' onClick={runTestCases}>Submit</button>
+          <button className={`bg-${primaryColor} px-2 py-1 rounded-full border-2 border-white w-28 min-w-fit hover:bg-white hover:text-${primaryColor}`} onClick={runCustomCase}>Run</button>
+          <button className={`bg-${primaryColor} px-2 py-1 rounded-full border-2 border-white w-28 min-w-fit hover:bg-white hover:text-${primaryColor}`} onClick={runTestCases}>Submit</button>
         </div>
 
         <div className='flex flex-col gap-2 max-h-1/3'>

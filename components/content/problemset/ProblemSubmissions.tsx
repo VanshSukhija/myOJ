@@ -1,11 +1,21 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react'
-import { SelectedProblemContext } from '@app/code/problemset/layout';
-import { SubmissionsByProblemType } from '@utils/types';
+import { DisplayProblemType, OnlyContestsType, SubmissionsByProblemType } from '@utils/types';
 import { useSession } from 'next-auth/react';
 import { verdictNames } from '@utils/constants';
 
-const ProblemSubmissions = () => {
+const ProblemSubmissions = ({ SelectedProblemContext, primaryColor, SelectedContestContext }: {
+  SelectedProblemContext: React.Context<{
+    selectedProblem: DisplayProblemType | null;
+    setSelectedProblem: React.Dispatch<React.SetStateAction<DisplayProblemType | null>>
+  }>,
+  primaryColor: string,
+  SelectedContestContext?: React.Context<{
+    selectedContest: OnlyContestsType | null;
+    setSelectedContest: React.Dispatch<React.SetStateAction<OnlyContestsType | null>>
+  }> | null
+}) => {
+  const { selectedContest } = SelectedContestContext ? useContext(SelectedContestContext) : { selectedContest: undefined }
   const { selectedProblem } = useContext(SelectedProblemContext)
   const [submissions, setSubmissions] = useState<SubmissionsByProblemType[]>([])
   const { data: session, status } = useSession()
@@ -22,6 +32,8 @@ const ProblemSubmissions = () => {
           method: 'POST',
           body: JSON.stringify({
             problemID: selectedProblem.problemID,
+            startTime: selectedContest ? Number(new Date(selectedContest.startTime).getTime()) : 0,
+            endTime: selectedContest ? Number(new Date(selectedContest.endTime).getTime()) : Number(new Date().getTime())
           }),
           headers: {
             'Content-Type': 'application/json',
@@ -41,7 +53,7 @@ const ProblemSubmissions = () => {
   return (
     <div className='p-1'>
       <section>
-        <div className='border-b-2 border-cyan-600 font-bold text-2xl flex justify-between items-center'>
+        <div className={`border-b-2 border-${primaryColor} font-bold text-2xl flex justify-between items-center`}>
           <span>Submissions</span>
           <div className='font-normal text-lg flex items-center gap-3'>
             <span className='flex gap-1'>
@@ -104,6 +116,12 @@ const ProblemSubmissions = () => {
                     </tr>
                   )
                 })
+              ||
+              <tr>
+                <td colSpan={8} className='border-2 border-slate-600 w-fit px-2 py-2 text-center'>
+                  No Submissions Yet
+                </td>
+              </tr>
             }
           </tbody>
         </table>

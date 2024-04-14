@@ -66,7 +66,7 @@ const Create = () => {
 const EditContest = ({ contest, index }: { contest: OnlyContestsType, index: number }) => {
   function timeDifference(dt2: Date, dt1: Date): string {
     const diff = dt2.getTime() - dt1.getTime();
-    const hours = diff / (1000 * 60 * 60);
+    const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = (diff % (1000 * 60 * 60)) / (1000 * 60);
     return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}h`;
   }

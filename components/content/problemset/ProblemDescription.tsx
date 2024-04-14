@@ -1,10 +1,16 @@
 "use client"
 import React, { useContext, useEffect } from 'react'
-import { SelectedProblemContext } from '@app/code/problemset/layout';
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
+import { DisplayProblemType } from '@utils/types';
 
-const ProblemDescription = () => {
+const ProblemDescription = ({ SelectedProblemContext, primaryColor }: {
+  SelectedProblemContext: React.Context<{
+    selectedProblem: DisplayProblemType | null;
+    setSelectedProblem: React.Dispatch<React.SetStateAction<DisplayProblemType | null>>
+  }>,
+  primaryColor: string,
+}) => {
   const { selectedProblem } = useContext(SelectedProblemContext)
 
   useEffect(() => {
@@ -15,7 +21,7 @@ const ProblemDescription = () => {
   return (
     <div className='p-1'>
       <section>
-        <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Description</div>
+        <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Description</div>
         <div
           className="ql-editor"
           dangerouslySetInnerHTML={{ __html: selectedProblem?.problemDescription || '' }}>
@@ -24,7 +30,7 @@ const ProblemDescription = () => {
       <br />
 
       <section>
-        <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Input</div>
+        <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Input</div>
         <div
           className="ql-editor"
           dangerouslySetInnerHTML={{ __html: selectedProblem?.inputFormat || '' }}>
@@ -33,7 +39,7 @@ const ProblemDescription = () => {
       <br />
 
       <section>
-        <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Output</div>
+        <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Output</div>
         <div
           className="ql-editor"
           dangerouslySetInnerHTML={{ __html: selectedProblem?.outputFormat || '' }}>
@@ -42,7 +48,7 @@ const ProblemDescription = () => {
       <br />
 
       <section>
-        <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Constraints</div>
+        <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Constraints</div>
         <div
           className="ql-editor"
           dangerouslySetInnerHTML={{ __html: selectedProblem?.constraints || '' }}>
@@ -51,7 +57,7 @@ const ProblemDescription = () => {
       <br />
 
       <section>
-        <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Sample Testcases</div>
+        <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Sample Testcases</div>
         <table className='table-auto border-2 border-slate-600 w-3/4 m-auto my-3'>
           <thead>
             <tr>
@@ -83,7 +89,7 @@ const ProblemDescription = () => {
         selectedProblem?.note &&
         <>
           <section>
-            <div className='border-b-2 border-cyan-600 font-bold text-2xl'>Note</div>
+            <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Note</div>
             <div
               className="ql-editor"
               dangerouslySetInnerHTML={{ __html: selectedProblem?.note || '' }}>

@@ -5,11 +5,16 @@ import { faClock, faEllipsisV, faPlay, faThunderstorm } from "@fortawesome/free-
 import { notFound, useParams, usePathname } from 'next/navigation'
 import Link from 'next/link';
 import { codeRunner } from '@utils/functions';
-import { SelectedProblemContext } from '@app/code/problemset/layout';
-import { SubmissionOutputType } from '@utils/types';
+import { DisplayProblemType, SubmissionOutputType } from '@utils/types';
 import { useSession } from 'next-auth/react';
 
-const ProblemNavbar = () => {
+const ProblemNavbar = ({ SelectedProblemContext, primaryColor }: {
+  SelectedProblemContext: React.Context<{
+    selectedProblem: DisplayProblemType | null;
+    setSelectedProblem: React.Dispatch<React.SetStateAction<DisplayProblemType | null>>
+  }>,
+  primaryColor: string,
+}) => {
   const params = useParams()
   const pathname = usePathname().split('/')
   const { selectedProblem, setSelectedProblem } = useContext(SelectedProblemContext)
@@ -21,7 +26,7 @@ const ProblemNavbar = () => {
   const [outputArray, setOutputArray] = useState<SubmissionOutputType[]>([])
 
   useEffect(() => {
-    // setSelectedProblem(null);
+    if (!params.problemID) return;
 
     const fetchProblem = async () => {
       try {
@@ -48,7 +53,7 @@ const ProblemNavbar = () => {
     if (!selectedProblem) return;
     if (status === 'loading') return;
     if (!session) return;
-    
+
     setOutputArray(() => [])
     const output: SubmissionOutputType[] = await codeRunner(selectedProblem, code, extension, session.user.id as string)
     setOutputArray(() => output)
@@ -79,7 +84,7 @@ const ProblemNavbar = () => {
 
   return (
     <>
-      <nav className='p-1.5 flex justify-between border-b-2 bg-cyan-600'>
+      <nav className={`p-1.5 flex justify-between border-b-2 bg-${primaryColor}`}>
         <div className='flex flex-col justify-between gap-1'>
           <div className='text-2xl font-bold'>{selectedProblem?.problemName}</div>
           <div className='text-white'>
@@ -123,18 +128,18 @@ const ProblemNavbar = () => {
       </nav>
 
       <nav className='w-full border-b-2'>
-        <Link href={`/code/problemset/problems/${params.problemID}/description`}>
-          <button className={`w-1/6 border-x-2 py-1 px-2 hover:bg-white hover:text-cyan-600 ${tab === 'description' ? 'bg-cyan-600 text-white' : ''}`}>
+        <Link href={`${pathname.slice(0, -1).join('/')}/description`}>
+          <button className={`w-1/6 border-x-2 py-1 px-2 hover:bg-white hover:text-${primaryColor} ${tab === 'description' ? `bg-${primaryColor} text-white` : ''}`}>
             Description
           </button>
         </Link>
-        <Link href={`/code/problemset/problems/${params.problemID}/submissions`}>
-          <button className={`w-1/6 border-r-2 py-1 px-2 hover:bg-white hover:text-cyan-600 ${tab === 'submissions' ? 'bg-cyan-600 text-white' : ''}`}>
+        <Link href={`${pathname.slice(0, -1).join('/')}/submissions`}>
+          <button className={`w-1/6 border-r-2 py-1 px-2 hover:bg-white hover:text-${primaryColor} ${tab === 'submissions' ? `bg-${primaryColor} text-white` : ''}`}>
             Submissions
           </button>
         </Link>
-        <Link href={`/code/problemset/problems/${params.problemID}/ide`}>
-          <button className={`w-1/6 border-r-2 py-1 px-2 hover:bg-white hover:text-cyan-600 ${tab === 'ide' ? 'bg-cyan-600 text-white' : ''}`}>
+        <Link href={`${pathname.slice(0, -1).join('/')}/ide`}>
+          <button className={`w-1/6 border-r-2 py-1 px-2 hover:bg-white hover:text-${primaryColor} ${tab === 'ide' ? `bg-${primaryColor} text-white` : ''}`}>
             IDE
           </button>
         </Link>
