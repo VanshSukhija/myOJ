@@ -88,11 +88,11 @@ const ContestDescription = () => {
             (isRegistered === true || new Date(selectedContest.endTime) < new Date()) ?
               <Link
                 href={`/code/contests/${selectedContest.contestID}/problems`}
-                className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'
+                className='bg-pink-600 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-600 w-1/6 text-center'
               >
                 Go To Contest
               </Link> :
-              <div className='border-2 border-pink-500 px-3 py-2'>
+              <div className='border-2 border-pink-600 px-3 py-2'>
                 Contest is running. You are not registered.
               </div>
             :
@@ -102,20 +102,20 @@ const ContestDescription = () => {
                 :
                 isRegistered === false ?
                   <div
-                    className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'
+                    className='bg-pink-600 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-600 w-1/6 text-center'
                     onClick={registerUserToContest}
                   >
                     Register :)
                   </div>
                   :
                   <div
-                    className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'
+                    className='bg-pink-600 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-600 w-1/6 text-center'
                     onClick={UnegisterUserToContest}
                   >
                     Unregister :(
                   </div>
               :
-              <div className='border-2 border-pink-500 px-3 py-2'>
+              <div className='border-2 border-pink-600 px-3 py-2'>
                 Registration will start on {new Date(selectedContest.registrationTime).toLocaleString()}.
               </div>
         }
@@ -123,7 +123,7 @@ const ContestDescription = () => {
           new Date(selectedContest.registrationTime) < new Date() &&
           <div
             onClick={() => setIsShowingParticipants(prev => !prev)}
-            className='bg-pink-500 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-500 w-1/6 text-center'
+            className='bg-pink-600 text-white px-3 py-1 font-bold cursor-pointer hover:bg-white hover:text-pink-600 w-1/6 text-center'
           >
             {isShowingParticipants === true ? 'Hide' : 'Show'} Participants
           </div>

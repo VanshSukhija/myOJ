@@ -102,7 +102,7 @@ export async function POST(req: Request) {
           timeLimit, 
           memoryLimit, 
           tags, 
-          note,
+          note
         ) 
         VALUES ${
           contest.problems.map((_) => {
@@ -121,7 +121,7 @@ export async function POST(req: Request) {
           timeLimit = VALUES(timeLimit), 
           memoryLimit = VALUES(memoryLimit), 
           tags = VALUES(tags), 
-          note = VALUES(note),
+          note = VALUES(note)
         ;
 
         INSERT INTO test (

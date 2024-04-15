@@ -12,7 +12,11 @@ export async function POST(req: Request) {
 
         SELECT problem.problemID, problem.contestID, problem.problemName, problem.difficulty, problem.tags, temp.minimumVerdict, temp.acceptedSubmissions FROM problem
         LEFT JOIN (
-          SELECT MIN(submission.verdict) AS minimumVerdict, problem.problemID, COUNT(DISTINCT id) AS acceptedSubmissions FROM submission
+          SELECT 
+            MIN(submission.verdict) AS minimumVerdict, 
+            problem.problemID, 
+            COUNT(DISTINCT id) AS acceptedSubmissions 
+          FROM submission
           RIGHT JOIN problem ON submission.problemID = problem.problemID
           WHERE submission.id = ?
           GROUP BY problem.problemID
@@ -20,8 +24,13 @@ export async function POST(req: Request) {
         ) AS temp ON temp.problemID = problem.problemID
         WHERE problem.contestID = ?
         ORDER BY temp.acceptedSubmissions DESC, problem.problemID ASC;
+
+        SELECT user.id, user.name, user.email, user.image, user.isAdmin FROM party
+        INNER JOIN user ON user.id = party.id
+        WHERE contestID = ?
+        ORDER BY user.name ASC;
       `,
-      values: [contestID, userID, contestID]
+      values: [contestID, userID, contestID, contestID]
     });
 
     return NextResponse.json({
@@ -37,7 +46,8 @@ export async function POST(req: Request) {
           minimumVerdict: problem.minimumVerdict,
           acceptedSubmissions: problem.acceptedSubmissions
         }
-      })
+      }),
+      participants: result[2]
     });
   } catch (error) {
     return NextResponse.json({status: "error", error});

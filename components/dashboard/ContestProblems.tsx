@@ -1,13 +1,11 @@
 "use client"
 import { SelectedContestContext } from '@app/code/contests/layout'
-import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { OnlyProblemType } from '@utils/types'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import React, { useContext, useEffect, useState } from 'react'
-import ProblemListItem from './ProblemListItem'
+import ProblemListItem from '@components/dashboard/ProblemListItem'
 
 const ContestProblems = () => {
   const { selectedContest, setSelectedContest } = useContext(SelectedContestContext)
@@ -17,7 +15,7 @@ const ContestProblems = () => {
   const [allProblems, setAllProblems] = useState<OnlyProblemType[]>([])
 
   useEffect(() => {
-    if(selectedContest && new Date(selectedContest.startTime).getTime() > new Date().getTime()) return
+    if(selectedContest && new Date(selectedContest.startTime) > new Date()) return
     if (!params.contestID) return
     if (status === 'loading') return
     if (!session) return
@@ -78,12 +76,12 @@ const ContestProblems = () => {
           {selectedContest?.contestName}
         </div>
 
-        <div className='w-full flex flex-col items-center bg-pink-500 py-2 gap-2'>
+        <div className='w-full flex flex-col items-center bg-pink-600 py-2 gap-2'>
           <div className='w-full text-xl font-bold text-center'>
             {remainingTime}
           </div>
 
-          <Link href={`/code/contests/${params.contestID}/standings`} className='bg-white text-pink-500 text-center font-bold py-1 w-[90%]'>
+          <Link href={`/code/contests/${params.contestID}/standings`} className='bg-white text-pink-600 text-center font-bold py-1 w-[90%]'>
             Standings
           </Link>
         </div>
@@ -94,7 +92,7 @@ const ContestProblems = () => {
             {
               allProblems.length > 0 &&
               allProblems.map((problem: OnlyProblemType, index: number) => (
-                <ProblemListItem key={index} problem={problem} index={index + 1} primaryColor='pink-500' />
+                <ProblemListItem key={index} problem={problem} index={index + 1} primaryColor='pink-600' />
               ))
             }
           </div>

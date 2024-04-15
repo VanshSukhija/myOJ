@@ -129,3 +129,21 @@ export type UserType = {
   image: string;
   isAdmin: boolean;
 }
+
+export type ContestStandingsType = {
+  id: string | string[];
+  username: string;
+  email: string;
+  lastAcceptedSubmission: string | null;
+  acceptedProblemCount: string | null;
+  problems: {
+    problemID: string | string[];
+    problemName: string;
+    minimumVerdict: number | null;
+    wrongSubmissions: number | null;
+  }[];
+  score: {
+    penalty: number;
+    accepted: number;
+  };
+}

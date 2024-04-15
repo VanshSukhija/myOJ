@@ -13,9 +13,9 @@ const layout = ({
   return (
     <div className="flex-col flex-1 h-screen overflow-auto">
       <Suspense fallback={<Loading />}>
-        <ProblemNavbar SelectedProblemContext={SelectedProblemContext} primaryColor='pink-500' />
+        <ProblemNavbar SelectedProblemContext={SelectedProblemContext} primaryColor='pink-600' />
         {children}
-        <ProblemFooter SelectedProblemContext={SelectedProblemContext} primaryColor='pink-500' />
+        <ProblemFooter SelectedProblemContext={SelectedProblemContext} primaryColor='pink-600' />
       </Suspense>
     </div>
   )

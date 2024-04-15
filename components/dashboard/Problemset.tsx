@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import { OnlyProblemType } from '@utils/types';
 import { Tags } from '@utils/constants';
 import { useSession } from 'next-auth/react';
-import ProblemListItem from './ProblemListItem';
+import ProblemListItem from '@components/dashboard/ProblemListItem';
 
 // const fetchData = async () => {
 //   try {
@@ -58,9 +58,7 @@ const Problemset = () => {
         {
           allProblems.length > 0 && allProblems.map((problem: OnlyProblemType, idx: number) => {
             return (
-              <div key={idx} className='w-full'>
-                <ProblemListItem problem={problem} index={idx + 1} primaryColor='cyan-600' />
-              </div>
+              <ProblemListItem key={idx} problem={problem} index={idx + 1} primaryColor='cyan-600' />
             )
           })
         }

@@ -4,7 +4,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <ProblemIDE SelectedProblemContext={SelectedProblemContext} primaryColor='pink-500' />
+    <ProblemIDE SelectedProblemContext={SelectedProblemContext} primaryColor='pink-600' />
   )
 }
 

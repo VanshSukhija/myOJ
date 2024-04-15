@@ -10,7 +10,7 @@ const ContestHeader = ({ contest }: { contest: OnlyContestsType | null }) => {
   }
 
   return (
-    contest && <div className='flex flex-col items-center justify-center bg-pink-500 py-2 gap-1'>
+    contest && <div className='flex flex-col items-center justify-center bg-pink-600 py-2 gap-1'>
       <div className='text-2xl font-bold'>{contest?.contestName}</div>
       <div className='flex'>
         <div className='px-2'>

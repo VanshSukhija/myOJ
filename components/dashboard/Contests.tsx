@@ -25,7 +25,7 @@ const Contests = () => {
       <div className='w-full flex flex-col items-center'>
         <div className='text-2xl font-bold my-1.5'>Contests</div>
 
-        <div className='w-full bg-pink-500 flex flex-col'>
+        <div className='w-full bg-pink-600 flex flex-col'>
           {
             allContests.length > 0 &&
             allContests.filter(contest => new Date(contest.startTime) < new Date() && new Date(contest.endTime) > new Date()).length > 0 &&
@@ -33,7 +33,7 @@ const Contests = () => {
               <div className='font-bold px-1 py-1 text-xl text-center border-t border-slate-300'>
                 Ongoing
               </div>
-              <div className='bg-pink-500 w-full flex flex-col'>
+              <div className='bg-pink-600 w-full flex flex-col'>
                 {
                   allContests
                     .filter(contest => new Date(contest.startTime) < new Date() && new Date(contest.endTime) > new Date())
@@ -53,7 +53,7 @@ const Contests = () => {
               <div className='font-bold px-1 py-1 text-xl text-center border-t border-slate-300'>
                 Upcoming
               </div>
-              <div className='bg-pink-500 w-full flex flex-col'>
+              <div className='bg-pink-600 w-full flex flex-col'>
                 {
                   allContests.filter(contest => new Date(contest.startTime) > new Date())
                     .map((contest: ContestWithParticipantsType, index: number) => {
@@ -72,7 +72,7 @@ const Contests = () => {
               <div className='font-bold px-1 py-1 text-xl text-center border-t border-slate-300'>
                 Past
               </div>
-              <div className='bg-pink-500 w-full flex flex-col'>
+              <div className='bg-pink-600 w-full flex flex-col'>
                 {
                   allContests.filter(contest => new Date(contest.startTime) < new Date())
                     .map((contest: ContestWithParticipantsType, index: number) => {
@@ -104,7 +104,7 @@ const ContestList = ({ contest }: { contest: ContestWithParticipantsType }) => {
   return (
     <Link
       href={`/code/contests/${contest.contestID}/announcement`}
-      className={`group w-full p-1 flex justify-between items-center hover:text-pink-500 hover:bg-white border-y border-slate-300 ${params.contestID && params.contestID === contest.contestID ? 'bg-white text-pink-500' : ''}`}
+      className={`group w-full p-1 flex justify-between items-center hover:text-pink-600 hover:bg-white border-y border-slate-300 ${params.contestID && params.contestID === contest.contestID ? 'bg-white text-pink-600' : ''}`}
     >
       <div className='w-full'>
         <div>

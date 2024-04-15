@@ -14,7 +14,7 @@ const ContestParticipants = ({ participants }: { participants: UserType[] }) => 
           {
             participants.length > 0 ?
             participants.map((participant, index) => (
-              <tr key={index} className=' hover:bg-pink-900 cursor-pointer'>
+              <tr key={index} className={`hover:bg-pink-900 cursor-pointer ${index&1 ? 'bg-gray-800' : 'bg-black'}`}>
                 <td className='text-center border-2 border-slate-600 py-1'>{index + 1}</td>
                 <td className='text-center border-2 border-slate-600 py-1'>{participant.name}</td>
                 <td className='text-center border-2 border-slate-600 py-1'>{participant.email}</td>

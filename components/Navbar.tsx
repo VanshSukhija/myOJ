@@ -25,8 +25,8 @@ const Navbar = () => {
         <Link className='border-l-2 border-cyan-600 w-full text-center' href="/code/problemset"> {/* blue */}
           <FontAwesomeIcon icon={faBrain} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'problemset' ? 'text-cyan-600' : ''}`} title="Problem Set" />
         </Link>
-        <Link className='border-l-2 border-pink-500 w-full text-center' href="/code/contests"> {/* pink */}
-          <FontAwesomeIcon icon={faCalendar} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'contests' ? 'text-pink-500' : ''}`} title="Contests" />
+        <Link className='border-l-2 border-pink-600 w-full text-center' href="/code/contests"> {/* pink */}
+          <FontAwesomeIcon icon={faCalendar} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'contests' ? 'text-pink-600' : ''}`} title="Contests" />
         </Link>
         <Link className='border-l-2 border-purple-500 w-full text-center' href="/code/blogs"> {/* purple */}
           <FontAwesomeIcon icon={faComments} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'blogs' ? 'text-purple-500' : ''}`} title="Blogs" />
