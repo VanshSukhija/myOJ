@@ -10,27 +10,43 @@ export async function POST(req: Request) {
         SELECT * FROM contest
         WHERE contestID = ?;
 
-        SELECT problem.problemID, problem.contestID, problem.problemName, problem.difficulty, problem.tags, temp.minimumVerdict, temp.acceptedSubmissions FROM problem
+        SELECT 
+          problem.problemID,
+          problem.contestID,
+          problem.problemName,
+          problem.difficulty,
+          problem.tags,
+          temp1.minimumVerdict,
+          temp2.acceptedSubmissions
+        FROM problem
         LEFT JOIN (
           SELECT 
-            MIN(submission.verdict) AS minimumVerdict, 
-            problem.problemID, 
-            COUNT(DISTINCT id) AS acceptedSubmissions 
+            MIN(verdict) AS minimumVerdict, 
+            submission.problemID 
           FROM submission
-          RIGHT JOIN problem ON submission.problemID = problem.problemID
           WHERE submission.id = ?
-          GROUP BY problem.problemID
-          HAVING MIN(submission.verdict) = 0
-        ) AS temp ON temp.problemID = problem.problemID
-        WHERE problem.contestID = ?
-        ORDER BY temp.acceptedSubmissions DESC, problem.problemID ASC;
+          GROUP BY submission.problemID
+        ) AS temp1 ON temp1.problemID = problem.problemID
+        LEFT JOIN (
+          SELECT 
+            COUNT(DISTINCT id) AS acceptedSubmissions, 
+            submission.problemID 
+          FROM submission
+          WHERE submission.verdict = 0 AND submission.id IN (
+            SELECT id FROM party
+            WHERE contestID = ?
+          )
+          GROUP BY submission.problemID
+        ) AS temp2 ON temp2.problemID = problem.problemID
+        WHERE contestID = ?
+        ORDER BY temp2.acceptedSubmissions DESC, problem.problemID ASC;
 
         SELECT user.id, user.name, user.email, user.image, user.isAdmin FROM party
         INNER JOIN user ON user.id = party.id
         WHERE contestID = ?
         ORDER BY user.name ASC;
       `,
-      values: [contestID, userID, contestID, contestID]
+      values: [contestID, userID, contestID, contestID, contestID]
     });
 
     return NextResponse.json({

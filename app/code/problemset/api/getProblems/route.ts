@@ -6,15 +6,32 @@ export async function POST(req: Request) {
   try {
     const results: any = await excuteQuery({
       query: `
-        SELECT problem.problemID, problem.contestID, problem.problemName, problem.difficulty, problem.tags, temp.minimumVerdict, temp.acceptedSubmissions FROM problem
+        SELECT 
+          problem.problemID,
+          problem.contestID,
+          problem.problemName,
+          problem.difficulty,
+          problem.tags,
+          temp1.minimumVerdict,
+          temp2.acceptedSubmissions
+        FROM problem
         LEFT JOIN (
-          SELECT MIN(submission.verdict) AS minimumVerdict, problem.problemID, COUNT(DISTINCT id) AS acceptedSubmissions FROM submission
-          RIGHT JOIN problem ON submission.problemID = problem.problemID
+          SELECT 
+            MIN(verdict) AS minimumVerdict,
+            submission.problemID 
+          FROM submission
           WHERE submission.id = ?
-          GROUP BY problem.problemID
-          HAVING MIN(submission.verdict) = 0
-        ) AS temp ON temp.problemID = problem.problemID
-        ORDER BY problem.problemID DESC;
+          GROUP BY submission.problemID
+        ) AS temp1 ON temp1.problemID = problem.problemID
+        LEFT JOIN (
+          SELECT 
+            COUNT(DISTINCT id) AS acceptedSubmissions,
+            submission.problemID
+          FROM submission
+          WHERE submission.verdict = 0
+          GROUP BY submission.problemID
+        ) AS temp2 ON temp2.problemID = problem.problemID
+        ORDER BY problem.problemID;
       `,
       values: [userID],
     });

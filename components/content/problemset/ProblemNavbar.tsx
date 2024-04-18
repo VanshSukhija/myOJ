@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect, useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faEllipsisV, faPlay, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faClock, faEllipsisV, faPen, faPlay, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
 import { notFound, useParams, usePathname } from 'next/navigation'
 import Link from 'next/link';
 import { codeRunner } from '@utils/functions';
@@ -19,14 +19,10 @@ const ProblemNavbar = ({ SelectedProblemContext, primaryColor }: {
   const pathname = usePathname().split('/')
   const { selectedProblem, setSelectedProblem } = useContext(SelectedProblemContext)
   const tab = pathname[pathname.length - 1]
-  const { data: session, status } = useSession()
-
-  const [code, setCode] = useState<string>('')
-  const [extension, setExtension] = useState<string>('')
-  const [outputArray, setOutputArray] = useState<SubmissionOutputType[]>([])
 
   useEffect(() => {
     if (!params.problemID) return;
+    setSelectedProblem(() => null);
 
     const fetchProblem = async () => {
       try {
@@ -39,48 +35,16 @@ const ProblemNavbar = ({ SelectedProblemContext, primaryColor }: {
         });
         const data = await response.json();
         console.log(data);
-        data.status === 'success' ? setSelectedProblem(() => data.data) : console.error(data.message), notFound();
+        if (data.status === 'error') throw new Error(data.error);
+        setSelectedProblem(() => data.data);
       } catch (err) {
+        fetchProblem();
         console.error(err);
       }
     }
 
     fetchProblem();
   }, [params.problemID])
-
-  const runTestCases = async (e: any) => {
-    e.preventDefault()
-    if (!selectedProblem) return;
-    if (status === 'loading') return;
-    if (!session) return;
-
-    setOutputArray(() => [])
-    const output: SubmissionOutputType[] = await codeRunner(selectedProblem, code, extension, session.user.id as string)
-    setOutputArray(() => output)
-  }
-
-  useEffect(() => {
-    console.log(outputArray)
-  }, [outputArray])
-
-  // useEffect(() => {
-  //   console.log(extension)
-  // }, [extension])
-
-  // useEffect(() => {
-  //   console.log(code)
-  // }, [code])
-
-  const getCode = async (event: any) => {
-    event.preventDefault()
-    const reader = new FileReader()
-    reader.onload = async (e) => {
-      const text = (e.target?.result as string)
-      setCode(text)
-      setExtension(event.target?.files[0].name.split('.').pop() as string);
-    };
-    reader.readAsText(event.target?.files[0])
-  }
 
   return (
     <>
@@ -116,14 +80,31 @@ const ProblemNavbar = ({ SelectedProblemContext, primaryColor }: {
           </div>
         </div>
 
-        <div className='flex items-center w-[30%] text-right justify-evenly'>
-          <input type="file" onChange={getCode} />
-          <button className='w-[15%] text-xl cursor-pointer' onClick={runTestCases}>
-            <FontAwesomeIcon icon={faPlay} title="Submit Code" />
-          </button>
-          <button className='w-[15%] text-xl cursor-pointer'>
-            <FontAwesomeIcon icon={faEllipsisV} title="More..." />
-          </button>
+        <div className='flex flex-col items-end text-right justify-end'>
+          {
+            selectedProblem &&
+            <div className='flex gap-1 items-center'>
+              <FontAwesomeIcon icon={faCalendar} title="Contest" />
+              <Link 
+                href={`/code/contests/${selectedProblem.contestID}/announcement`} 
+                className='hover:underline'
+              >
+                {selectedProblem.contestName}
+              </Link>
+            </div>
+          }
+          {
+            selectedProblem &&
+            <div className='flex gap-1 items-center'>
+              <FontAwesomeIcon icon={faPen} title="Author" />
+              <Link 
+                href={`/code/profile/${selectedProblem.createdBy}`} 
+                className='hover:underline'
+              >
+                {selectedProblem.username}
+              </Link>
+            </div>
+          }
         </div>
       </nav>
 

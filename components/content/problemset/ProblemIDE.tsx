@@ -102,8 +102,6 @@ const ProblemIDE = ({ SelectedProblemContext, primaryColor }: {
     postSubmission();
   }, [outputArray]);
 
-  // useEffect(() => console.log(session, status), [session]);
-
   const parseCustomOutput = (output: SubmissionOutputType | null) => {
     if (output === null) return ''
     if (output.status === 1) return output.output
@@ -176,6 +174,16 @@ const ProblemIDE = ({ SelectedProblemContext, primaryColor }: {
 
         <div className='flex flex-col gap-2 max-h-1/3'>
           {
+            firstNonZeroCode(outputArray) === 0 ?
+              <div className='text-green-500 text-2xl font-bold'>
+                Accepted :)
+              </div> :
+              firstNonZeroCode(outputArray) > 0 ?
+                <div className='text-red-500 text-2xl font-bold'>
+                  {verdictNames[firstNonZeroCode(outputArray)]} :(
+                </div> : null
+          }
+          {
             outputArray.map((output, index) => {
               return (
                 <Testcase
@@ -187,16 +195,6 @@ const ProblemIDE = ({ SelectedProblemContext, primaryColor }: {
                 />
               )
             })
-          }
-          {
-            firstNonZeroCode(outputArray) === 0 ?
-              <div className='text-green-500 text-2xl font-bold'>
-                Accepted :)
-              </div> :
-              firstNonZeroCode(outputArray) > 0 ?
-                <div className='text-red-500 text-2xl font-bold'>
-                  {verdictNames[firstNonZeroCode(outputArray)]} :(
-                </div> : null
           }
         </div>
       </div>
