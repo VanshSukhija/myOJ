@@ -8,7 +8,8 @@ export async function POST(req: Request) {
       const result: any = await excuteQuery({
         query: `
           SELECT * FROM contest
-          WHERE createdBy = ?;
+          WHERE createdBy = ?
+          ORDER BY contestID DESC;
         `,
         values: [userID]
       });

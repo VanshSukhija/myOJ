@@ -21,9 +21,9 @@ export async function POST(req: Request) {
 
   const contestValues = [
     contest.contestID,
-    contest.contestName.replace(/[\u0800-\uFFFF]/g, ''),
-    contest.contestDescription.replace(/[\u0800-\uFFFF]/g, ''),
-    contest.createdBy.replace(/[\u0800-\uFFFF]/g, ''),
+    contest.contestName,
+    contest.contestDescription,
+    contest.createdBy,
     fixDateTime(contest.registrationTime),
     fixDateTime(contest.startTime),
     fixDateTime(contest.endTime)
@@ -33,17 +33,17 @@ export async function POST(req: Request) {
     return [
       problem.problemID,
       contest.contestID,
-      contest.createdBy.replace(/[\u0800-\uFFFF]/g, ''),
-      problem.problemName.replace(/[\u0800-\uFFFF]/g, ''),
+      contest.createdBy,
+      problem.problemName,
       problem.difficulty === 0 ? 'EASY' : problem.difficulty === 1 ? 'MEDIUM' : 'HARD',
-      problem.problemDescription.replace(/[\u0800-\uFFFF]/g, ''),
-      problem.inputFormat.replace(/[\u0800-\uFFFF]/g, ''),
-      problem.outputFormat.replace(/[\u0800-\uFFFF]/g, ''),
-      problem.constraints.replace(/[\u0800-\uFFFF]/g, ''),
+      problem.problemDescription,
+      problem.inputFormat,
+      problem.outputFormat,
+      problem.constraints,
       problem.timeLimit,
       problem.memoryLimit,
-      problem.tags.replace(/[\u0800-\uFFFF]/g, ''),
-      problem.note.replace(/[\u0800-\uFFFF]/g, ''),
+      problem.tags,
+      problem.note,
     ];
   })
 
@@ -53,8 +53,8 @@ export async function POST(req: Request) {
         testcase.id,
         problem.problemID,
         contest.contestID,
-        testcase.input.replace(/[\u0800-\uFFFF]/g, ''),
-        testcase.expectedOutput.replace(/[\u0800-\uFFFF]/g, '')
+        testcase.input,
+        testcase.expectedOutput
       ];
     });
   })

@@ -55,7 +55,7 @@ const Create = () => {
               allContests.map((contest: OnlyContestsType, idx: number) => {
                 return (
                   <div key={idx} className='w-full'>
-                    <EditContest contest={contest} index={idx} />
+                    <EditContest contest={contest} />
                   </div>
                 )
               })
@@ -67,7 +67,7 @@ const Create = () => {
   )
 }
 
-const EditContest = ({ contest, index }: { contest: OnlyContestsType, index: number }) => {
+const EditContest = ({ contest }: { contest: OnlyContestsType }) => {
   function timeDifference(dt2: Date, dt1: Date): string {
     const diff = dt2.getTime() - dt1.getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));

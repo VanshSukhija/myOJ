@@ -42,7 +42,7 @@ const InputFormat = () => {
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        inputFormat: newContent
+        inputFormat: newContent.replace(/[\u0800-\uFFFF]/g, '')
       }
     })
   };
@@ -71,7 +71,7 @@ const OutputFormat = () => {
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        outputFormat: newContent
+        outputFormat: newContent.replace(/[\u0800-\uFFFF]/g, '')
       }
     })
   };
@@ -100,7 +100,7 @@ const Constraints = () => {
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        constraints: newContent
+        constraints: newContent.replace(/[\u0800-\uFFFF]/g, '')
       }
     })
   };

@@ -19,7 +19,7 @@ const Note = () => {
     setProblem((prev: ProblemType) => {
       return {
         ...prev,
-        note: newContent
+        note: newContent.replace(/[\u0800-\uFFFF]/g, '')
       }
     })
   };

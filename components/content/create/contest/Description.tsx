@@ -19,7 +19,7 @@ const Description = () => {
     setContest((prev: ContestType) => {
       return {
         ...prev,
-        contestDescription: newContent
+        contestDescription: newContent.replace(/[\u0800-\uFFFF]/g, '')
       }
     })
   };
