@@ -24,16 +24,22 @@ const ContestDescription = () => {
       if (status === 'loading') return
       if (!session) return
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/contests/api/getAllContests`, {
-        method: 'POST',
-        body: JSON.stringify({ contestID: params.contestID })
-      })
-      const data = await res.json()
-      console.log(data)
-      if (data.status === 'error') return
-      setSelectedContest(() => data.contestDetails)
-      data.participants && setParticipants(data.participants)
-      data.participants && setIsRegistered(data.participants.some((participant: any) => participant.id === session.user.id))
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/contests/api/getAllContests`, {
+          method: 'POST',
+          body: JSON.stringify({ contestID: params.contestID })
+        })
+        const data = await res.json()
+        console.log(data)
+        if (data.status === 'error') throw new Error(data.error)
+          
+        setSelectedContest(() => data.contestDetails)
+        data.participants && setParticipants(data.participants)
+        data.participants && setIsRegistered(data.participants.some((participant: any) => participant.id === session.user.id))
+      } catch (err) {
+        console.log(err)
+        fetchContest()
+      }
     }
 
     fetchContest()

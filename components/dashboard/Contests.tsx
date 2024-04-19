@@ -28,7 +28,7 @@ const Contests = () => {
         <div className='w-full bg-pink-600 flex flex-col'>
           {
             allContests.length > 0 &&
-            allContests.filter(contest => new Date(contest.startTime) < new Date() && new Date(contest.endTime) > new Date()).length > 0 &&
+            allContests.filter(contest => new Date(contest.startTime) <= new Date() && new Date(contest.endTime) > new Date()).length > 0 &&
             <>
               <div className='font-bold px-1 py-1 text-xl text-center border-t border-slate-300'>
                 Ongoing
@@ -36,7 +36,7 @@ const Contests = () => {
               <div className='bg-pink-600 w-full flex flex-col'>
                 {
                   allContests
-                    .filter(contest => new Date(contest.startTime) < new Date() && new Date(contest.endTime) > new Date())
+                    .filter(contest => new Date(contest.startTime) <= new Date() && new Date(contest.endTime) > new Date())
                     .map((contest: ContestWithParticipantsType, index: number) => {
                       return (
                         <ContestList key={index} contest={contest} />
@@ -67,14 +67,14 @@ const Contests = () => {
           }
           {
             allContests.length > 0 &&
-            allContests.filter(contest => new Date(contest.endTime) < new Date()).length > 0 &&
+            allContests.filter(contest => new Date(contest.endTime) <= new Date()).length > 0 &&
             <>
               <div className='font-bold px-1 py-1 text-xl text-center border-t border-slate-300'>
                 Past
               </div>
               <div className='bg-pink-600 w-full flex flex-col'>
                 {
-                  allContests.filter(contest => new Date(contest.startTime) < new Date())
+                  allContests.filter(contest => new Date(contest.endTime) <= new Date())
                     .map((contest: ContestWithParticipantsType, index: number) => {
                       return (
                         <ContestList key={index} contest={contest} />

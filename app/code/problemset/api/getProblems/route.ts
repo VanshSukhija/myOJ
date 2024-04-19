@@ -15,6 +15,7 @@ export async function POST(req: Request) {
           temp1.minimumVerdict,
           temp2.acceptedSubmissions
         FROM problem
+        INNER JOIN contest ON contest.contestID = problem.contestID
         LEFT JOIN (
           SELECT 
             MIN(verdict) AS minimumVerdict,
@@ -31,7 +32,8 @@ export async function POST(req: Request) {
           WHERE submission.verdict = 0
           GROUP BY submission.problemID
         ) AS temp2 ON temp2.problemID = problem.problemID
-        ORDER BY problem.problemID;
+        WHERE contest.endtime <= ADDTIME(CURRENT_TIMESTAMP(), '05:30:00')
+        ORDER BY problem.problemID DESC;
       `,
       values: [userID],
     });

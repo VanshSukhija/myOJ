@@ -1,12 +1,10 @@
 "use client"
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendar, faClock, faEllipsisV, faPen, faPlay, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
-import { notFound, useParams, usePathname } from 'next/navigation'
+import { faCalendar, faClock, faPen, faThunderstorm } from "@fortawesome/free-solid-svg-icons";
+import { useParams, usePathname } from 'next/navigation'
 import Link from 'next/link';
-import { codeRunner } from '@utils/functions';
-import { DisplayProblemType, SubmissionOutputType } from '@utils/types';
-import { useSession } from 'next-auth/react';
+import { DisplayProblemType } from '@utils/types';
 
 const ProblemNavbar = ({ SelectedProblemContext, primaryColor }: {
   SelectedProblemContext: React.Context<{

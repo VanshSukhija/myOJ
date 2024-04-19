@@ -13,12 +13,12 @@ const Create = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if(status === 'loading') return
-      if(!session) return
+      if (status === 'loading') return
+      if (!session) return
 
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/contests/api/getAllContestsByUser`, {
         method: 'POST',
-        body: JSON.stringify({ userID: session?.user.id }),
+        body: JSON.stringify({ userID: session.user.id }),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -27,7 +27,10 @@ const Create = () => {
         .then(data => {
           setAllContests(() => data as OnlyContestsType[])
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+          fetchData()
+        })
     }
 
     fetchData()
@@ -48,7 +51,8 @@ const Create = () => {
           <div className='font-bold px-1 text-xl text-center'>Your Contests</div>
           <div className='bg-red-500 w-full flex flex-col'>
             {
-              allContests.length > 0 && allContests.map((contest: OnlyContestsType, idx: number) => {
+              allContests.length > 0 &&
+              allContests.map((contest: OnlyContestsType, idx: number) => {
                 return (
                   <div key={idx} className='w-full'>
                     <EditContest contest={contest} index={idx} />
@@ -74,9 +78,8 @@ const EditContest = ({ contest, index }: { contest: OnlyContestsType, index: num
   return (
     <Link href={`/code/create/${contest.contestID}/description`} className={`group w-full p-1 flex justify-between items-center hover:text-red-500 hover:bg-white border-y border-slate-300`} >
       <div className='w-full'>
-        <div>
-          #{index + 1 + ' '}
-          <span className='font-bold'>{contest.contestName}</span>
+        <div className='font-bold'>
+          {contest.contestName}
         </div>
         <div>
           {String(new Date(contest.startTime).toLocaleDateString())} |
@@ -84,7 +87,7 @@ const EditContest = ({ contest, index }: { contest: OnlyContestsType, index: num
           {' ' + timeDifference(new Date(contest.endTime), new Date(contest.startTime))}
         </div>
       </div>
-      
+
       <div className='w-20 text-right'>
         <FontAwesomeIcon icon={faAngleRight} className="text-s" />
       </div>

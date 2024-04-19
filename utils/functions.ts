@@ -56,6 +56,7 @@ export const fixDateTime = (datetime: string) => {
 }
 
 export const addDateTimeOffset = (date: string) => {
+  if(!date) return ''
   const currDate = new Date(date);
   const offset = currDate.getTimezoneOffset() || 0;
   const newDate = new Date(currDate.getTime() - (offset * 60 * 1000));

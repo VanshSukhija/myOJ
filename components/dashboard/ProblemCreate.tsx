@@ -112,7 +112,7 @@ const NewCreate = () => {
 
         console.log(data);
 
-        router.push(`/code/create/${contest.contestID}/description`)
+        router.push(`/code/create/${params.contestID}/description`)
       })
       .catch(err => console.error(err))
   }
@@ -122,7 +122,7 @@ const NewCreate = () => {
       <div className='w-full flex h-screen flex-col items-center justify-between bg-red-900'>
         <div className='w-full flex flex-col items-center'>
           <div className='text-2xl font-bold my-1.5 flex items-center'>
-            <Link href={`/code/create/${contest.contestID}/description`} className='cursor-pointer'>
+            <Link href={`/code/create/${params.contestID}/description`} className='cursor-pointer'>
               <FontAwesomeIcon
                 icon={faAngleLeft}
                 className="text-s relative right-20 cursor-pointer"
@@ -132,12 +132,6 @@ const NewCreate = () => {
           </div>
 
           <div className='bg-red-500 w-full h-[100%] overflow-y-auto'>
-            <div className='w-full flex p-2 pl-0'>
-              <div className='w-1 bg-transparent mr-1.5'></div>
-
-              <div className='w-full font-bold'>Problem ID: {problem.problemID}</div>
-            </div>
-
             <div className='w-full flex p-2 pl-0'>
               <div className={`w-1 bg-gray-400 mr-1.5 ${validateProblem("name") ? 'bg-green-400' : ''}`}></div>
 

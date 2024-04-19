@@ -42,7 +42,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
     contestID: `${Date.now()}`,
     contestName: "",
     contestDescription: "",
-    createdBy: session?.user.id,
+    createdBy: session?.user.id || "",
     startTime: "",
     endTime: "",
     registrationTime: "",
@@ -60,7 +60,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
     tags: '',
     testcases: [],
     note: "",
-    createdBy: session?.user.id,
+    createdBy: session?.user.id || "",
     timeLimit: 0,
     memoryLimit: 0,
   }

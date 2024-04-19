@@ -30,16 +30,17 @@ const ContestCreate = () => {
       })
         .then(res => res.json())
         .then(result => {
+          console.log("result: ", result)
           setContest(() => {
-            return result===null ? emptyContest : {
-              contestID: result.contestID,
-              contestName: result.contestName,
-              contestDescription: result.contestDescription,
-              createdBy: result.createdBy,
+            return result === null || JSON.stringify(result) === JSON.stringify(Object()) ? emptyContest : {
+              contestID: result.contestID || params.contestID,
+              contestName: result.contestName || '',
+              contestDescription: result.contestDescription || '',
+              createdBy: result.createdBy || '',
               startTime: addDateTimeOffset(result.startTime),
               endTime: addDateTimeOffset(result.endTime),
               registrationTime: addDateTimeOffset(result.registrationTime),
-              problems: result.problems
+              problems: result.problems || []
             }
           })
           setHasRendered(() => true)
@@ -65,7 +66,7 @@ const ContestCreate = () => {
     tags: '',
     testcases: [],
     note: "",
-    createdBy: session?.user.id,
+    createdBy: session?.user.id || "",
     timeLimit: 0,
     memoryLimit: 0,
   }
@@ -74,7 +75,7 @@ const ContestCreate = () => {
     contestID: `${Date.now()}`,
     contestName: "",
     contestDescription: "",
-    createdBy: session?.user.id,
+    createdBy: session?.user.id || "",
     startTime: "",
     endTime: "",
     registrationTime: "",
@@ -86,7 +87,8 @@ const ContestCreate = () => {
     setContest((prev: ContestType) => {
       return {
         ...prev,
-        [name]: value
+        [name]: value,
+        createdBy: session?.user.id || ''
       }
     })
   }
@@ -161,34 +163,35 @@ const ContestCreate = () => {
       return
     }
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/create/api`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(contest)
-    })
-    const data = await res.json()
-    console.log(data)
-    setContest(() => emptyContest)
-    setHasRendered(() => false)
-
-    router.push('/code/create')
+    try{
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/create/api`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(contest)
+      })
+      const data = await res.json()
+      console.log(data)
+      if(data.status === 'error') throw new Error(data.error)
+      
+      setContest(() => emptyContest)
+      setHasRendered(() => false)
+      
+      alert('Contest created successfully')
+      router.push('/code/create')
+    } catch(err) {
+      console.error(err)
+    }
   }
 
   return (
-    <main className='text-white w-1/4 overflow-y-auto'>
+    <main className='text-white w-1/4 overflow-y-auto' suppressHydrationWarning>
       <div className='w-full flex h-screen flex-col items-center justify-between bg-red-900'>
         <div className='w-full flex flex-col items-center'>
           <div className='text-2xl font-bold my-1.5'>Create Contest</div>
 
           <div className='bg-red-500 w-full h-[100%] overflow-y-auto'>
-            <div className='w-full flex p-2 pl-0'>
-              <div className='w-1 bg-transparent mr-1.5'></div>
-
-              <div className='w-full font-bold'>Contest ID: {contest.contestID}</div>
-            </div>
-
             <div className='w-full flex p-2 pl-0'>
               <div className={`w-1 bg-gray-400 mr-1.5 ${validateContestDetails("name") ? 'bg-green-400' : ''}`}></div>
 
@@ -286,6 +289,7 @@ const ContestCreate = () => {
 
             <div className='bg-red-500 w-full flex flex-col'>
               {
+                contest && contest.problems && contest.problems.length > 0 &&
                 contest.problems
                   .filter((prob: ProblemType) => prob.createdBy === session?.user.id)
                   .map((problem: ProblemType, idx: number) => {
