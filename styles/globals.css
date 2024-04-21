@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 .create-problem-editor .ql-toolbar {
-  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
+  background-color: rgb(127 29 29);
+}
+
+.new-blog-editor .ql-toolbar {
+  background-color: rgb(88 28 135);
 }
 
 .ql-toolbar .ql-stroke {
@@ -20,8 +24,12 @@
   color: #fff !important;
 }
 
-.ql-toolbar .ql-picker-options {
-  color: rgb(127 29 29 / var(--tw-bg-opacity)) !important;
+.create-problem-editor .ql-toolbar .ql-picker-options {
+  color: rgb(127 29 29) !important;
+}
+
+.new-blog-editor .ql-toolbar .ql-picker-options {
+  color: rgb(88 28 135) !important;
 }
 
 .create-problem-editor .ql-snow .ql-toolbar button:hover,
@@ -31,13 +39,67 @@
 .create-problem-editor .ql-snow.ql-toolbar .ql-picker-label.ql-active,
 .create-problem-editor .ql-snow.ql-toolbar .ql-picker-item:hover,
 .create-problem-editor .ql-snow.ql-toolbar .ql-picker-item.ql-selected {
-  color: rgb(239 68 68 / var(--tw-bg-opacity)) !important;
-  stroke: rgb(239 68 68 / var(--tw-bg-opacity)) !important;
-  fill: rgb(239 68 68 / var(--tw-bg-opacity)) !important;
+  color: rgb(239 68 68) !important;
+  stroke: rgb(239 68 68) !important;
+  fill: rgb(239 68 68) !important;
+}
+
+.new-blog-editor .ql-snow .ql-toolbar button:hover,
+.new-blog-editor .ql-snow .ql-toolbar button:focus,
+.new-blog-editor .ql-snow .ql-toolbar button.ql-active,
+.new-blog-editor .ql-snow.ql-toolbar .ql-picker-label:hover,
+.new-blog-editor .ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.new-blog-editor .ql-snow.ql-toolbar .ql-picker-item:hover,
+.new-blog-editor .ql-snow.ql-toolbar .ql-picker-item.ql-selected {
+  color: rgb(168 85 247) !important;
+  stroke: rgb(168 85 247) !important;
+  fill: rgb(168 85 247) !important;
 }
 
 .ql-tooltip {
   left: auto !important;
-  /* right: 0 !important; */
-  /* top: 0 !important; */
+}
+
+.ql-editor a {
+  color: #3182ce;
+}
+
+.ql-editor a:hover {
+  text-decoration: underline;
+}
+
+.ql-editor h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 1.5rem 0;
+}
+
+.ql-editor h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 1.5rem 0;
+}
+
+.ql-editor h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1.5rem 0;
+}
+
+.ql-editor h4 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 1.5rem 0;
+}
+
+.ql-editor h5 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 1.5rem 0;
+}
+
+.ql-editor h6 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 1.5rem 0;
 }

@@ -147,3 +147,28 @@ export type ContestStandingsType = {
     accepted: number;
   };
 }
+
+export type BlogType = {
+  blogID: string | string[];
+  title: string;
+  content: string;
+  createdBy: string;
+}
+
+export type DisplayBlogType = {
+  blogID: string | string[];
+  title: string;
+  username: string;
+  contribution: number | null;
+}
+
+export type BlogWithActionsType = {
+  blogID: string | string[];
+  title: string;
+  content: string;
+  createdBy: string;
+  username: string;
+  image: string;
+  contribution: number;
+  hasLiked: number;
+}

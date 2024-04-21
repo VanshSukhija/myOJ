@@ -1,9 +1,5 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { OnlyProblemType } from '@utils/types';
 import { Tags } from '@utils/constants';
 import { useSession } from 'next-auth/react';

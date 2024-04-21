@@ -1,6 +1,6 @@
 "use client";
 import { UserType } from '@utils/types';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react'
 import ContestHeader from '@components/content/contests/ContestHeader';
 import katex from 'katex'
@@ -81,7 +81,7 @@ const ContestDescription = () => {
     <div>
       <ContestHeader contest={selectedContest} />
 
-      <div className='w-full h-full'>
+      <div className='w-full h-full text-lg'>
         <div
           dangerouslySetInnerHTML={{ __html: selectedContest.contestDescription }}
           className='ql-editor'
