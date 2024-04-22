@@ -1,0 +1,120 @@
+"use client"
+import { faReply, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { CommentType } from '@utils/types'
+import React from 'react'
+import CommentBox from '@components/content/blogs/CommentBox'
+
+const Comments = ({
+  comment,
+  likeContent,
+  parentComment,
+  setParentComment,
+  isCommenting,
+  setIsCommenting,
+  comments
+}: {
+  comment: CommentType,
+  likeContent: (like: number, commentID: string) => Promise<void>,
+  parentComment: string | null,
+  setParentComment: React.Dispatch<React.SetStateAction<string | null>>,
+  isCommenting: boolean,
+  setIsCommenting: React.Dispatch<React.SetStateAction<boolean>>,
+  comments: { [key: string]: CommentType[] }
+}) => {
+  const timeDifference = (str: string) => {
+    const date = Number(str)
+    const now = Date.now()
+    const diff = now - date;
+    const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365))
+    if (years > 0) return `${years}y ago`
+    const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30))
+    if (months > 0) return `${months}mo ago`
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    if (days > 0) return `${days}d ago`
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    if (hours > 0) return `${hours}h ago`
+    const minutes = Math.floor(diff / (1000 * 60))
+    if (minutes > 0) return `${minutes}m ago`
+    return `Just now`
+  }
+
+  return (
+    <div className='w-full p-2'>
+      <div className='border-l-2 border-purple-500 p-2'>
+        <div className='w-full flex items-center gap-2'>
+          <img
+            src={comment.image}
+            alt={comment.username}
+            className='w-8 h-8'
+          />
+          <span>{comment.username}, {timeDifference(comment.commentID as string)}</span>
+        </div>
+
+        <div>
+          <div dangerouslySetInnerHTML={{ __html: comment.description }} className='ql-editor' />
+        </div>
+
+        <div className='w-full py-2 flex justify-between items-center'>
+          <div className='flex gap-3 items-center text-xl'>
+            <FontAwesomeIcon
+              icon={faThumbsUp}
+              className={`cursor-pointer ${comment.hasLiked === 1 && 'text-green-500'}`}
+              onClick={() => likeContent(1, comment.commentID as string)}
+            />
+            {comment.contribution || 0}
+            <FontAwesomeIcon
+              icon={faThumbsDown}
+              className={`cursor-pointer ${comment.hasLiked === -1 && 'text-red-500'}`}
+              onClick={() => likeContent(-1, comment.commentID as string)}
+            />
+          </div>
+          <div
+            className='flex gap-2 items-center cursor-pointer'
+            onClick={() => {
+              setIsCommenting(true)
+              setParentComment(comment.commentID as string)
+            }}
+          >
+            <FontAwesomeIcon icon={faReply} />
+            Reply
+          </div>
+        </div>
+
+        {
+          isCommenting && comment && parentComment === comment.commentID &&
+          <div className='w-full h-1/3 mb-10 p-2'>
+            <CommentBox
+              setIsCommenting={setIsCommenting}
+              parentComment={comment.commentID}
+              blogID={comment.blogID}
+            />
+          </div>
+        }
+
+        {
+          comments[Number(comment.commentID as string)] &&
+          comments[Number(comment.commentID as string)].length === 0 &&
+          comments[Number(comment.commentID as string)].map((cmmt, idx) =>
+            <Comments
+              key={idx}
+              comment={cmmt}
+              likeContent={likeContent}
+              parentComment={parentComment}
+              setParentComment={setParentComment}
+              setIsCommenting={setIsCommenting}
+              isCommenting={isCommenting}
+              comments={comments}
+            />
+          ) 
+          // || 
+          // <div className='w-full py-3 flex justify-center items-center'>
+          //   {comments[Number(comment.commentID as string)]?.length || 1} comments
+          // </div>
+        }
+      </div>
+    </div>
+  )
+}
+
+export default Comments

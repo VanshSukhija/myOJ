@@ -179,3 +179,15 @@ export type ActionType = {
   id: string | string[];
   hasLiked: number | null;
 }
+
+export type CommentType = {
+  commentID: string | string[];
+  blogID: string | string[];
+  id: string | string[];
+  description: string;
+  parentComment: string | string[] | null;
+  username: string;
+  image: string;
+  contribution: number | null;
+  hasLiked: number | null;
+}

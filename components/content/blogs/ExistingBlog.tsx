@@ -1,5 +1,5 @@
 "use client"
-import { BlogWithActionsType } from '@utils/types'
+import { BlogWithActionsType, CommentType } from '@utils/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useSession } from 'next-auth/react'
 import { useParams } from 'next/navigation'
@@ -7,11 +7,16 @@ import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import React, { useEffect, useState } from 'react'
 import { faReply, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import CommentBox from '@components/content/blogs/CommentBox'
+import Comments from '@components/content/blogs/Comments'
 
 const ExistingBlog = () => {
   const [blog, setBlog] = useState<BlogWithActionsType | null>(null)
   const { data: session, status } = useSession()
   const params = useParams()
+  const [isCommenting, setIsCommenting] = useState<boolean>(false)
+  const [comments, setComments] = useState<({ [key: string]: CommentType[] })>({ 'null': [] })
+  const [parentComment, setParentComment] = useState<string | null>(null)
 
   useEffect(() => {
     if (status === 'loading') return
@@ -40,7 +45,31 @@ const ExistingBlog = () => {
       }
     }
 
+    const fetchComments = async (retry: number) => {
+      if (retry === 0) return
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/blogs/api/getcomments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            blogID: params.blogID,
+            userID: session.user.id
+          })
+        })
+        const data = await res.json()
+        console.log(data)
+        if (data.status === 'error') throw new Error(data.error)
+        setComments(data.comments)
+      } catch (err) {
+        fetchComments(retry - 1)
+        console.log(err)
+      }
+    }
+
     fetchBlog(3)
+    fetchComments(3)
   }, [session])
 
   useEffect(() => {
@@ -101,7 +130,7 @@ const ExistingBlog = () => {
   }
 
   return (
-    <div className='h-screen w-full overflow-auto flex flex-1 flex-col justify-start items-center pb-1'>
+    <div className='h-screen w-full overflow-auto flex flex-1 flex-col justify-start items-center pb-5'>
       <nav className='w-full h-fit bg-purple-500 flex justify-between items-center p-3 font-bold'>
         <div className='text-2xl'>
           {blog?.title || 'Loading...'}
@@ -112,7 +141,7 @@ const ExistingBlog = () => {
         <div className='w-full p-2 flex items-center gap-3 text-lg border-b-2 border-purple-500'>
           <img
             src={blog.image}
-            alt="Profile Picture"
+            alt={blog.username}
             className='w-10 h-10'
           />
           <span>{blog.username}, {timeDifference(blog.blogID as string)}</span>
@@ -137,12 +166,53 @@ const ExistingBlog = () => {
             onClick={() => likeContent(-1, '')}
           />
         </div>
-        <div className='flex gap-2 items-center'>
-          <FontAwesomeIcon icon={faReply} className='cursor-pointer' />
+        <div
+          className='flex gap-2 items-center cursor-pointer'
+          onClick={() => {
+            setIsCommenting(true)
+            setParentComment(null)
+          }}
+        >
+          <FontAwesomeIcon icon={faReply} />
           Comment
         </div>
       </div>
 
+      {
+        isCommenting && blog && parentComment === null &&
+        <div className='w-full h-1/3 mb-10 p-2'>
+          <CommentBox
+            setIsCommenting={setIsCommenting}
+            parentComment={null}
+            blogID={blog.blogID}
+          />
+        </div>
+      }
+
+      <nav className='w-full h-fit bg-purple-500 flex justify-between items-center px-2 py-1 font-bold'>
+        <div className='text-2xl'>
+          Comments
+        </div>
+      </nav>
+
+      {
+        comments['null'].length === 0 ?
+          <div className='w-full py-3 flex justify-center items-center'>
+            No comments yet
+          </div> :
+          comments['null'].map((comment, idx) =>
+            <Comments
+              key={idx}
+              comment={comment}
+              likeContent={likeContent}
+              parentComment={parentComment}
+              setParentComment={setParentComment}
+              setIsCommenting={setIsCommenting}
+              isCommenting={isCommenting}
+              comments={comments}
+            />
+          )
+      }
     </div>
   )
 }
