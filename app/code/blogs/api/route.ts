@@ -9,6 +9,7 @@ export async function GET() {
         INNER JOIN user ON user.id = blog.createdBy
         LEFT JOIN (
           SELECT SUM(hasLiked) AS contribution, blogID FROM action
+          WHERE commentID = ''
           GROUP BY blogID
         ) AS temp ON temp.blogID = blog.blogID
         ORDER BY blog.blogID DESC;
@@ -30,9 +31,13 @@ export async function POST(req: Request) {
         INNER JOIN user ON user.id = blog.createdBy
         LEFT JOIN (
           SELECT SUM(hasLiked) AS contribution, blogID FROM action
+          WHERE commentID = ''
           GROUP BY blogID
         ) AS temp ON temp.blogID = blog.blogID
-        LEFT JOIN action ON action.blogID = blog.blogID AND action.id = ?
+        LEFT JOIN action ON 
+          action.blogID = blog.blogID AND 
+          action.id = ? AND
+          action.commentID = ''
         WHERE blog.blogID = ?;
       `,
       values: [userID, blogID],

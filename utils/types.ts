@@ -169,6 +169,13 @@ export type BlogWithActionsType = {
   createdBy: string;
   username: string;
   image: string;
-  contribution: number;
-  hasLiked: number;
+  contribution: number | null;
+  hasLiked: number | null;
+}
+
+export type ActionType = {
+  blogID: string | string[];
+  commentID: string | string[] | null;
+  id: string | string[];
+  hasLiked: number | null;
 }

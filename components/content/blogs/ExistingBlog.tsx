@@ -65,6 +65,41 @@ const ExistingBlog = () => {
     return `Just now`
   }
 
+  const likeContent = async (like: number, commentID: string) => {
+    if (status === 'loading') return
+    if (!session) return
+    if (!blog) return
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/blogs/api/likeblog`, {
+        method: like === blog.hasLiked ? 'DELETE' : 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          blogID: blog.blogID,
+          id: session.user.id,
+          commentID: commentID,
+          hasLiked: like
+        })
+      })
+      const data = await res.json()
+      console.log(data)
+      if (data.status === 'error') throw new Error(data.error)
+
+      commentID === '' && setBlog((prev) => {
+        if (!prev) return prev
+        return {
+          ...prev,
+          hasLiked: like === prev.hasLiked ? null : like,
+          contribution: data.results[1][0].contribution
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div className='h-screen w-full overflow-auto flex flex-1 flex-col justify-start items-center pb-1'>
       <nav className='w-full h-fit bg-purple-500 flex justify-between items-center p-3 font-bold'>
@@ -80,8 +115,7 @@ const ExistingBlog = () => {
             alt="Profile Picture"
             className='w-10 h-10'
           />
-          <span>{blog.username},</span>
-          <span>{timeDifference(blog.blogID as string)}</span>
+          <span>{blog.username}, {timeDifference(blog.blogID as string)}</span>
         </div> : 'Loading...'
       }
 
@@ -91,9 +125,17 @@ const ExistingBlog = () => {
 
       <div className='w-full border-y-2 border-purple-500 py-2 px-3 flex justify-between items-center'>
         <div className='flex gap-3 items-center text-xl'>
-          <FontAwesomeIcon icon={faThumbsUp} className={`cursor-pointer ${blog && blog.hasLiked === 1 && 'text-green-500'}`} />
+          <FontAwesomeIcon
+            icon={faThumbsUp}
+            className={`cursor-pointer ${blog && blog.hasLiked === 1 && 'text-green-500'}`}
+            onClick={() => likeContent(1, '')}
+          />
           {blog?.contribution || 0}
-          <FontAwesomeIcon icon={faThumbsDown} className={`cursor-pointer ${blog && blog.hasLiked === -1 && 'text-red-500'}`} />
+          <FontAwesomeIcon
+            icon={faThumbsDown}
+            className={`cursor-pointer ${blog && blog.hasLiked === -1 && 'text-red-500'}`}
+            onClick={() => likeContent(-1, '')}
+          />
         </div>
         <div className='flex gap-2 items-center'>
           <FontAwesomeIcon icon={faReply} className='cursor-pointer' />
