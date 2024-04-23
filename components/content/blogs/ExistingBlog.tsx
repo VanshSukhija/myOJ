@@ -15,7 +15,7 @@ const ExistingBlog = () => {
   const { data: session, status } = useSession()
   const params = useParams()
   const [isCommenting, setIsCommenting] = useState<boolean>(false)
-  const [comments, setComments] = useState<({ [key: string]: CommentType[] })>({ 'null': [] })
+  const [comments, setComments] = useState<Record<string, CommentType[]>>({ 'null': [] })
   const [parentComment, setParentComment] = useState<string | null>(null)
 
   useEffect(() => {
@@ -94,19 +94,18 @@ const ExistingBlog = () => {
     return `Just now`
   }
 
-  const likeContent = async (like: number, commentID: string) => {
+  const likeContent = async (like: number, commentID: string, alreadyLiked: boolean) => {
     if (status === 'loading') return
     if (!session) return
-    if (!blog) return
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/blogs/api/likeblog`, {
-        method: like === blog.hasLiked ? 'DELETE' : 'POST',
+        method: alreadyLiked ? 'DELETE' : 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          blogID: blog.blogID,
+          blogID: params.blogID,
           id: session.user.id,
           commentID: commentID,
           hasLiked: like
@@ -116,21 +115,43 @@ const ExistingBlog = () => {
       console.log(data)
       if (data.status === 'error') throw new Error(data.error)
 
-      commentID === '' && setBlog((prev) => {
-        if (!prev) return prev
-        return {
-          ...prev,
-          hasLiked: like === prev.hasLiked ? null : like,
-          contribution: data.results[1][0].contribution
-        }
-      })
+      commentID === '' ?
+        setBlog((prev) => {
+          if (!prev) return prev
+          return {
+            ...prev,
+            hasLiked: like === prev.hasLiked ? null : like,
+          }
+        }) :
+        setComments((prev: Record<string, CommentType[]>) => {
+          const newComments = prev[parentComment === null ? 'null' : parentComment].map((comment) => {
+            if (comment.commentID === commentID) {
+              return {
+                ...comment,
+                hasLiked: like === comment.hasLiked ? null : like,
+              }
+            }
+            return comment
+          })
+          return {
+            ...prev,
+            [parentComment === null ? 'null' : parentComment]: newComments
+          }
+        })
+
     } catch (err) {
       console.log(err)
     }
   }
 
+  const getContribution = (contribution: number | null, hasLiked: number | null) => {
+    contribution = contribution || 0
+    hasLiked = hasLiked || 0
+    return contribution + hasLiked
+  }
+
   return (
-    <div className='h-screen w-full overflow-auto flex flex-1 flex-col justify-start items-center pb-5'>
+    <div className='h-screen w-full overflow-auto flex flex-1 flex-col justify-start items-center'>
       <nav className='w-full h-fit bg-purple-500 flex justify-between items-center p-3 font-bold'>
         <div className='text-2xl'>
           {blog?.title || 'Loading...'}
@@ -152,31 +173,36 @@ const ExistingBlog = () => {
         <div dangerouslySetInnerHTML={{ __html: blog?.content || '' }} className='ql-editor' />
       </div>
 
-      <div className='w-full border-y-2 border-purple-500 py-2 px-3 flex justify-between items-center'>
-        <div className='flex gap-3 items-center text-xl'>
-          <FontAwesomeIcon
-            icon={faThumbsUp}
-            className={`cursor-pointer ${blog && blog.hasLiked === 1 && 'text-green-500'}`}
-            onClick={() => likeContent(1, '')}
-          />
-          {blog?.contribution || 0}
-          <FontAwesomeIcon
-            icon={faThumbsDown}
-            className={`cursor-pointer ${blog && blog.hasLiked === -1 && 'text-red-500'}`}
-            onClick={() => likeContent(-1, '')}
-          />
+      {
+        blog &&
+        <div className='w-full border-y-2 border-purple-500 py-2 px-3 flex justify-between items-center'>
+          <div className='flex gap-3 items-center text-xl'>
+            <FontAwesomeIcon
+              icon={faThumbsUp}
+              className={`cursor-pointer ${blog.hasLiked === 1 && 'text-green-500'}`}
+              onClick={() => likeContent(1, '', blog.hasLiked === 1)}
+            />
+            {
+              blog ? getContribution(blog.contribution, blog.hasLiked) : 0
+            }
+            <FontAwesomeIcon
+              icon={faThumbsDown}
+              className={`cursor-pointer ${blog.hasLiked === -1 && 'text-red-500'}`}
+              onClick={() => likeContent(-1, '', blog.hasLiked === -1)}
+            />
+          </div>
+          <div
+            className='flex gap-2 items-center cursor-pointer'
+            onClick={() => {
+              setIsCommenting(true)
+              setParentComment(null)
+            }}
+          >
+            <FontAwesomeIcon icon={faReply} />
+            Comment
+          </div>
         </div>
-        <div
-          className='flex gap-2 items-center cursor-pointer'
-          onClick={() => {
-            setIsCommenting(true)
-            setParentComment(null)
-          }}
-        >
-          <FontAwesomeIcon icon={faReply} />
-          Comment
-        </div>
-      </div>
+      }
 
       {
         isCommenting && blog && parentComment === null &&
@@ -185,6 +211,7 @@ const ExistingBlog = () => {
             setIsCommenting={setIsCommenting}
             parentComment={null}
             blogID={blog.blogID}
+            setComments={setComments}
           />
         </div>
       }
@@ -200,18 +227,23 @@ const ExistingBlog = () => {
           <div className='w-full py-3 flex justify-center items-center'>
             No comments yet
           </div> :
-          comments['null'].map((comment, idx) =>
-            <Comments
-              key={idx}
-              comment={comment}
-              likeContent={likeContent}
-              parentComment={parentComment}
-              setParentComment={setParentComment}
-              setIsCommenting={setIsCommenting}
-              isCommenting={isCommenting}
-              comments={comments}
-            />
-          )
+          <div className='w-full pr-2 pl-1'>
+            {
+              comments['null'].map((comment, idx) =>
+                <Comments
+                  key={idx}
+                  comment={comment}
+                  likeContent={likeContent}
+                  parentComment={parentComment}
+                  setParentComment={setParentComment}
+                  setIsCommenting={setIsCommenting}
+                  isCommenting={isCommenting}
+                  comments={comments}
+                  setComments={setComments}
+                />
+              )
+            }
+          </div>
       }
     </div>
   )

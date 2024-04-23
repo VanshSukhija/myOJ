@@ -31,7 +31,7 @@ export async function POST(req: Request) {
         INNER JOIN user ON user.id = blog.createdBy
         LEFT JOIN (
           SELECT SUM(hasLiked) AS contribution, blogID FROM action
-          WHERE commentID = ''
+          WHERE commentID = '' AND id != ?
           GROUP BY blogID
         ) AS temp ON temp.blogID = blog.blogID
         LEFT JOIN action ON 
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
           action.commentID = ''
         WHERE blog.blogID = ?;
       `,
-      values: [userID, blogID],
+      values: [userID, userID, blogID],
     });
 
     return NextResponse.json({results, status: "success"});

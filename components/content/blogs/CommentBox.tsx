@@ -5,6 +5,7 @@ import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import { quillFormats, quillModules } from '@utils/constants';
 import { useSession } from 'next-auth/react';
+import { CommentType } from '@utils/types';
 
 const QuillEditor: any = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -14,11 +15,13 @@ const QuillEditor: any = dynamic(() => import('react-quill'), {
 const CommentBox = ({
   setIsCommenting,
   blogID,
-  parentComment
+  parentComment,
+  setComments,
 }: {
   setIsCommenting: React.Dispatch<React.SetStateAction<boolean>>,
   blogID: string | string[],
   parentComment: string | null
+  setComments: React.Dispatch<React.SetStateAction<Record<string, CommentType[]>>>
 }) => {
   const [comment, setComment] = useState<string>('')
   const { data: session, status } = useSession()
@@ -34,6 +37,17 @@ const CommentBox = ({
     if (!comment) return
 
     try {
+      const newComment: CommentType = {
+        blogID,
+        commentID: `${Date.now()}`,
+        description: comment,
+        hasLiked: null,
+        id: session.user.id,
+        image: session.user.image,
+        username: session.user.name,
+        contribution: null,
+        parentComment,
+      }
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/blogs/api/postcomment`, {
         method: 'POST',
         headers: {
@@ -41,7 +55,7 @@ const CommentBox = ({
         },
         body: JSON.stringify({
           blogID,
-          commentID: `${Date.now()}`,
+          commentID: newComment.commentID,
           id: session.user.id,
           description: comment,
           parentComment
@@ -52,6 +66,19 @@ const CommentBox = ({
       if (data.status === 'error') throw new Error(data.error)
       setComment('')
       setIsCommenting(false)
+      setComments((prev: Record<string, CommentType[]>) => {
+        if(prev[parentComment === null ? 'null' : parentComment]) {
+          return {
+            ...prev,
+            [parentComment === null ? 'null' : parentComment]: [newComment, ...prev[parentComment === null ? 'null' : parentComment]]
+          }
+        } else {
+          return {
+            ...prev,
+            [parentComment === null ? 'null' : parentComment]: [newComment]
+          }
+        }
+      })
     } catch (err) {
       console.log(err)
     }

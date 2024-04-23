@@ -11,12 +11,8 @@ export async function POST(req: Request) {
         ON DUPLICATE KEY UPDATE
           hasLiked = VALUES(hasLiked)
         ;
-
-        SELECT SUM(hasLiked) AS contribution FROM action
-        WHERE commentID = ?
-        AND blogID = ?;
       `,
-      values: [blogID, commentID, id, hasLiked, commentID, blogID],
+      values: [blogID, commentID, id, hasLiked],
     });
 
     return NextResponse.json({ results, status: "success" });
@@ -32,12 +28,8 @@ export async function DELETE(req: Request) {
       query: `
         DELETE FROM action
         WHERE blogID = ? AND commentID = ? AND id = ?;
-
-        SELECT SUM(hasLiked) AS contribution FROM action
-        WHERE commentID = ?
-        AND blogID = ?;
       `,
-      values: [blogID, commentID, id, commentID, blogID],
+      values: [blogID, commentID, id],
     });
 
     return NextResponse.json({ results, status: "success" });

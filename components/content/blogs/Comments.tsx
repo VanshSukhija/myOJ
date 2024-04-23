@@ -12,15 +12,17 @@ const Comments = ({
   setParentComment,
   isCommenting,
   setIsCommenting,
-  comments
+  comments,
+  setComments
 }: {
   comment: CommentType,
-  likeContent: (like: number, commentID: string) => Promise<void>,
+  likeContent: (like: number, commentID: string, alreadyLiked: boolean) => Promise<void>,
   parentComment: string | null,
   setParentComment: React.Dispatch<React.SetStateAction<string | null>>,
   isCommenting: boolean,
   setIsCommenting: React.Dispatch<React.SetStateAction<boolean>>,
-  comments: { [key: string]: CommentType[] }
+  comments: Record<string, CommentType[]>,
+  setComments: React.Dispatch<React.SetStateAction<Record<string, CommentType[]>>>
 }) => {
   const timeDifference = (str: string) => {
     const date = Number(str)
@@ -39,9 +41,15 @@ const Comments = ({
     return `Just now`
   }
 
+  const getContribution = (contribution: number | null, hasLiked: number | null) => {
+    contribution = contribution || 0
+    hasLiked = hasLiked || 0
+    return contribution + hasLiked
+  }
+
   return (
-    <div className='w-full p-2'>
-      <div className='border-l-2 border-purple-500 p-2'>
+    <div className='w-full py-2 pl-1'>
+      <div className='border-l-2 border-purple-500 py-2 pl-2'>
         <div className='w-full flex items-center gap-2'>
           <img
             src={comment.image}
@@ -60,13 +68,15 @@ const Comments = ({
             <FontAwesomeIcon
               icon={faThumbsUp}
               className={`cursor-pointer ${comment.hasLiked === 1 && 'text-green-500'}`}
-              onClick={() => likeContent(1, comment.commentID as string)}
+              onClick={() => likeContent(1, comment.commentID as string, comment.hasLiked === 1)}
             />
-            {comment.contribution || 0}
+            {
+              getContribution(comment.contribution, comment.hasLiked)
+            }
             <FontAwesomeIcon
               icon={faThumbsDown}
               className={`cursor-pointer ${comment.hasLiked === -1 && 'text-red-500'}`}
-              onClick={() => likeContent(-1, comment.commentID as string)}
+              onClick={() => likeContent(-1, comment.commentID as string, comment.hasLiked === -1)}
             />
           </div>
           <div
@@ -88,14 +98,15 @@ const Comments = ({
               setIsCommenting={setIsCommenting}
               parentComment={comment.commentID}
               blogID={comment.blogID}
+              setComments={setComments}
             />
           </div>
         }
 
         {
-          comments[Number(comment.commentID as string)] &&
-          comments[Number(comment.commentID as string)].length === 0 &&
-          comments[Number(comment.commentID as string)].map((cmmt, idx) =>
+          comments[comment.commentID as string] &&
+          comments[comment.commentID as string].length > 0 &&
+          comments[comment.commentID as string].map((cmmt, idx) =>
             <Comments
               key={idx}
               comment={cmmt}
@@ -105,12 +116,9 @@ const Comments = ({
               setIsCommenting={setIsCommenting}
               isCommenting={isCommenting}
               comments={comments}
+              setComments={setComments}
             />
-          ) 
-          // || 
-          // <div className='w-full py-3 flex justify-center items-center'>
-          //   {comments[Number(comment.commentID as string)]?.length || 1} comments
-          // </div>
+          )
         }
       </div>
     </div>

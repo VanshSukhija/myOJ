@@ -11,6 +11,7 @@ export async function POST(req: Request) {
         INNER JOIN user ON user.id = comment.id
         LEFT JOIN (
           SELECT SUM(hasLiked) AS contribution, commentID, blogID FROM action
+          WHERE id != ?
           GROUP BY blogID, commentID
         ) AS temp ON temp.commentID = comment.commentID AND temp.blogID = comment.blogID
         LEFT JOIN action ON
@@ -20,15 +21,17 @@ export async function POST(req: Request) {
         WHERE comment.blogID = ?
         ORDER BY comment.commentID DESC;
       `,
-      values: [userID, blogID],
+      values: [userID, userID, blogID],
     });
 
-    let comments: { [key: string]: CommentType[] } = {};
-    results.forEach((comment: any) => {
-      if(!comments[comment.parentComment || 'null']) 
-        comments[comment.parentComment || 'null'] = [];
-      comments[comment.parentComment || 'null'].push(comment)
-    })
+    const comments: Record<string, CommentType[]> = {};
+    for (const comment of results) {
+      if (comments[comment.parentComment === null ? 'null' : comment.parentComment]) {
+        comments[comment.parentComment === null ? 'null' : comment.parentComment].push(comment);
+      } else {
+        comments[comment.parentComment === null ? 'null' : comment.parentComment] = [comment];
+      }
+    }
 
     return NextResponse.json({ comments, status: "success" });
   } catch (error) {
