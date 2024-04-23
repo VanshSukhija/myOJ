@@ -81,7 +81,7 @@ const ContestDescription = () => {
     <div>
       <ContestHeader contest={selectedContest} />
 
-      <div className='w-full h-full text-lg'>
+      <div className='w-full h-full'>
         <div
           dangerouslySetInnerHTML={{ __html: selectedContest.contestDescription }}
           className='ql-editor'

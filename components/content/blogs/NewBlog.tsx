@@ -26,6 +26,29 @@ const NewBlog = () => {
   })
 
   useEffect(() => {
+    if(!params.blogID) return
+
+    const getBlog = async () => {
+      try{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/blogs/${params.blogID}/edit/api`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ blogID: params.blogID })
+        })
+        const data = await res.json()
+        if(data.status === 'error') throw new Error(data.error)
+        setBlog(data.results[0])
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    getBlog()
+  }, [params])
+
+  useEffect(() => {
     if (typeof window !== 'undefined')
       window.katex = katex
   }, [katex])
@@ -35,11 +58,7 @@ const NewBlog = () => {
     if(blog.title.trim() === '') return alert('Title cannot be empty')
     if(blog.content.trim() === '') return alert('Content cannot be empty')
 
-    setBlog(prev => ({
-      ...prev,
-      createdBy: session.user.id,
-      blogID: `${Date.now()}`
-    }))
+    const blogID: string = `${Date.now()}`
 
     try{
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/blogs/new/api`, {
@@ -47,13 +66,18 @@ const NewBlog = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(blog)
+        body: JSON.stringify({
+          blogID,
+          title: blog.title,
+          content: blog.content,
+          createdBy: session.user.id
+        })
       })
       const data = await res.json()
       console.log(data);
       if(data.status === 'error') throw new Error(data.error)
       alert('Blog Published Successfully')
-      router.push(`/code/blogs/${blog.blogID}`)
+      router.push(`/code/blogs/${blogID}`)
     } catch (error) {
       console.log(error)
     }
@@ -63,7 +87,7 @@ const NewBlog = () => {
     <div className='h-screen w-full overflow-auto flex flex-col justify-start items-center gap-3'>
       <nav className='w-full h-fit bg-purple-500 flex justify-between items-center py-1.5 px-3 font-bold'>
         <div className='text-2xl'>
-          New Blog
+          {params.blogID ? 'Edit Blog' : 'New Blog'}
         </div>
       </nav>
 

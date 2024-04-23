@@ -19,8 +19,8 @@ const ProblemDescription = ({ SelectedProblemContext, primaryColor }: {
   }, [katex])
 
   return (
-    <div className='p-1'>
-      <section>
+    <div className='p-1 w-full'>
+      <section className='w-full'>
         <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Description</div>
         <div
           className="ql-editor"
@@ -29,7 +29,7 @@ const ProblemDescription = ({ SelectedProblemContext, primaryColor }: {
       </section>
       <br />
 
-      <section>
+      <section className='w-full'>
         <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Input</div>
         <div
           className="ql-editor"
@@ -38,7 +38,7 @@ const ProblemDescription = ({ SelectedProblemContext, primaryColor }: {
       </section>
       <br />
 
-      <section>
+      <section className='w-full'>
         <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Output</div>
         <div
           className="ql-editor"
@@ -47,7 +47,7 @@ const ProblemDescription = ({ SelectedProblemContext, primaryColor }: {
       </section>
       <br />
 
-      <section>
+      <section className='w-full'>
         <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Constraints</div>
         <div
           className="ql-editor"
@@ -88,7 +88,7 @@ const ProblemDescription = ({ SelectedProblemContext, primaryColor }: {
       {
         selectedProblem?.note &&
         <>
-          <section>
+          <section className='w-full'>
             <div className={`border-b-2 border-${primaryColor} font-bold text-2xl`}>Note</div>
             <div
               className="ql-editor"

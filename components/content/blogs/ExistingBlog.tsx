@@ -2,18 +2,20 @@
 import { BlogWithActionsType, CommentType } from '@utils/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useSession } from 'next-auth/react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import React, { useEffect, useState } from 'react'
-import { faReply, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faDumpster, faPen, faReply, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import CommentBox from '@components/content/blogs/CommentBox'
 import Comments from '@components/content/blogs/Comments'
+import Link from 'next/link'
 
 const ExistingBlog = () => {
   const [blog, setBlog] = useState<BlogWithActionsType | null>(null)
   const { data: session, status } = useSession()
   const params = useParams()
+  const router = useRouter()
   const [isCommenting, setIsCommenting] = useState<boolean>(false)
   const [comments, setComments] = useState<Record<string, CommentType[]>>({ 'null': [] })
   const [parentComment, setParentComment] = useState<string | null>(null)
@@ -150,6 +152,31 @@ const ExistingBlog = () => {
     return contribution + hasLiked
   }
 
+  const deleteBlog = async () => {
+    if (status === 'loading') return
+    if (!session) return
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/blogs/${params.blogID}/deleteblog`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          blogID: params.blogID,
+          userID: session.user.id
+        })
+      })
+      const data = await res.json()
+      console.log(data)
+      if (data.status === 'error') throw new Error(data.error)
+      router.refresh()
+      router.push('/code/blogs')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className='h-screen w-full overflow-auto flex flex-1 flex-col justify-start items-center'>
       <nav className='w-full h-fit bg-purple-500 flex justify-between items-center p-3 font-bold'>
@@ -169,7 +196,7 @@ const ExistingBlog = () => {
         </div> : 'Loading...'
       }
 
-      <div>
+      <div className='w-full'>
         <div dangerouslySetInnerHTML={{ __html: blog?.content || '' }} className='ql-editor' />
       </div>
 
@@ -191,15 +218,36 @@ const ExistingBlog = () => {
               onClick={() => likeContent(-1, '', blog.hasLiked === -1)}
             />
           </div>
-          <div
-            className='flex gap-2 items-center cursor-pointer'
-            onClick={() => {
-              setIsCommenting(true)
-              setParentComment(null)
-            }}
-          >
-            <FontAwesomeIcon icon={faReply} />
-            Comment
+          <div className='flex gap-4 items-center'>
+            {
+              blog && session && session.user.id === blog.createdBy &&
+              <>
+                <div
+                  className='flex gap-2 items-center cursor-pointer text-red-500'
+                  onClick={deleteBlog}
+                >
+                  <FontAwesomeIcon icon={faDumpster} />
+                  Delete
+                </div>
+                <Link
+                  href={`/code/blogs/${params.blogID}/edit`}
+                  className='flex gap-2 items-center cursor-pointer'
+                >
+                  <FontAwesomeIcon icon={faPen} />
+                  Edit
+                </Link>
+              </>
+            }
+            <div
+              className='flex gap-2 items-center cursor-pointer'
+              onClick={() => {
+                setIsCommenting(true)
+                setParentComment(null)
+              }}
+            >
+              <FontAwesomeIcon icon={faReply} />
+              Comment
+            </div>
           </div>
         </div>
       }
@@ -223,7 +271,7 @@ const ExistingBlog = () => {
       </nav>
 
       {
-        comments['null'].length === 0 ?
+        !comments['null'] || comments['null'].length === 0 ?
           <div className='w-full py-3 flex justify-center items-center'>
             No comments yet
           </div> :

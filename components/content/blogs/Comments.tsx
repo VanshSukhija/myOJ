@@ -59,7 +59,7 @@ const Comments = ({
           <span>{comment.username}, {timeDifference(comment.commentID as string)}</span>
         </div>
 
-        <div>
+        <div className='w-full'>
           <div dangerouslySetInnerHTML={{ __html: comment.description }} className='ql-editor' />
         </div>
 
