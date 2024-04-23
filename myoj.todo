@@ -1,5 +1,21 @@
-Create page for viewing individual submissions
+Create page/modal for viewing individual submissions
+Implement problem filters in problemset
+Write a python script for changing user ratings based on contest standings
 Create Profile page for user
-
-Design home page for website
-Make website responsive
+    - Dashboard
+        - profile picture with name, email, contribution and ratings
+        - navigation to 14-17
+        - logout and delete account button
+    - Content
+        - submission heat map (if possible)
+        - contest rating change graph
+        - submission language pie chart
+        - submission verdict pie chart
+        - solved problems count grouped by difficulty, tags and total
+        - contests created
+        - blogs and comments written
+        - latest submissions
+        - search user by name
+Create Home page / Delete Home page & redirect to profile page after login
+Design Landing page for website
+Update README
