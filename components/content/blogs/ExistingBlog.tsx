@@ -122,7 +122,7 @@ const ExistingBlog = () => {
           if (!prev) return prev
           return {
             ...prev,
-            hasLiked: like === prev.hasLiked ? null : like,
+            hasLiked: alreadyLiked ? null : like,
           }
         }) :
         setComments((prev: Record<string, CommentType[]>) => {
@@ -130,7 +130,7 @@ const ExistingBlog = () => {
             if (comment.commentID === commentID) {
               return {
                 ...comment,
-                hasLiked: like === comment.hasLiked ? null : like,
+                hasLiked: alreadyLiked ? null : like,
               }
             }
             return comment

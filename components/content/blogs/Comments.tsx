@@ -1,9 +1,10 @@
 "use client"
-import { faReply, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faDumpster, faReply, faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CommentType } from '@utils/types'
 import React from 'react'
 import CommentBox from '@components/content/blogs/CommentBox'
+import { useSession } from 'next-auth/react'
 
 const Comments = ({
   comment,
@@ -24,6 +25,8 @@ const Comments = ({
   comments: Record<string, CommentType[]>,
   setComments: React.Dispatch<React.SetStateAction<Record<string, CommentType[]>>>
 }) => {
+  const {data: session} = useSession()
+
   const timeDifference = (str: string) => {
     const date = Number(str)
     const now = Date.now()
@@ -45,6 +48,37 @@ const Comments = ({
     contribution = contribution || 0
     hasLiked = hasLiked || 0
     return contribution + hasLiked
+  }
+
+  const deleteComment = async () => {
+    if (!session) return
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/blogs/api/deletecomment`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          blogID: comment.blogID,
+          userID: session.user.id,
+          commentID: comment.commentID
+        })
+      })
+      const data = await res.json()
+      console.log(data)
+      if (data.status === 'error') throw new Error(data.error)
+
+      setComments((prev: Record<string, CommentType[]>) => {
+        const newComments = prev[parentComment === null ? 'null' : parentComment].filter((cmmt) => cmmt.commentID !== comment.commentID)
+        return {
+          ...prev,
+          [parentComment === null ? 'null' : parentComment]: newComments
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -79,15 +113,27 @@ const Comments = ({
               onClick={() => likeContent(-1, comment.commentID as string, comment.hasLiked === -1)}
             />
           </div>
-          <div
-            className='flex gap-2 items-center cursor-pointer'
-            onClick={() => {
-              setIsCommenting(true)
-              setParentComment(comment.commentID as string)
-            }}
-          >
-            <FontAwesomeIcon icon={faReply} />
-            Reply
+          <div className='flex gap-4 items-center'>
+            {
+              session && session.user.id === comment.id &&
+              <div
+                className='flex gap-2 items-center cursor-pointer text-red-500'
+                onClick={deleteComment}
+              >
+                <FontAwesomeIcon icon={faDumpster} />
+                Delete
+              </div>
+            }
+            <div
+              className='flex gap-2 items-center cursor-pointer'
+              onClick={() => {
+                setIsCommenting(true)
+                setParentComment(comment.commentID as string)
+              }}
+            >
+              <FontAwesomeIcon icon={faReply} />
+              Reply
+            </div>
           </div>
         </div>
 
