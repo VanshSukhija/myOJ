@@ -1,9 +1,9 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { OnlyProblemType } from '@utils/types';
-import { Tags } from '@utils/constants';
 import { useSession } from 'next-auth/react';
 import ProblemListItem from '@components/dashboard/ProblemListItem';
+import ProblemsetFilters from '@components/dashboard/ProblemsetFilters';
 
 // const fetchData = async () => {
 //   try {
@@ -20,6 +20,13 @@ import ProblemListItem from '@components/dashboard/ProblemListItem';
 const Problemset = () => {
   const [allProblems, setAllProblems] = useState<OnlyProblemType[]>([]);
   const { data: session } = useSession();
+  const [filters, setFilters] = useState<{
+    difficultyMask: string[],
+    tags: string[]
+  }>({
+    difficultyMask: [],
+    tags: []
+  })
 
   useEffect(() => {
     if (!session) return;
@@ -49,48 +56,30 @@ const Problemset = () => {
       <div className='w-full flex flex-col items-center'>
         <div className='text-2xl font-bold my-1.5'>Problem Set</div>
 
-        <Filters />
+        <ProblemsetFilters setFilters={setFilters} filters={filters} />
 
         {
-          allProblems.length > 0 && allProblems.map((problem: OnlyProblemType, idx: number) => {
+          allProblems.length > 0 &&
+          allProblems.filter((problem: OnlyProblemType) => {
+            const difficulty = problem.difficulty === 0 ? 'Easy' : problem.difficulty === 1 ? 'Medium' : 'Hard';
+
+            const flag1: boolean = filters.difficultyMask.length === 0 || filters.difficultyMask.includes(difficulty);
+            const flag2: boolean = filters.tags.length === 0 || filters.tags.every((tag: string) => problem.tags.includes(tag));
+
+            return flag1 && flag2;
+          })
+          .map((problem: OnlyProblemType, idx: number) => {
             return (
-              <ProblemListItem key={idx} problem={problem} index={idx + 1} primaryColor='cyan-600' />
+              <ProblemListItem
+                key={idx}
+                problem={problem}
+                index={idx + 1}
+                primaryColor='cyan-600'
+              />
             )
           })
         }
       </div>
-
-      {/* <code>{'<<'} {'<'} | 1 | 2 | 3 | 4 | 5 | {'>'} {'>>'}</code> */}
-    </div>
-  )
-}
-
-const Filters = () => {
-
-  return (
-    <div className='p-1 w-full bg-cyan-600 flex flex-col items-center border-y-2 border-slate-400'>
-      <div className='flex justify-between w-full mb-2'>
-        <span>Difficulty: </span>
-        <div>
-          <input type='text' min='800' max='3500' className='w-20' />
-          <span> to </span>
-          <input type='text' min='800' max='3500' className='w-20' />
-        </div>
-      </div>
-      <div className='flex justify-between w-full mb-1'>
-        <span>Tags: </span>
-        <select className='w-48 text-black'>
-          <option value='all'>All</option>
-          {
-            Tags.map((tag: string) => {
-              return (
-                <option key={tag} value={tag} className='text-black'>{tag}</option>
-              )
-            })
-          }
-        </select>
-      </div>
-      <button className='bg-sky-950 p-1 mt-1 w-full rounded'>Apply Filters</button>
     </div>
   )
 }
