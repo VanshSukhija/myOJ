@@ -191,3 +191,13 @@ export type CommentType = {
   contribution: number | null;
   hasLiked: number | null;
 }
+
+export type DisplayUserType = {
+  id: string | string[];
+  name: string;
+  email: string;
+  image: string;
+  contribution: number | null;
+  isAdmin: boolean;
+  rating: number | null;
+}

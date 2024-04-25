@@ -37,9 +37,9 @@ const Navbar = () => {
       </ul>
 
       <ul className="flex flex-col items-center gap-2">
-        <Link className='border-l-2 border-green-500 w-full text-center' href="/code/profile"> {/* green */}
+        <Link className='border-l-2 border-green-500 w-full text-center' href={`/code/profile/${session?.user.id}`}> {/* green */}
           {session ?
-            <img src={session.user.image} className="w-8 h-8 rounded-full m-2 cursor-pointer border-2 border-green-500" title="Profile" /> :
+            <img src={session.user.image} className="w-8 h-8 rounded-full m-2 cursor-pointer border-2 border-green-500" title={session.user.name} /> :
             <FontAwesomeIcon icon={faUser} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'profile' ? 'text-green-500' : ''}`} title="Profile" />
           }
         </Link>
