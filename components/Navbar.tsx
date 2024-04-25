@@ -3,17 +3,17 @@ import React, { useEffect } from 'react'
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBrain, faCalendar, faComments, faGear, faHome, faPen, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBrain, faCalendar, faComments, faHome, faPen, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from 'next-auth/react';
 
 const Navbar = () => {
   const pathname = usePathname().split('/')
   const { data: session, status } = useSession()
   const router = useRouter()
-  
+
   useEffect(() => {
-    if(status === 'loading') return;
-    if(!session) router.push('/')
+    if (status === 'loading') return;
+    if (!session) router.push('/')
   }, [session, status, router])
 
   return (
@@ -34,17 +34,11 @@ const Navbar = () => {
         <Link className='border-l-2 border-red-500 w-full text-center' href="/code/create"> {/* red */}
           <FontAwesomeIcon icon={faPen} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'create' ? 'text-red-500' : ''}`} title="Create" />
         </Link>
-      </ul>
-
-      <ul className="flex flex-col items-center gap-2">
         <Link className='border-l-2 border-green-500 w-full text-center' href={`/code/profile/${session?.user.id}`}> {/* green */}
           {session ?
             <img src={session.user.image} className="w-8 h-8 rounded-full m-2 cursor-pointer border-2 border-green-500" title={session.user.name} /> :
             <FontAwesomeIcon icon={faUser} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'profile' ? 'text-green-500' : ''}`} title="Profile" />
           }
-        </Link>
-        <Link className='border-l-2 border-slate-600 w-full text-center' href="/code/settings"> {/* slate */}
-          <FontAwesomeIcon icon={faGear} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'settings' ? 'text-slate-600' : ''}`} title="Settings" />
         </Link>
       </ul>
     </nav>
