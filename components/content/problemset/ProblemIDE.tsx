@@ -121,7 +121,7 @@ const ProblemIDE = ({ SelectedProblemContext, primaryColor }: {
       <div className={`border-b-2 border-${primaryColor} font-bold text-2xl flex justify-between items-center`}>
         Code Editor
         <select
-          className={`text-white bg-transparent text-lg font-normal focus:outline-none focus:border border-${primaryColor} px-2 h-fit`}
+          className={`text-white bg-transparent text-lg font-normal focus:outline-none border border-${primaryColor} px-2 h-fit`}
           value={language}
           onChange={(event) => setLanguage(event.target.value)}
         >

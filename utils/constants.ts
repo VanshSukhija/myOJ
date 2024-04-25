@@ -1,3 +1,5 @@
+import { width } from "@fortawesome/free-solid-svg-icons/fa0";
+
 export const Tags = [
   "2 sat", "binary search", "bitmasks", "brute force", "chinese remainder theorem", "combinatorics", "constructive algorithms", "data structures", "dfs and similar", "divide and conquer", "dp", "dsu", "expression parsing", "fft", "flows", "games", "geometry", "graph matchings", "graphs", "greedy", "hashing", "implementation", "interactive", "math", "matrices", "meet in the middle", "number theory", "probabilities", "schedules", "shortest paths", "sortings", "string suffix structures", "strings", "ternary search", "trees", "two pointers"
 ]
@@ -49,3 +51,17 @@ export const verdictNames = [
   'Runtime Error', 
   'Unknown Error'
 ]
+
+export const customModalStyles = {
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+  },
+  content: {
+    border: 'none',
+    borderRadius: '8px',
+    padding: '20px',
+    margin: 'auto',
+    width: '80%',
+    height: '80%',
+  },
+};

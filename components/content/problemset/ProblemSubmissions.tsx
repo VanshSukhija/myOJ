@@ -2,9 +2,15 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { DisplayProblemType, OnlyContestsType, SubmissionsByProblemType } from '@utils/types';
 import { useSession } from 'next-auth/react';
-import { verdictNames } from '@utils/constants';
+import SubmissionRow from '@components/content/problemset/SubmissionRow';
+import SubmissionModal from '@components/content/problemset/SubmissionModal';
+import IndividualSubmission from '@components/content/problemset/IndividualSubmission';
 
-const ProblemSubmissions = ({ SelectedProblemContext, primaryColor, SelectedContestContext }: {
+const ProblemSubmissions = ({
+  SelectedProblemContext,
+  primaryColor,
+  SelectedContestContext
+}: {
   SelectedProblemContext: React.Context<{
     selectedProblem: DisplayProblemType | null;
     setSelectedProblem: React.Dispatch<React.SetStateAction<DisplayProblemType | null>>
@@ -19,7 +25,17 @@ const ProblemSubmissions = ({ SelectedProblemContext, primaryColor, SelectedCont
   const { selectedProblem } = useContext(SelectedProblemContext)
   const [submissions, setSubmissions] = useState<SubmissionsByProblemType[]>([])
   const { data: session, status } = useSession()
-  const [filterMask, setFilterMask] = useState<number>(0)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [submission, setSubmission] = useState<SubmissionsByProblemType | null>(null)
+  const [filters, setFilters] = useState<{
+    onlyAccepted: boolean,
+    onlyUser: boolean,
+    language: 'All' | 'cpp' | 'java' | 'py'
+  }>({
+    onlyAccepted: false,
+    onlyUser: false,
+    language: 'All'
+  })
 
   useEffect(() => {
     if (!selectedProblem) return
@@ -50,20 +66,47 @@ const ProblemSubmissions = ({ SelectedProblemContext, primaryColor, SelectedCont
     fetchSubmissions();
   }, [session, selectedProblem, status])
 
+  const onOpen = (sub: SubmissionsByProblemType) => {
+    setSubmission(sub)
+    setIsOpen(true)
+  }
+
+  const onClose = () => {
+    setSubmission(null)
+    setIsOpen(false)
+  }
+
   return (
     <div className='p-1'>
       <section>
         <div className={`border-b-2 border-${primaryColor} font-bold text-2xl flex justify-between items-center`}>
           <span>Submissions</span>
           <div className='font-normal text-lg flex items-center gap-3'>
+            <select
+              className={`text-white bg-transparent focus:outline-none px-1 border border-${primaryColor} h-fit`}
+              value={filters.language}
+              onChange={(e) => {
+                setFilters(prev => {
+                  return {
+                    ...prev,
+                    language: e.target.value as 'All' | 'cpp' | 'java' | 'py'
+                  }
+                })
+              }}
+            >
+              <option className='bg-black' value="All">All Languages</option>
+              <option className='bg-black' value="cpp">C++</option>
+              <option className='bg-black' value="java">Java</option>
+              <option className='bg-black' value="py">Python</option>
+            </select>
             <span className='flex gap-1'>
               <input
                 type="checkbox"
                 name="onlyAccepted"
                 id="onlyAccepted"
                 className='cursor-pointer'
-                onChange={() => setFilterMask(prev => prev ^ 1)}
-                value={filterMask & 1}
+                onChange={() => setFilters(prev => ({ ...prev, onlyAccepted: !prev.onlyAccepted }))}
+                value={filters.onlyAccepted === true ? 1 : 0}
               />
               <label htmlFor="onlyAccepted" className='cursor-pointer'>Accepted</label>
             </span>
@@ -73,13 +116,18 @@ const ProblemSubmissions = ({ SelectedProblemContext, primaryColor, SelectedCont
                 name="onlyUser"
                 id="onlyUser"
                 className='cursor-pointer'
-                onChange={() => setFilterMask(prev => prev ^ 2)}
-                value={filterMask & 2}
+                onChange={() => setFilters(prev => ({ ...prev, onlyUser: !prev.onlyUser }))}
+                value={filters.onlyUser === true ? 1 : 0}
               />
               <label htmlFor="onlyUser" className='cursor-pointer'>Yours</label>
             </span>
           </div>
         </div>
+
+        <SubmissionModal isOpen={isOpen} onClose={onClose}>
+          <IndividualSubmission submission={submission} onClose={onClose} />
+        </SubmissionModal>
+
         <table className='table-auto border-2 border-slate-600 w-full m-auto my-3'>
           <thead>
             <tr>
@@ -96,24 +144,25 @@ const ProblemSubmissions = ({ SelectedProblemContext, primaryColor, SelectedCont
 
           <tbody>
             {
-              submissions.length > 0 &&
-              submissions.filter((sub: SubmissionsByProblemType) => (filterMask & 1 ? sub.verdict === 0 : true) && (filterMask & 2 ? sub.id === session?.user.id : true))
-                .map((sub: SubmissionsByProblemType, index: number, arr: SubmissionsByProblemType[]) => {
+              submissions.length > 0 && session &&
+              submissions
+                .filter((sub: SubmissionsByProblemType) => {
+                  if (filters.onlyAccepted && sub.verdict !== 0) return false
+                  if (filters.onlyUser && sub.id !== session.user.id) return false
+                  if (filters.language !== 'All' && sub.language !== filters.language) return false
+                  return true
+                })
+                .map((sub: SubmissionsByProblemType, index: number, array: SubmissionsByProblemType[]) => {
                   return (
-                    <tr key={index} className='text-center'>
-                      <td className='border-2 border-slate-600 w-fit px-3 py-2'>{arr.length - index}</td>
-                      <td className='border-2 border-slate-600 w-fit px-2 py-2'>{sub.username}</td>
-                      <td className='border-2 border-slate-600 w-fit px-2 py-2'>{sub.problemName}</td>
-                      <td className='border-2 border-slate-600 w-fit px-2 py-2'>
-                        {
-                          (new Date(Number(sub.submissionID))).toLocaleDateString() + ' ' + (new Date(Number(sub.submissionID))).toLocaleTimeString()
-                        }
-                      </td>
-                      <td className='border-2 border-slate-600 w-fit px-2 py-2'>{sub.language}</td>
-                      <td className={`border-2 border-slate-600 w-fit px-2 py-2 ${sub.verdict === 0 ? 'text-green-500' : 'text-red-500'}`}>{verdictNames[sub.verdict]}</td>
-                      <td className='border-2 border-slate-600 w-fit px-2 py-2'>{sub.timeTaken} ms</td>
-                      <td className='border-2 border-slate-600 w-fit px-2 py-2'>{(Number(sub.memoryUsed) / 1024).toPrecision(3)} MB</td>
-                    </tr>
+                    <SubmissionRow
+                      key={index}
+                      submission={sub}
+                      array={array}
+                      index={index}
+                      selectedContest={selectedContest}
+                      setIsOpen={() => onOpen(sub)}
+                      userID={session.user.id}
+                    />
                   )
                 })
               ||
