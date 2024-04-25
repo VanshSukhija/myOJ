@@ -115,18 +115,8 @@ export type SubmissionsByProblemType = {
 }
 
 export type SubmissionsByUserType = {
-  submissionID: string | string[];
-  problemID: string | string[];
-  id: string | string[];
-  code: string;
-  language: string;
-  timeTaken: string;
-  memoryUsed: string;
-  verdict: number;
-  problemName: string;
-  username: string;
-  startTime: string;
-  endTime: string;
+  submission: SubmissionsByProblemType;
+  contestDetails: OnlyContestsType;
 }
 
 export type ContestWithParticipantsType = {
