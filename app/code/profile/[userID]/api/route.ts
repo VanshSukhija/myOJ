@@ -23,12 +23,12 @@ export async function POST(req: Request) {
             GROUP BY comment.id
           ) AS temp2
         ) AS temp ON temp.id = user.id
-        WHERE user.id = 'cltq7280z000010vd0eqa8kdg';
+        WHERE user.id = ?;
       `,
       values: [userID],
     });
 
-    if(results.error) throw new Error(results.error);
+    if (results.error) throw new Error(results.error);
 
     return NextResponse.json({ status: 'success', results });
   } catch (error) {
@@ -46,7 +46,7 @@ export async function DELETE(req: Request) {
       values: [userID],
     });
 
-    if(results.error) throw new Error(results.error);
+    if (results.error) throw new Error(results.error);
 
     return NextResponse.json({ status: 'success', results });
   } catch (error) {

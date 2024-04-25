@@ -39,7 +39,7 @@ const Profile = () => {
     }
 
     fetchUser(3)
-  }, [params])
+  }, [params.userID, pathname])
 
   const deleteAccount = async () => {
     try {
@@ -74,16 +74,16 @@ const Profile = () => {
             <div className='text-2xl font-bold'>{user?.name || '-'}</div>
             <div className='flex items-center gap-2 py-1'>
               <Image src={mailIcon} alt='mail' width={20} height={20} />
-              {user?.email || '-'}
+              {user?.email}
             </div>
             <div className='w-full py-1 flex justify-evenly'>
               <div className='flex items-center gap-1 h-full' title='Contribution'>
                 <FontAwesomeIcon icon={faStar} width={20} height={20} />
-                {user?.contribution || '-'}
+                {user?.contribution || 0}
               </div>
               <div className='flex items-center gap-1 h-full' title='Rating'>
                 <FontAwesomeIcon icon={faBoltLightning} width={20} height={20} />
-                {user?.rating || '-'}
+                {user?.rating || 0}
               </div>
             </div>
           </div>
