@@ -1,7 +1,6 @@
 Write a python script for changing user ratings based on contest standings
 Create Profile page for user
     - Content
-        - submission heat map (if possible)
         - contest rating change graph
         - submission language pie chart
         - submission verdict pie chart

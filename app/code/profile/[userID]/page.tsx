@@ -1,9 +1,10 @@
+import ProfilePage from '@components/content/profile/ProfilePage'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-      vansh
+      <ProfilePage />
     </div>
   )
 }
