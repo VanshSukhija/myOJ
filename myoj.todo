@@ -5,8 +5,7 @@ Create Profile page for user
         - submission language pie chart
         - submission verdict pie chart
         - solved problems count grouped by difficulty, tags and total
-        - latest submissions
-        - blogs and comments written
+        - comments written
         - contests & problems authored
 Create Home page / Delete Home page & redirect to profile page after login
 Design Landing page for website

@@ -12,9 +12,10 @@ const SubmissionCalendar = ({
 
   return (
     <div className='w-full h-full'>
-      <div className='w-full p-2'>
+      <div className='w-full flex justify-between'>
+        <span className='font-bold text-xl'>Submissions Heat Map</span>
         <select 
-          className='bg-transparent w-[10%] ring ring-green-500 focus:outline-none'
+          className='bg-transparent w-[10%] ring-1 ring-green-500 rounded-md focus:outline-none'
           value={year}
           onChange={(e) => setYear(parseInt(e.target.value))}
         >
@@ -29,6 +30,7 @@ const SubmissionCalendar = ({
           }
         </select>
       </div>
+
       <ResponsiveCalendar
         data={data.length === 0 ? [] : data.map(item => {
           return {

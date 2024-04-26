@@ -9,11 +9,13 @@ const ProfilePage = () => {
   const [SubmissionCalendarData, setSubmissionCalendarData] = useState<{
     submissionDate: string, submissionCount: number
   }[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchSubmissionCalendarData = async (retry: number) => {
-      if(retry === 0) return
+      if (retry === 0) return
       try {
+        setLoading(true)
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/code/profile/${params.userID}/getSubmissionData`, {
           method: 'POST',
           headers: {
@@ -23,11 +25,13 @@ const ProfilePage = () => {
         })
         const data = await response.json()
         console.log(data)
-        if(data.status === 'error') throw new Error(data.error)
+        if (data.status === 'error') throw new Error(data.error)
         setSubmissionCalendarData(data.results)
       } catch (error) {
         fetchSubmissionCalendarData(retry - 1)
         console.log(error)
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -42,12 +46,16 @@ const ProfilePage = () => {
         </div>
       </nav>
 
-      <div className='w-[95%] h-1/3 border border-green-500 rounded-xl'>
-        <SubmissionCalendar
-          data={SubmissionCalendarData}
-        />
+      <div className='w-[95%] h-1/4 border border-green-500 rounded-xl p-2'>
+        {
+          loading ?
+            <div>Loading...</div> :
+            <SubmissionCalendar
+              data={SubmissionCalendarData}
+            />
+        }
       </div>
-      
+
     </div>
   )
 }

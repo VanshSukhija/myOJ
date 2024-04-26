@@ -119,8 +119,8 @@ const ContestList = ({ contest }: { contest: ContestWithParticipantsType }) => {
 
       <div className='w-20 text-right'>
         <div className='flex gap-1 justify-end items-center'>
-          <span>{contest.participantCount}</span>
           <FontAwesomeIcon icon={faPeopleGroup} className="text-s" />
+          <span>{contest.participantCount}</span>
         </div>
         <FontAwesomeIcon icon={faAngleRight} className="text-s" />
       </div>

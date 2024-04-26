@@ -1,5 +1,5 @@
 "use client"
-import { faPeopleGroup } from '@fortawesome/free-solid-svg-icons'
+import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DisplayBlogType } from '@utils/types'
 import Link from 'next/link'
@@ -91,8 +91,8 @@ const BlogListItem = ({ blog }: { blog: DisplayBlogType }) => {
       </div>
       <div className='w-20 text-right'>
         <div className='flex gap-1 justify-end items-center'>
+          <FontAwesomeIcon icon={faStar} className="text-s" />
           {blog.contribution === null ? 0 : blog.contribution}
-          <FontAwesomeIcon icon={faPeopleGroup} className="text-s" />
         </div>
       </div>
     </Link>
