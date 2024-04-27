@@ -4,13 +4,27 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { DisplayBlogType } from '@utils/types'
 import Link from 'next/link'
 import { useParams, usePathname } from 'next/navigation'
+import katex from 'katex'
+import 'katex/dist/katex.min.css'
 import React, { useEffect, useState } from 'react'
+
+type UserCommentsType = {
+  commentID: string | string[];
+  blogID: string | string[];
+  description: string;
+  contribution: number | null;
+  username: string;
+  title: string;
+  id: string | string[];
+  parentComment: string | string[];
+}
 
 const UserBlogs = () => {
   const params = useParams()
   const pathname = usePathname()
   const [blogs, setBlogs] = useState<DisplayBlogType[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
+  const [comments, setComments] = useState<UserCommentsType[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const getBlogs = async (retry: number) => {
@@ -27,7 +41,8 @@ const UserBlogs = () => {
         const data = await res.json()
         console.log(data)
         if (data.status === 'error') throw new Error(data.error)
-        setBlogs(data.results)
+        setBlogs(data.results[0])
+        setComments(data.results[1])
       } catch (error) {
         getBlogs(retry - 1)
         console.error(error)
@@ -38,6 +53,11 @@ const UserBlogs = () => {
 
     getBlogs(3)
   }, [params.userID, pathname])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined')
+      window.katex = katex
+  }, [katex])
 
   const timeDifference = (str: string) => {
     const date = Number(str)
@@ -63,21 +83,21 @@ const UserBlogs = () => {
           Blogs & Comments
         </div>
       </nav>
-      
+
       <nav className='w-full h-fit border-b-2 border-green-500 flex justify-between items-center py-1.5 px-3 font-bold'>
         <div className='text-2xl'>
           Blogs
         </div>
       </nav>
 
-      <div className='w-full flex flex-col gap-3'>
+      <div className='w-full flex flex-col'>
         {
           loading ?
             <div className='p-2'>Loading...</div> :
             blogs.length === 0 ?
-              <div>No Blogs Found</div> :
+              <div className='p-2'>No Blogs Found</div> :
               blogs.map((blog: DisplayBlogType, index: number) => (
-                <div className='w-full p-2 flex justify-between hover:text-green-500 hover:bg-white'>
+                <div key={index} className='w-full p-2 flex justify-between hover:text-green-500 hover:bg-white'>
                   <div className='flex flex-col justify-between'>
                     <Link
                       key={index}
@@ -104,6 +124,39 @@ const UserBlogs = () => {
           Comments
         </div>
       </nav>
+
+      <div className='w-full flex flex-col'>
+        {
+          loading ?
+            <div className='p-2'>Loading...</div> :
+            comments.length === 0 ?
+              <div className='p-2'>No Comments Found</div> :
+              comments.map((comment: UserCommentsType, index: number) => (
+                <div key={index} className='w-full p-2 flex flex-col justify-between hover:text-green-500 hover:bg-white'>
+                  <div className='flex justify-between'>
+                    <Link
+                      key={index}
+                      href={`/code/blogs/${comment.blogID}`}
+                      className='text-lg font-bold'
+                    >
+                      {comment.title}
+                    </Link>
+                    <div className='flex items-center justify-end gap-1'>
+                      <FontAwesomeIcon icon={faStar} width={20} height={20} />
+                      {comment.contribution || 0}
+                    </div>
+                  </div>
+                  <div>
+                    {comment.username}, {timeDifference(comment.commentID as string)}
+                  </div>
+                  <div 
+                    dangerouslySetInnerHTML={{__html: comment.description}}
+                    className='ql-editor border-l-2 border-green-500'
+                  />
+                </div>
+              ))
+        }
+      </div>
     </div>
   )
 }

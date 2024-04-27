@@ -15,8 +15,19 @@ export async function POST(req: Request) {
         ) AS temp ON temp.blogID = blog.blogID
         WHERE blog.createdBy = ?
         ORDER BY blog.blogID DESC;
+
+        SELECT temp.contribution, comment.*, user.name AS username, blog.title FROM comment
+        INNER JOIN blog ON blog.blogID = comment.blogID
+        INNER JOIN user ON user.id = blog.createdBy
+        LEFT JOIN (
+          SELECT SUM(hasLiked) AS contribution, commentID FROM action
+          WHERE commentID != ''
+          GROUP BY commentID
+        ) AS temp ON temp.commentID = comment.commentID
+        WHERE comment.id = ?
+        ORDER BY commentID DESC;
       `,
-      values: [userID],
+      values: [userID, userID],
     });
 
     if (results.error) throw new Error(results.error);

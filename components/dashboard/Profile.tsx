@@ -138,7 +138,7 @@ const Profile = () => {
 
       {
         session && session.user.id === params.userID &&
-        <div className='w-full px-2 flex gap-2'>
+        <div className='w-full px-2 flex gap-2 items-center justify-center'>
           <button
             className='bg-white text-red-500 font-bold py-1 w-1/2'
             onClick={logoutAccount}

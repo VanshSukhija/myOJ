@@ -13,7 +13,7 @@ const UserSubmissions = () => {
   const [submissions, setSubmissions] = useState<SubmissionsByUserType[]>([])
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [submission, setSubmission] = useState<SubmissionsByProblemType | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState<boolean>(true)
   const { data: session } = useSession()
 
   useEffect(() => {

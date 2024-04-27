@@ -8,24 +8,20 @@ export async function POST(req: Request) {
       query: `
         SELECT user.*, temp.contribution FROM user
         LEFT JOIN (
-          SELECT temp2.id, temp1.blogContribution + temp2.commentContribution AS contribution
+          SELECT temp2.id, IFNULL(temp1.blogContribution, 0) + IFNULL(temp2.commentContribution, 0) AS contribution
           FROM (
             SELECT SUM(action.hasLiked) AS blogContribution, blog.createdBy FROM blog
-            LEFT JOIN action ON 
-              action.blogID = blog.blogID AND 
-              action.commentID = ''
-            GROUP BY blog.createdBy
+            LEFT JOIN action ON action.blogID = blog.blogID AND action.commentID = ''
+            WHERE blog.createdBy = ?
           ) AS temp1 JOIN (
             SELECT SUM(action.hasLiked) AS commentContribution, comment.id FROM comment
-            LEFT JOIN action ON 
-              action.commentID = comment.commentID AND 
-              action.blogID = comment.blogID
-            GROUP BY comment.id
+            LEFT JOIN action ON action.commentID = comment.commentID AND action.blogID = comment.blogID
+            WHERE comment.id = ?
           ) AS temp2
         ) AS temp ON temp.id = user.id
-        WHERE user.id = ?;
+        WHERE user.id = ?
       `,
-      values: [userID],
+      values: [userID, userID, userID],
     });
 
     if (results.error) throw new Error(results.error);
