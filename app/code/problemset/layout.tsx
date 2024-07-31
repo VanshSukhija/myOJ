@@ -1,18 +1,9 @@
 "use client";
-import React, { Suspense, createContext, useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import Dashboard from '@components/dashboard/Dashboard'
 import Loading from './loading'
 import { DisplayProblemType } from '@utils/types';
-
-export const SelectedProblemContext = createContext<{
-  selectedProblem: DisplayProblemType | null;
-  setSelectedProblem: React.Dispatch<React.SetStateAction<DisplayProblemType | null>>;
-}>({
-  selectedProblem: null,
-  setSelectedProblem: function (value: React.SetStateAction<DisplayProblemType | null>): void {
-    throw new Error('Function not implemented.')
-  }
-});
+import { SelectedProblemContext } from '@utils/contexts';
 
 const layout = (
   {

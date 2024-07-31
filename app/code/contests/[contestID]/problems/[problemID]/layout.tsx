@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import Loading from './loading'
 import ProblemNavbar from '@components/content/problemset/ProblemNavbar'
-import { SelectedProblemContext } from '@app/code/contests/layout';
+import { SelectedProblemContext } from '@utils/contexts';
 
 const layout = ({
   children

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect, useContext } from 'react'
-import { SelectedContestContext } from '@app/code/contests/layout'
+import { SelectedContestContext } from '@utils/contexts'
 import { ContestStandingsType } from '@utils/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faPlus, faSync } from '@fortawesome/free-solid-svg-icons'

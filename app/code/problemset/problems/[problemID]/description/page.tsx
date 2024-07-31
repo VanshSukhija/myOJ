@@ -1,4 +1,4 @@
-import { SelectedProblemContext } from '@app/code/problemset/layout'
+import { SelectedProblemContext } from '@utils/contexts'
 import ProblemDescription from '@components/content/problemset/ProblemDescription'
 import React from 'react'
 

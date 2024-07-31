@@ -4,6 +4,6 @@ Create Profile page for user
         - contest rating change graph
         - solved problems count grouped by tags
         - contests & problems authored
-Create Home page / Delete Home page & redirect to profile page after login
+Add loading components, error and not found pages
 Design Landing page for website
 Update README

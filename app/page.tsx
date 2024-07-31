@@ -9,11 +9,11 @@ const page = () => {
 
   useEffect(() => {
     if(status === 'loading') return;
-    if(session) router.push('/code/home');
+    if(session) router.push('/code/problemset');
   }, [session, status, router])
 
   const handleSignIn = async (provider: string) => {
-    await signIn(provider, { callbackUrl: '/code/home' })
+    await signIn(provider, { callbackUrl: '/code/problemset' })
   }
 
   return (

@@ -7,7 +7,7 @@ import katex from 'katex'
 import 'katex/dist/katex.min.css'
 import { useSession } from 'next-auth/react';
 import ContestParticipants from './ContestParticipants';
-import { SelectedContestContext } from '@app/code/contests/layout';
+import { SelectedContestContext } from '@utils/contexts';
 import Link from 'next/link';
 
 const ContestDescription = () => {

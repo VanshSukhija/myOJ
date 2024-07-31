@@ -1,5 +1,4 @@
 import React from 'react'
-import Home from '@components/dashboard/Home'
 import Problemset from '@components/dashboard/Problemset'
 import Contests from '@components/dashboard/Contests'
 import Blogs from '@components/dashboard/Blogs'
@@ -10,8 +9,6 @@ const Dashboard = ({ active }: { active: string }) => {
 
   const renderSwitch = (active: string) => {
     switch (active) {
-      case "Home":
-        return <Home />
       case "Problemset":
         return <Problemset />
       case "Contests":

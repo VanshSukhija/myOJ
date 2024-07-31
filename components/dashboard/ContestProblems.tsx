@@ -1,5 +1,5 @@
 "use client"
-import { SelectedContestContext } from '@app/code/contests/layout'
+import { SelectedContestContext } from '@utils/contexts'
 import { OnlyProblemType } from '@utils/types'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'

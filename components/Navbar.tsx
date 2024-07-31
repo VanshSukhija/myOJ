@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBrain, faCalendar, faComments, faHome, faPen, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBrain, faCalendar, faComments, faPen, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from 'next-auth/react';
 
 const Navbar = () => {
@@ -19,9 +19,6 @@ const Navbar = () => {
   return (
     <nav className="text-slate-400 bg-black h-screen w-12 flex flex-col justify-between">
       <ul className="flex flex-col items-center gap-2">
-        <Link className='border-l-2 border-yellow-500 w-full text-center' href="/code/home"> {/* yellow */}
-          <FontAwesomeIcon icon={faHome} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'home' ? 'text-yellow-500' : ''}`} title="Home" />
-        </Link>
         <Link className='border-l-2 border-cyan-600 w-full text-center' href="/code/problemset"> {/* blue */}
           <FontAwesomeIcon icon={faBrain} className={`text-2xl m-2 cursor-pointer ${pathname[2] === 'problemset' ? 'text-cyan-600' : ''}`} title="Problem Set" />
         </Link>
