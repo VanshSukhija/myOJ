@@ -8,7 +8,7 @@ time_taken_in_seconds=0
 memory_used=0
 
 # Check the language and execute the source code accordingly
-if [ $lang == "cpp" ] || [ $lang == "c" ]; 
+if [ $lang = "cpp" ] || [ $lang = "c" ]; 
 then
     g++ "Main.$lang" -o Main -std=c++17
     if [ $? -ne 0 ]; then
@@ -43,7 +43,7 @@ then
         exit 3 # Memory Limit Exceeded
     fi
 
-elif [ $lang == "java" ]; 
+elif [ $lang = "java" ]; 
 then
     javac Main.java
     if [ $? -ne 0 ]; then
@@ -76,7 +76,7 @@ then
         exit 3 # Memory Limit Exceeded
     fi
 
-elif [ $lang == "py" ];
+elif [ $lang = "py" ];
 then
     ulimit -SHv $MEMORY_LIMIT_KB -t $TIMEOUT_SECONDS
     /usr/bin/time -f "time_taken %e\nmemory_used %M\nexit_status %x" python3 Main.py < input.txt > output.txt 2> time_memory.txt

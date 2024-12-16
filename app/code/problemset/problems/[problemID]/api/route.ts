@@ -39,13 +39,12 @@ export async function POST(req: Request, res: Response) {
     if (err) throw err;
   });
 
-  console.log('user id:', userID)
-
   // run the code
   try {
     const cwd = path.join(process.cwd(), 'app', 'code', 'problemset', 'docker');
-    const cmd = `docker run -v ${filePath}:/app/Main.${extension} -v ${inputPath}:/app/input.txt -v ${expectedOutputPath}:/app/expectedOutput.txt -v ${outputPath}:/app/output.txt -v ${time_memoryPath}:/app/time_memory.txt --name ${userID} --rm vanshsukhija/myoj-code-runner ${extension} ${timeLimit} ${memoryLimit}`
-    // const cmd = `docker run -v ${cwd}:/app/ myoj-code-runner ${extension} ${timeLimit} ${memoryLimit}`
+    const cmd = `docker run -v ${filePath}:/app/Main.${extension} -v ${inputPath}:/app/input.txt -v ${expectedOutputPath}:/app/expectedOutput.txt -v ${outputPath}:/app/output.txt -v ${time_memoryPath}:/app/time_memory.txt --name ${userID}-${submissionTime} --rm vanshsukhija/myoj-code-runner ${extension} ${timeLimit} ${memoryLimit}`
+
+    // console.log(cmd);
 
     const runOutput = await execAsync(cmd, { cwd: cwd });
 
@@ -60,6 +59,31 @@ export async function POST(req: Request, res: Response) {
       .split(' ')[1] || "0";
 
     const output: string = fs.readFileSync(outputPath, 'utf8').trim();
+
+    // clear the Main code file
+    fs.writeFile(filePath, '', (err: any) => {
+      if (err) throw err;
+    });
+
+    // clear the input file
+    fs.writeFile(inputPath, '', (err: any) => {
+      if (err) throw err;
+    });
+
+    // clear the expectedOutput file
+    fs.writeFile(expectedOutputPath, '', (err: any) => {
+      if (err) throw err;
+    });
+
+    // clear the time_memory file
+    fs.writeFile(time_memoryPath, '', (err: any) => {
+      if (err) throw err;
+    });
+
+    // clear the output file
+    fs.writeFile(outputPath, '', (err: any) => {
+      if (err) throw err;
+    });
 
     return NextResponse.json({
       status: 1,

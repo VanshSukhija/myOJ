@@ -127,13 +127,13 @@ const ProblemIDE = ({ SelectedProblemContext, primaryColor }: {
         >
           <option className='bg-black' value="cpp">C++</option>
           <option className='bg-black' value="java">Java</option>
-          <option className='bg-black' value="python">Python</option>
+          <option className='bg-black' value="py">Python</option>
         </select>
       </div>
 
       <div className='w-5/6 h-full min-h-full mx-auto flex flex-col gap-3'>
         <CodeEditor
-          language={language}
+          language={language === 'py' ? 'python' : language}
           value={code}
           theme="vs-dark"
           wrapperProps={{ style: { height: '100%', width: '100%' } }}

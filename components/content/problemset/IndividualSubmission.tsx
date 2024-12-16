@@ -25,7 +25,7 @@ const IndividualSubmission = ({ submission, onClose }: { submission: Submissions
       </div>
       <div className='w-full h-full'>
         <CodeEditor
-          language={submission.language || 'cpp'}
+          language={submission.language === 'py' ? 'python' : submission.language ?? 'cpp'}
           value={submission.code || ''}
           theme="vs-dark"
           wrapperProps={{ style: { height: '100%', width: '100%' } }}
