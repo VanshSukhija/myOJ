@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/app/Main.py", line 3, in <module>
-    a, b = map(int, input().split())
-EOFError: EOF when reading a line
-Command exited with non-zero status 1
-time_taken 0.11
-memory_used 7992
-exit_status 1

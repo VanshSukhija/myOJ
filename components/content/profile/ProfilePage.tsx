@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SubmissionCalendar from '@components/content/profile/SubmissionCalendar'
 import SubmissionPie from '@components/content/profile/SubmissionPie'
 import { useParams, usePathname } from 'next/navigation'
-import { verdictNames } from '@utils/constants'
+import { verdictNames, Tags } from '@utils/constants'
 
 const ProfilePage = () => {
   const params = useParams()
@@ -19,6 +19,9 @@ const ProfilePage = () => {
   }[]>([])
   const [submissionsByVerdict, setSubmissionsByVerdict] = useState<{
     verdict: number, submissionCount: number
+  }[]>([])
+  const [submissionsByTags, setSubmissionsByTags] = useState<{
+    tag: string, submissionCount: number
   }[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -66,6 +69,19 @@ const ProfilePage = () => {
           }
         }))
 
+        const getTagsCount = (problemTags: {tags: string}[]): {tag: string, submissionCount: number}[]  => {
+          const tagsMap = new Map<string, number>()
+          problemTags.forEach((tags) => {
+            tags.tags.split(',').forEach((tag) => {
+              tagsMap.set(tag, (tagsMap.get(tag) ?? 0) + 1)
+            })
+          })
+          let tagsCount: {tag: string, submissionCount: number}[] = []
+          tagsMap.forEach((value, key) => tagsCount.push({ tag: key, submissionCount: value }))
+          return tagsCount
+        }
+
+        data.results[4].length > 0 && setSubmissionsByTags(getTagsCount(data.results[4]))
       } catch (error) {
         fetchSubmissionCalendarData(retry - 1)
         console.log(error)
@@ -101,7 +117,7 @@ const ProfilePage = () => {
             <div>Loading...</div> :
             <div className='flex w-full h-full gap-3'>
               <SubmissionPie
-                title='Submission Difficulty Distribution'
+                title='Difficulty Distribution'
                 data={submissionsByDifficulty.length === 0 ? [] :
                   submissionsByDifficulty.map((item) => {
                     return {
@@ -116,7 +132,7 @@ const ProfilePage = () => {
               <div className='h-full w-[1px] bg-green-500' />
 
               <SubmissionPie
-                title='Submission Language Distribution'
+                title='Language Distribution'
                 data={submissionsByLanguage.length === 0 ? [] :
                   submissionsByLanguage.map((item) => {
                     return {
@@ -137,7 +153,7 @@ const ProfilePage = () => {
             <div>Loading...</div> :
             <div className='flex w-full h-full gap-3'>
               <SubmissionPie
-                title='Submission Verdict Distribution'
+                title='Verdict Distribution'
                 data={submissionsByVerdict.length === 0 ? [] :
                   submissionsByVerdict.map((item: {verdict: number, submissionCount: number}) => {
                     return {
@@ -152,12 +168,12 @@ const ProfilePage = () => {
               <div className='h-full w-[1px] bg-green-500' />
               
               <SubmissionPie
-                title='Submission Language Distribution'
-                data={submissionsByLanguage.length === 0 ? [] :
-                  submissionsByLanguage.map((item) => {
+                title='Tags Distribution'
+                data={submissionsByTags.length === 0 ? [] :
+                  submissionsByTags.map((item) => {
                     return {
-                      id: item.language,
-                      label: item.language,
+                      id: item.tag,
+                      label: item.tag,
                       value: item.submissionCount,
                     }
                   })

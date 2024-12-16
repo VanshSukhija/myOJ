@@ -37,8 +37,17 @@ export async function POST(req: Request) {
           GROUP BY problem.difficulty
         ) AS temp ON temp.difficulty = problem.difficulty
         GROUP BY problem.difficulty, submissionCount;
+
+        SELECT tags FROM problem
+        WHERE
+          problemID IN (
+            SELECT DISTINCT problemID FROM submission
+            WHERE
+              id = ? AND
+              verdict = 0
+          );
       `,
-      values: [userID, userID, userID, userID],
+      values: [userID, userID, userID, userID, userID],
     });
 
     if (results.error) throw new Error(results.error);
