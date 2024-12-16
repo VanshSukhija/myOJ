@@ -2,8 +2,6 @@ Write a python script for changing user ratings based on contest standings
 Create Profile page for user
     - Content
         - contest rating change graph
-        - solved problems count grouped by tags
         - contests & problems authored
 Add loading components, error and not found pages
 Design Landing page for website
-Update README
